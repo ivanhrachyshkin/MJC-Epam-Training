@@ -1,6 +1,6 @@
+DROP TABLE IF EXISTS gift_certificate_tag;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS gift_certificate;
-DROP TABLE IF EXISTS gift_certificate_tag;
 
 CREATE TABLE tag
 (

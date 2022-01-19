@@ -1,2 +1,2 @@
-com/epam/esm/integration/GiftCertificateIntegrationTest.java
- com.epam.esm.integration.GiftCertificateIntegrationTest
+com/epam/esm/integration/GiftCertificateDaoTest.java
+ com.epam.esm.integration.GiftCertificateDaoTest

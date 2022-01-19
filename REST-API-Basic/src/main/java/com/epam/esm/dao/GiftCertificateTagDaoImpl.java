@@ -40,8 +40,7 @@ public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
     public void deleteGiftCertificateTagByTagId(final int tagId) {
         final String DELETE_QUERY = "DELETE" +
                 " FROM gift_certificate_tag" +
-                " WHERE tag_id = :tag_id" +
-                " ON CONFLICT DO NOTHIG";
+                " WHERE tag_id = :tag_id";
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("tag_id", tagId);
         namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);

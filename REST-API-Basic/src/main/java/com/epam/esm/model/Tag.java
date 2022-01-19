@@ -15,6 +15,10 @@ public class Tag {
     public Tag() {
     }
 
+    public Tag(final String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }
