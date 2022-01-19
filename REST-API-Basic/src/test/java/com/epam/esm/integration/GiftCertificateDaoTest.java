@@ -249,14 +249,9 @@ public class GiftCertificateDaoTest {
     }
 
     @Test
-    void shouldCreateGiftCertificateWithTags_On_CreateWithOldTags() {
-        Assertions.assertEquals(oldTags, tagDao.readAll());
-        Assertions.assertEquals(oldGiftCertificates,
-                giftCertificateDao.readAll(null, null, null, null));
-
-
-        tagDao.create(new Tag("1241"));
-        System.out.println(tagDao.readOneByName("1241"));
-
+    void shouldUpdateGiftCertificateWithOldTags_On_CreateWithOldTags() {
+        oldGiftCertificate1.setName("newName");
+        giftCertificateDao.update(oldGiftCertificate1);
+        Assertions.assertEquals(oldGiftCertificate1, giftCertificateDao.readOneByName("newName"));
     }
 }

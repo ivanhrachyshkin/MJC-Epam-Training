@@ -12,8 +12,8 @@ com/epam/esm/config/SpringDispatcherServletInitializer.java
  com.epam.esm.config.SpringDispatcherServletInitializer
 com/epam/esm/validator/ValidationException.java
  com.epam.esm.validator.ValidationException
-com/epam/esm/dao/GiftCertificateDaoImpl.java
- com.epam.esm.dao.GiftCertificateDaoImpl
+com/epam/esm/service/GiftCertificateServiceImpl.java
+ com.epam.esm.service.GiftCertificateServiceImpl
 com/epam/esm/controller/TagController.java
  com.epam.esm.controller.TagController
 com/epam/esm/model/ApiError.java
@@ -52,5 +52,5 @@ com/epam/esm/dao/TagDao.java
  com.epam.esm.dao.TagDao
 com/epam/esm/service/GiftCertificateService.java
  com.epam.esm.service.GiftCertificateService
-com/epam/esm/service/GiftCertificateServiceImpl.java
- com.epam.esm.service.GiftCertificateServiceImpl
+com/epam/esm/dao/GiftCertificateDaoImpl.java
+ com.epam.esm.dao.GiftCertificateDaoImpl

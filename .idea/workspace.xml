@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="added more service unit tests">
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/jarAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/classes/com.epam.esm.unit.service.GiftServiceImplTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/classes/com.epam.esm.unit.service.TagServiceImplTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/packages/com.epam.esm.unit.service.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/test/create-tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/resources/test/create-tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/test/insert-data-tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/resources/test/insert-data-tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/TEST-com.epam.esm.unit.service.GiftServiceImplTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/TEST-com.epam.esm.unit.service.TagServiceImplTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/results.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileTestJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileTestJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/integration/GiftCertificateDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/integration/GiftCertificateDaoTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/resources/create-tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/src/test/resources/create-tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/resources/insert-data-tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/src/test/resources/insert-data-tables.sql" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/REST-API-Basic">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MJC-Epam-Training" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MJC-Epam-Training" type="f1a62948:ProjectNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MJC-Epam-Training" type="f1a62948:ProjectNode" />
+                <item name="REST-API-Basic" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MJC-Epam-Training" type="f1a62948:ProjectNode" />
+                <item name="REST-API-Basic" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MJC-Epam-Training" type="f1a62948:ProjectNode" />
+                <item name="REST-API-Basic" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="FxmlFile" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="23ou5w9i6ms8g4iPEoIqal1pALw" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="h2" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="jdk.selected.JAVA_MODULE" value="1.8" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/unit/service" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.editor" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\test\java\com\epam\esm\unit\service" />
+      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\test\resources" />
+      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\resources" />
+      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\test\java\com\epam\esm" />
+      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\java\com\epam\esm" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\java" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.epam.esm" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.epam.esm.unit.service" />
+      <recent name="com.epam.esm.integration" />
+      <recent name="com.epam.esm.config" />
+      <recent name="com.epam.esm.unit.integration" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.GiftCertificateDaoTest">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GiftCertificateDaoTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="env">
+          <map>
+            <entry key="SPRING_PROFILES_ACTIVE" value="test" />
+          </map>
+        </option>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.integration.GiftCertificateDaoTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":REST-API-Basic:test" />
+          </list>
+        </option>
+        <option name="vmOptions" value="" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="GiftCertificateDaoTest.shouldReturnGiftCertificateWithTags_On_ReadOneByName" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="env">
+          <map>
+            <entry key="SPRING_PROFILES_ACTIVE" value="test" />
+          </map>
+        </option>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.integration.GiftCertificateDaoTest.shouldReturnGiftCertificateWithTags_On_ReadOneByName&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":REST-API-Basic:test" />
+          </list>
+        </option>
+        <option name="vmOptions" value="" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="GiftServiceImplTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.unit.service.GiftServiceImplTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":REST-API-Basic:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="TagServiceImplTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.unit.service.TagServiceImplTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":REST-API-Basic:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Tests in 'com.epam.esm.unit.service'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.unit.service.*&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":REST-API-Basic:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Tomcat" type="com.poratu.idea.plugins.tomcat" factoryName="SMART_TOMCAT_FACTORY">
+      <option name="adminPort" value="8005" />
+      <option name="contextPath" value="/REST-API-Basic" />
+      <option name="docBase" value="$PROJECT_DIR$/REST-API-Basic/src/main/webapp" />
+      <option name="envOptions">
+        <map>
+          <entry key="SPRING_PROFILES_ACTIVE" value="prod" />
+        </map>
+      </option>
+      <option name="passParentEnvironmentVariables" value="true" />
+      <option name="port" value="8080" />
+      <option name="tomcatInfo">
+        <TomcatInfo>
+          <option name="name" value="Apache Tomcat/9.0.55" />
+          <option name="number" value="0" />
+          <option name="path" value="D:\EPAM\apache-tomcat" />
+          <option name="version" value="9.0.55.0" />
+        </TomcatInfo>
+      </option>
+      <option name="vmOptions" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="com.poratu.idea.plugins.tomcat" factoryName="SMART_TOMCAT_FACTORY">
+      <option name="adminPort" value="8005" />
+      <option name="contextPath" value="" />
+      <option name="docBase" value="" />
+      <option name="envOptions" />
+      <option name="passParentEnvironmentVariables" value="true" />
+      <option name="port" value="8080" />
+      <option name="tomcatInfo">
+        <TomcatInfo>
+          <option name="name" value="Apache Tomcat/9.0.55" />
+          <option name="number" value="0" />
+          <option name="path" value="D:\EPAM\apache-tomcat" />
+          <option name="version" value="9.0.55.0" />
+        </TomcatInfo>
+      </option>
+      <option name="vmOptions" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.GiftCertificateDaoTest" />
+      <item itemvalue="Gradle.GiftCertificateDaoTest.shouldReturnGiftCertificateWithTags_On_ReadOneByName" />
+      <item itemvalue="Smart Tomcat.Tomcat" />
+      <item itemvalue="Gradle.GiftServiceImplTest" />
+      <item itemvalue="Gradle.TagServiceImplTest" />
+      <item itemvalue="Gradle.Tests in 'com.epam.esm.unit.service'" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.GiftCertificateDaoTest" />
+        <item itemvalue="Gradle.Tests in 'com.epam.esm.unit.service'" />
+        <item itemvalue="Gradle.GiftServiceImplTest" />
+        <item itemvalue="Gradle.TagServiceImplTest" />
+        <item itemvalue="Gradle.GiftCertificateDaoTest.shouldReturnGiftCertificateWithTags_On_ReadOneByName" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="" />
+      <created>1642412581982</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1642412581982</updated>
+      <workItem from="1642412583442" duration="1765000" />
+      <workItem from="1642431540933" duration="370000" />
+      <workItem from="1642452434219" duration="3585000" />
+      <workItem from="1642456080665" duration="258000" />
+      <workItem from="1642456350363" duration="10056000" />
+      <workItem from="1642467024281" duration="1160000" />
+      <workItem from="1642494574351" duration="3151000" />
+      <workItem from="1642534055579" duration="5151000" />
+      <workItem from="1642539229405" duration="3428000" />
+      <workItem from="1642597169047" duration="35832000" />
+    </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <created>1642611414363</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1642611414363</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added GiftCertificateDaoTest, sql scripts">
+      <created>1642613559203</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1642613559203</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added read one integration tests GiftCertificateDaoTest">
+      <created>1642621593533</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1642621593533</updated>
+    </task>
+    <task id="LOCAL-00004" summary="added read all and delete integration tests GiftCertificateDaoTest">
+      <created>1642630287720</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1642630287720</updated>
+    </task>
+    <task id="LOCAL-00005" summary="added negative read all and delete integration tests GiftCertificateDaoTest">
+      <created>1642634207041</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1642634207041</updated>
+    </task>
+    <task id="LOCAL-00006" summary="added service unit tests">
+      <created>1642634820141</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1642634820141</updated>
+    </task>
+    <task id="LOCAL-00007" summary="added more service unit tests">
+      <created>1642634904480</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1642634904480</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added more service unit tests">
+      <created>1642634947936</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1642634947936</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit" />
+    <MESSAGE value="added GiftCertificateDaoTest, sql scripts" />
+    <MESSAGE value="added read one integration tests GiftCertificateDaoTest" />
+    <MESSAGE value="added read all and delete integration tests GiftCertificateDaoTest" />
+    <MESSAGE value="added negative read all and delete integration tests GiftCertificateDaoTest" />
+    <MESSAGE value="added service unit tests" />
+    <MESSAGE value="added more service unit tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="added more service unit tests" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftCertificateDaoTest.ic" NAME="GiftCertificateDaoTest Coverage Results" MODIFIED="1642635915675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__com_epam_esm_unit_service_.ic" NAME="Tests in 'com.epam.esm.unit.service' Coverage Results" MODIFIED="1642634769368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>

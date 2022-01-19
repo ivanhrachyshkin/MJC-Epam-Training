@@ -1,6 +1,6 @@
-com/epam/esm/integration/GiftCertificateDaoTest.java
- com.epam.esm.integration.GiftCertificateDaoTest
 com/epam/esm/unit/service/TagServiceImplTest.java
  com.epam.esm.unit.service.TagServiceImplTest
+com/epam/esm/integration/GiftCertificateDaoTest.java
+ com.epam.esm.integration.GiftCertificateDaoTest
 com/epam/esm/unit/service/GiftServiceImplTest.java
  com.epam.esm.unit.service.GiftServiceImplTest

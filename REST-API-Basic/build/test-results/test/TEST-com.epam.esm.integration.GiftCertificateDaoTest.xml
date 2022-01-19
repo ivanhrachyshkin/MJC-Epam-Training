@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.epam.esm.integration.GiftCertificateDaoTest" tests="30" skipped="0" failures="0" errors="0" timestamp="2022-01-19T23:45:19" hostname="VIVOBOOK-S14" time="1.577">
+  <properties/>
+  <testcase name="shouldReturnGiftCertificateWithTags_On_ReadOneByName()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.731"/>
+  <testcase name="shouldUpdateGiftCertificateWithOldTags_On_CreateWithOldTags()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.075"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTag_Positive()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.037"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForTagAndDescription()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.041"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForName()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.034"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTag_Negative()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.028"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForNameAndDescription()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.027"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Positive()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.035"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForDescription()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.03"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.023"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadSort_DESC()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.023"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForTag()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.022"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadDescription_Positive()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.019"/>
+  <testcase name="shouldReturnGiftCertificateWithTags_On_ReadOne()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.018"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndName_Positive()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.02"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForDescription()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.019"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadSort_ASC()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.02"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadDescription_Negative()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.017"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Positive()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.019"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForName()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.019"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.02"/>
+  <testcase name="shouldDeleteGiftCertificateById_On_DeleteById()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.025"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.025"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForTag()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.031"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_Read()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.03"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForTagAndName()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.025"/>
+  <testcase name="shouldReturnNull_On_ReadOne_NotExist()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.034"/>
+  <testcase name="shouldReturnNull_On_ReadOneByaName_NotExists()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.026"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadName()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.028"/>
+  <testcase name="shouldReturnAllGiftCertificates_On_ReadName_Negative()" classname="com.epam.esm.integration.GiftCertificateDaoTest" time="0.026"/>
+  <system-out><![CDATA[org.h2.Driver
+Hello i'm test
+]]></system-out>
+  <system-err><![CDATA[SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+MLog initialization issue: slf4j found no binding or threatened to use its (dangerously silent) NOPLogger. We consider the slf4j library not found.
+янв 20, 2022 2:45:18 AM com.mchange.v2.log.MLog 
+INFO: MLog clients using java 1.4+ standard logging.
+янв 20, 2022 2:45:18 AM com.mchange.v2.c3p0.C3P0Registry 
+INFO: Initializing c3p0-0.9.5.5 [built 11-December-2019 22:18:33 -0800; debug? true; trace: 10]
+янв 20, 2022 2:45:19 AM com.mchange.v2.c3p0.impl.AbstractPoolBackedDataSource 
+INFO: Initializing c3p0 pool... com.mchange.v2.c3p0.ComboPooledDataSource [ acquireIncrement -> 3, acquireRetryAttempts -> 30, acquireRetryDelay -> 1000, autoCommitOnClose -> false, automaticTestTable -> null, breakAfterAcquireFailure -> false, checkoutTimeout -> 0, connectionCustomizerClassName -> null, connectionTesterClassName -> com.mchange.v2.c3p0.impl.DefaultConnectionTester, contextClassLoaderSource -> caller, dataSourceName -> 1hge9flamwdzk331yv6sc1|148532f5, debugUnreturnedConnectionStackTraces -> false, description -> null, driverClass -> org.h2.Driver, extensions -> {}, factoryClassLocation -> null, forceIgnoreUnresolvedTransactions -> false, forceSynchronousCheckins -> false, forceUseNamedDriverClass -> false, identityToken -> 1hge9flamwdzk331yv6sc1|148532f5, idleConnectionTestPeriod -> 0, initialPoolSize -> 3, jdbcUrl -> jdbc:h2:mem:certificate, maxAdministrativeTaskTime -> 0, maxConnectionAge -> 0, maxIdleTime -> 0, maxIdleTimeExcessConnections -> 0, maxPoolSize -> 15, maxStatements -> 0, maxStatementsPerConnection -> 0, minPoolSize -> 3, numHelperThreads -> 3, preferredTestQuery -> null, privilegeSpawnedThreads -> false, properties -> {user=******, password=******}, propertyCycle -> 0, statementCacheNumDeferredCloseThreads -> 0, testConnectionOnCheckin -> false, testConnectionOnCheckout -> false, unreturnedConnectionTimeout -> 0, userOverrides -> {}, usesTraditionalReflectiveProxies -> false ]
+[2022.01.20 02:45:20] (Coverage): Error during class instrumentation: org.h2.value.ValueToObjectConverter: java.lang.RuntimeException: java.io.IOException: Class org/locationtech/jts/geom/Geometry not found
+]]></system-err>
+</testsuite>

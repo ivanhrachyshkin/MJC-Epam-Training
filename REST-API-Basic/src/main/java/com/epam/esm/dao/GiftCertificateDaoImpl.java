@@ -154,9 +154,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         final Map<String, Object> columnToPlaceholder = new HashMap<>();
         final Map<String, Object> columnToValue = new HashMap<>();
 
-        if (giftCertificate.getName() != null) {
-            columnToValue.put("id", giftCertificate.getId());
-        }
+        columnToValue.put("id", giftCertificate.getId());
 
         if (giftCertificate.getName() != null) {
             columnToPlaceholder.put("name", ":name");
@@ -173,12 +171,12 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
             columnToValue.put("price", giftCertificate.getPrice());
         }
 
-        if (giftCertificate.getPrice() != null) {
+        if (giftCertificate.getDuration() != null) {
             columnToPlaceholder.put("duration", ":duration");
             columnToValue.put("duration", giftCertificate.getDuration());
         }
 
-        if (giftCertificate.getPrice() != null) {
+        if (giftCertificate.getLastUpdateDate() != null) {
             columnToPlaceholder.put("last_update_date", ":last_update_date");
             columnToValue.put("last_update_date", giftCertificate.getLastUpdateDate());
         }

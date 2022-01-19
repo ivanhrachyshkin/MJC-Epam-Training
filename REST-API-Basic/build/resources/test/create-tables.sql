@@ -30,4 +30,3 @@ CREATE TABLE gift_certificate_tag
     FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificate(id),
     UNIQUE (gift_certificate_id, tag_id)
 );
-
