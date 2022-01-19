@@ -1,0 +1,3 @@
+rootProject.name = 'MJC-Epam-Training'
+include 'REST-API-Basic'
+
