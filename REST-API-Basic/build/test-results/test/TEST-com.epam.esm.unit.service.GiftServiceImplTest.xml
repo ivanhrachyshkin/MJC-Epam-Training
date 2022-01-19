@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.epam.esm.unit.service.GiftServiceImplTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2022-01-19T23:26:13" hostname="VIVOBOOK-S14" time="0.516">
+  <properties/>
+  <testcase name="shouldReturnGiftCertificate_On_ReadOne()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.174"/>
+  <testcase name="shouldThrowNotFoundException_On_DeleteById()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.006"/>
+  <testcase name="shouldReturnGiftCertificates_On_ReadAllContainsDescription()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.005"/>
+  <testcase name="shouldThrowAlreadyExistException_On_Create()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.006"/>
+  <testcase name="shouldReturnGiftCertificates_On_ReadAllByTagName()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.003"/>
+  <testcase name="shouldReturnGiftCertificates_On_ReadAllContainsName()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.004"/>
+  <testcase name="shouldCreateGiftCertificate_On_Create_WithNewTag()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.262"/>
+  <testcase name="shouldCreateGiftCertificate_On_Create_WithOldTag()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.004"/>
+  <testcase name="shouldUpdateGiftCertificate_On_Create_WithOldTag()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.025"/>
+  <testcase name="shouldDeleteTag_On_DeleteById()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.003"/>
+  <testcase name="shouldReturnGiftCertificates_On_ReadAll()" classname="com.epam.esm.unit.service.GiftServiceImplTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
