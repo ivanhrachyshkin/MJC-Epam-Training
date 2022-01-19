@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ApplicationConfig.class)
@@ -55,10 +56,13 @@ public class GiftCertificateDaoTest {
             "g2",
             "d2",
             2.0F,
-            1,
+            2,
             Timestamp.valueOf("2020-02-02 02:02:02.222").toLocalDateTime(),
             Timestamp.valueOf("2020-02-02 02:02:02.222").toLocalDateTime(),
             tags2);
+
+    final List<GiftCertificate> giftCertificates
+            = Arrays.asList(oldGiftCertificateWithTags1, oldGiftCertificateWithTags2);
 
     @Test
     void shouldReturnGiftCertificateWithTags_On_ReadOneByName() {
@@ -84,29 +88,150 @@ public class GiftCertificateDaoTest {
         Assertions.assertNull(newGiftCertificateWithTags);
     }
 
-//    @Test
-//    void shouldDeleteGiftCertificateById_On_DeleteById() {
-//        final GiftCertificate giftCertificate1 = giftCertificateDao.readOne(1);
-//        Assertions.assertNotNull(giftCertificate1);
-//        Assertions.assertNotNull(giftCertificate1.getTags());
-//        System.out.println(giftCertificateDao.readAll(null, null, null, null));
-//        giftCertificateTagDao.deleteGiftCertificateTagByTagId(1);
-//        System.out.println(giftCertificateDao.readAll(null, null, null, null));
-//        final GiftCertificate giftCertificate2 = giftCertificateDao.readOne(1);
-//       Assertions.assertNull(giftCertificate2.getTags());
-//       giftCertificateDao.deleteById(1);
-//       Assertions.assertNull(giftCertificateDao.readOne(1));
-//    }
+    @Test
+    void shouldDeleteGiftCertificateById_On_DeleteById() {
+        Assertions.assertNotNull(giftCertificateDao.readOne(1));
+        giftCertificateTagDao.deleteGiftCertificateTagByCertificateId(1);
+        giftCertificateDao.deleteById(1);
+        Assertions.assertNull(giftCertificateDao.readOne(1));
+    }
 
-//    @Test
-//    void shouldFindGiftCertificatesWithTags_On_DeleteById() {
-//        final GiftCertificate giftCertificate = giftCertificateDao.readOne(1);
-//        Assertions.assertNotNull(giftCertificate);
-//        giftCertificateTagDao.deleteGiftCertificateTagByCertificateId(giftCertificate.getId());
-//        giftCertificateDao.deleteById(1);
-//        giftCertificate.getTags().forEach(tag -> giftCertificateTagDao.deleteGiftCertificateTagByTagId(1));
-//        Assertions.assertNull(giftCertificateDao.readOne(1));
-//    }
+    @Test
+    void shouldReturnAllGiftCertificates_On_Read() {
+
+        Assertions.assertEquals(giftCertificates,
+                giftCertificateDao.readAll(null, null, null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTag_Positive() {
+        Assertions.assertEquals(Collections.singletonList(oldGiftCertificateWithTags1),
+                giftCertificateDao.readAll("secondTag", null, null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTag_Negative() {
+        Assertions.assertEquals(Collections.emptyList(), giftCertificateDao.readAll("secondTags", null, null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadName() {
+        Assertions.assertEquals(Collections.singletonList(oldGiftCertificateWithTags1),
+                giftCertificateDao.readAll(null, "g1", null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadName_Negative() {
+        Assertions.assertEquals(Collections.emptyList(), giftCertificateDao.readAll(null, "asd", null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadDescription_Positive() {
+        Assertions.assertEquals(Collections.singletonList(oldGiftCertificateWithTags2),
+                giftCertificateDao.readAll(null, null, "d2", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadDescription_Negative() {
+        Assertions.assertEquals(Collections.emptyList(), giftCertificateDao.readAll(null, null, "fg", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadSort_ASC() {
+        Assertions.assertEquals(giftCertificates,
+                giftCertificateDao.readAll(null, null, null, true));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadSort_DESC() {
+        Assertions.assertNotEquals(giftCertificates,
+                giftCertificateDao.readAll(null, null, null, false));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndName_Positive() {
+        Assertions.assertEquals(Collections.singletonList(oldGiftCertificateWithTags1),
+                giftCertificateDao.readAll("secondTag", "1", null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative() {
+        Assertions.assertEquals(Collections.emptyList(),
+                giftCertificateDao.readAll("secondTag", "2", null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForTag() {
+        Assertions.assertEquals(Collections.emptyList(), giftCertificateDao.readAll("secondTag2", "g1", null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForName() {
+        Assertions.assertEquals(Collections.emptyList(), giftCertificateDao.readAll("secondTag", "fgd", null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForTagAndName() {
+        Assertions.assertEquals(Collections.emptyList(), giftCertificateDao.readAll("secondTaga", "fgd", null, null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Positive() {
+        Assertions.assertEquals(Collections.singletonList(oldGiftCertificateWithTags2),
+                giftCertificateDao.readAll("firstTag", null, "2", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative() {
+        Assertions.assertEquals(Collections.emptyList(),
+                giftCertificateDao.readAll("secondTag", null, "2", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForTag() {
+        Assertions.assertEquals(Collections.emptyList(), giftCertificateDao.readAll("secondTag2a", null, "1", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForDescription() {
+        Assertions.assertEquals(Collections.emptyList(), giftCertificateDao.readAll("secondTag", null, "dfg", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForTagAndDescription() {
+        Assertions.assertEquals(Collections.emptyList(),
+                giftCertificateDao.readAll("secondTaga", null, "asd", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Positive() {
+        Assertions.assertEquals(Collections.singletonList(oldGiftCertificateWithTags1),
+                giftCertificateDao.readAll(null, "1", "1", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative() {
+        Assertions.assertEquals(Collections.emptyList(),
+                giftCertificateDao.readAll(null, "1", "2", true));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForName() {
+        Assertions.assertEquals(Collections.emptyList(),
+                giftCertificateDao.readAll(null, "eh", "2", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForDescription() {
+        Assertions.assertEquals(Collections.emptyList(),
+                giftCertificateDao.readAll(null, "1", "lkjh", null));
+    }
+
+    @Test
+    void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForNameAndDescription() {
+        Assertions.assertEquals(Collections.emptyList(),
+                giftCertificateDao.readAll(null, "asd", "asd", null));
+    }
 
 
 }
