@@ -4,10 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="Initial commit">
+      <change afterPath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/integration/GiftCertificateIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/REST-API-Basic/src/test/resources/create-tables.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/REST-API-Basic/src/test/resources/insert-data-tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/jarAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/test/com/epam/esm/integration/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/classes/com.epam.esm.integration.Test.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/packages/com.epam.esm.integration.html" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/packages/com.epam.esm.integration.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/main/create.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/main/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/TEST-com.epam.esm.integration.Test.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/results.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileTestJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileTestJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/unit/service/GiftServiceImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/unit/service/TagServiceImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/unit/service/config/TestConfig.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +117,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="jdk.selected.JAVA_MODULE" value="1.8" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/REST-API-Basic/src/main/resources" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/REST-API-Basic/src/test/resources" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -100,8 +125,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\resources" />
       <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\test\resources" />
+      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\resources" />
       <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\test\java\com\epam\esm\unit\service" />
       <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\test\java\com\epam\esm" />
       <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\java\com\epam\esm" />
@@ -113,12 +138,12 @@
       <recent name="com.epam.esm" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.epam.esm.config" />
       <recent name="com.epam.esm.integration" />
+      <recent name="com.epam.esm.config" />
       <recent name="com.epam.esm.unit.integration" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Test">
+  <component name="RunManager" selected="Gradle.GiftCertificateIntegrationTest">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -132,7 +157,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test" type="GradleRunConfiguration" factoryName="Gradle">
+    <configuration name="GiftCertificateIntegrationTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="env">
           <map>
@@ -142,7 +167,7 @@
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.integration.Test&quot;" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.integration.GiftCertificateIntegrationTest&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -203,9 +228,14 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Gradle.Test" />
+      <item itemvalue="Gradle.GiftCertificateIntegrationTest" />
       <item itemvalue="Smart Tomcat.Tomcat" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.GiftCertificateIntegrationTest" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -224,8 +254,16 @@
       <workItem from="1642494574351" duration="3151000" />
       <workItem from="1642534055579" duration="5151000" />
       <workItem from="1642539229405" duration="3428000" />
-      <workItem from="1642597169047" duration="14023000" />
+      <workItem from="1642597169047" duration="16080000" />
     </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <created>1642611414363</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1642611414363</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,6 +291,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

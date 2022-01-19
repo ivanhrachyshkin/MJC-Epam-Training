@@ -1,8 +1,2 @@
-com/epam/esm/unit/service/GiftServiceImplTest.java
- com.epam.esm.unit.service.GiftServiceImplTest
-com/epam/esm/unit/service/TagServiceImplTest.java
- com.epam.esm.unit.service.TagServiceImplTest
-com/epam/esm/unit/service/config/TestConfig.java
- com.epam.esm.unit.service.config.TestConfig
-com/epam/esm/integration/Test.java
- com.epam.esm.integration.Test
+com/epam/esm/integration/GiftCertificateIntegrationTest.java
+ com.epam.esm.integration.GiftCertificateIntegrationTest
