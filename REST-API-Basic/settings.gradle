@@ -1,0 +1,4 @@
+rootProject.name = 'REST-API-Basic'
+
+include 'dao','model', 'service','config','controller'
+

@@ -1,0 +1,16 @@
+com/epam/esm/dao/GiftCertificateTagDaoImpl.java
+ com.epam.esm.dao.GiftCertificateTagDaoImpl
+com/epam/esm/dao/GiftCertificateDao.java
+ com.epam.esm.dao.GiftCertificateDao
+com/epam/esm/dao/TagDao.java
+ com.epam.esm.dao.TagDao
+com/epam/esm/dao/extractor/TagRowMapper.java
+ com.epam.esm.dao.extractor.TagRowMapper
+com/epam/esm/dao/GiftCertificateTagDao.java
+ com.epam.esm.dao.GiftCertificateTagDao
+com/epam/esm/dao/extractor/GiftCertificatesResultSetExtractor.java
+ com.epam.esm.dao.extractor.GiftCertificatesResultSetExtractor
+com/epam/esm/dao/GiftCertificateDaoImpl.java
+ com.epam.esm.dao.GiftCertificateDaoImpl
+com/epam/esm/dao/TagDaoImpl.java
+ com.epam.esm.dao.TagDaoImpl
