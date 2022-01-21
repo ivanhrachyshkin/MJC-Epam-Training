@@ -4,150 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="added more service unit tests">
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/jarAnalysis.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/checksums/checksums.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/configuration-cache/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/vcs-1/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/config/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/config/build/resources/main/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/config/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/config/build/tmp/jar/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/config/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/controller/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/controller/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/controller/build/tmp/jar/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/tmp/jar/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/model/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/model/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/model/build/tmp/jar/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/service/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/tmp/jar/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/resources/create-tables.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/resources/insert-data-tables.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/fileHashes/resourceHashesCache.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/jarAnalysis.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/taskHistory.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/config/ApplicationConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/config/ApplicationListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/config/SpringDispatcherServletInitializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/controller/GiftCertificateController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/controller/TagController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/controller/exceptionhandler/RestExceptionHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/dao/GiftCertificateDao.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/dao/GiftCertificateDaoImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/dao/GiftCertificateTagDao.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/dao/GiftCertificateTagDaoImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/dao/TagDao.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/dao/TagDaoImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/dao/extractor/GiftCertificatesResultSetExtractor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/dao/extractor/TagRowMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/model/ApiError.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/model/GiftCertificate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/model/Tag.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/service/AlreadyExistException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/service/GiftCertificateService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/service/GiftCertificateServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/service/NotFoundException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/service/TagService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/service/TagServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/validator/CreateGiftCertificateValidator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/validator/CreateTagValidator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/validator/ReadAllGiftCertificatesValidator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/validator/UpdateGiftCertificateValidator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/main/com/epam/esm/validator/ValidationException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/test/com/epam/esm/integration/GiftCertificateDaoTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/test/com/epam/esm/unit/service/GiftServiceImplTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/classes/java/test/com/epam/esm/unit/service/TagServiceImplTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/libs/REST-API-Basic-1.0.war" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/classes/com.epam.esm.integration.GiftCertificateDaoTest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/css/base-style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/css/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/js/report.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/reports/tests/test/packages/com.epam.esm.integration.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/main/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/build/resources/main/application-dev.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/main/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/build/resources/main/application-prod.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/main/application-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/build/resources/main/application-test.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/test/create-tables.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/resources/test/insert-data-tables.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/TEST-com.epam.esm.integration.GiftCertificateDaoTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/output.bin.idx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/test-results/test/binary/results.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/tmp/compileTestJava/source-classes-mapping.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/tmp/war/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/src/main/java/com/epam/esm/config/ApplicationConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/config/ApplicationListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/src/main/java/com/epam/esm/config/ApplicationListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/config/SpringDispatcherServletInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/src/main/java/com/epam/esm/config/SpringDispatcherServletInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/controller/GiftCertificateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/GiftCertificateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/controller/TagController.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/TagController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/controller/exceptionhandler/RestExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/exceptionhandler/RestExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/GiftCertificateDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/GiftCertificateTagDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateTagDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/GiftCertificateTagDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateTagDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/TagDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/TagDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/extractor/GiftCertificatesResultSetExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/extractor/GiftCertificatesResultSetExtractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/dao/extractor/TagRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/extractor/TagRowMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/model/ApiError.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/ApiError.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/model/GiftCertificate.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/model/src/main/java/com/epam/esm/model/GiftCertificate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/model/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/model/src/main/java/com/epam/esm/model/Tag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/service/AlreadyExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/AlreadyExistException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/service/GiftCertificateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/service/GiftCertificateServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/service/NotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/NotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/service/TagService.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/service/TagServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/validator/CreateGiftCertificateValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/CreateGiftCertificateValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/validator/CreateTagValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/CreateTagValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/validator/ReadAllGiftCertificatesValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/ReadAllGiftCertificatesValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/validator/UpdateGiftCertificateValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/UpdateGiftCertificateValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/java/com/epam/esm/validator/ValidationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/ValidationException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/src/main/resources/application-dev.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/resources/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/src/main/resources/application-prod.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/main/resources/application-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/src/main/resources/application-test.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/integration/GiftCertificateDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/unit/service/GiftServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/GiftServiceImplTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/java/com/epam/esm/unit/service/TagServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/TagServiceImplTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/resources/create-tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/resources/create-tables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/src/test/resources/insert-data-tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/resources/insert-data-tables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="refactor modules">
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/jarAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/src/main/java/com/epam/esm/config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/config/src/main/java/com/epam/esm/config/ApplicationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -411,7 +280,7 @@
       <workItem from="1642597169047" duration="35832000" />
       <workItem from="1642718753106" duration="281000" />
       <workItem from="1642748213163" duration="11873000" />
-      <workItem from="1642785295482" duration="1326000" />
+      <workItem from="1642785295482" duration="1731000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1642611414363</created>
@@ -469,7 +338,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642634947936</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="refactor modules">
+      <created>1642791306247</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1642791306247</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -507,7 +383,8 @@
     <MESSAGE value="added negative read all and delete integration tests GiftCertificateDaoTest" />
     <MESSAGE value="added service unit tests" />
     <MESSAGE value="added more service unit tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="added more service unit tests" />
+    <MESSAGE value="refactor modules" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor modules" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
