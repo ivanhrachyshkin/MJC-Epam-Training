@@ -1,6 +1,7 @@
 package com.epam.esm.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -37,6 +38,11 @@ public class ApplicationConfig {
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate(final DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
     @Bean

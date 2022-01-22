@@ -18,6 +18,7 @@ allprojects {
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
         testCompile 'org.mockito:mockito-junit-jupiter:3.12.4'
+        testCompile 'com.h2database:h2:2.0.206'
         compile 'org.mockito:mockito-inline:4.2.0'
         compile 'org.hamcrest:hamcrest-library:2.2'
         compile 'com.jayway.jsonpath:json-path:2.6.0'
@@ -26,11 +27,11 @@ allprojects {
         compile 'org.springframework:spring-webmvc:5.2.19.RELEASE'
         compile 'javax.servlet:javax.servlet-api:4.0.1'
         implementation 'org.postgresql:postgresql:42.3.1'
-        compile 'com.h2database:h2:2.0.206'// todo
         compile 'com.mchange:c3p0:0.9.5.5'
         compile 'org.apache.commons:commons-lang3:3.12.0'
         compile 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
         compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+        compile 'org.modelmapper:modelmapper:2.4.5'
     }
 
     test {
@@ -44,6 +45,7 @@ dependencies {
     compile project(':service')
     compile project(':controller')
     compile project(':config')
+
 }
 
 jar {

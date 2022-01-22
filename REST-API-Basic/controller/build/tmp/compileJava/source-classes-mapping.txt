@@ -1,8 +1,0 @@
-com/epam/esm/controller/exceptionhandler/RestExceptionHandler.java
- com.epam.esm.controller.exceptionhandler.RestExceptionHandler
-com/epam/esm/controller/GiftCertificateController.java
- com.epam.esm.controller.GiftCertificateController
-com/epam/esm/controller/ApiError.java
- com.epam.esm.controller.ApiError
-com/epam/esm/controller/TagController.java
- com.epam.esm.controller.TagController

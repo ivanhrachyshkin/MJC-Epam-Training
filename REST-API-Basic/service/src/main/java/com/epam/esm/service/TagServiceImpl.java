@@ -31,9 +31,8 @@ public class TagServiceImpl implements TagService {
     public Tag create(final Tag tag) {
         createTagValidator.validate(tag);
         checkExistByName(tag.getName());
-        final Integer newId = tagDao.create(tag);
-        tag.setId(newId);
-        return tag;
+        final Tag newTag = tagDao.create(tag);
+        return newTag;
     }
 
     @Override

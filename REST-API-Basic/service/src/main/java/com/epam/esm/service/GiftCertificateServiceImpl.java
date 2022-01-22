@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -24,7 +23,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateDao giftCertificateDao;
     private final TagDao tagDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
-    private final Clock clock;
     private final CreateGiftCertificateValidator createGiftCertificateValidator;
     private final UpdateGiftCertificateValidator updateGiftCertificateValidator;
     private final ReadAllGiftCertificatesValidator readAllGiftCertificatesValidator;
@@ -32,14 +30,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateServiceImpl(final GiftCertificateDao giftCertificateDao,
                                       final TagDao tagDao,
                                       final GiftCertificateTagDao giftCertificateTagDao,
-                                      final Clock clock,
                                       final CreateGiftCertificateValidator createGiftCertificateValidator,
                                       final UpdateGiftCertificateValidator updateGiftCertificateValidator,
                                       final ReadAllGiftCertificatesValidator readAllGiftCertificatesValidator) {
         this.giftCertificateDao = giftCertificateDao;
         this.tagDao = tagDao;
         this.giftCertificateTagDao = giftCertificateTagDao;
-        this.clock = clock;
         this.createGiftCertificateValidator = createGiftCertificateValidator;
         this.updateGiftCertificateValidator = updateGiftCertificateValidator;
         this.readAllGiftCertificatesValidator = readAllGiftCertificatesValidator;
@@ -51,11 +47,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificate create(final GiftCertificate giftCertificate) {
         createGiftCertificateValidator.validate(giftCertificate);
         checkExistByName(giftCertificate.getName());
-        giftCertificate.setCreateDate(LocalDateTime.now(clock));
-        giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
-        final Integer newId = giftCertificateDao.create(giftCertificate);
-        giftCertificate.setId(newId);
-        createOrAssignTags(giftCertificate);
+        final GiftCertificate newGiftCertificate = giftCertificateDao.create(giftCertificate);
+        createOrAssignTags(newGiftCertificate);
         return giftCertificate;
     }
 
@@ -79,7 +72,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         updateGiftCertificateValidator.validate(giftCertificate);
         checkExist(giftCertificate.getId());
         checkExistByName(giftCertificate.getName());
-        giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
         giftCertificateDao.update(giftCertificate);
         createOrAssignTags(giftCertificate);
         return giftCertificate;
@@ -119,8 +111,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                     .peek(tag -> {
                         final Tag oldTag = tagDao.readOneByName(tag.getName());
                         if (oldTag == null) {
-                            final Integer newId = tagDao.create(tag);
-                            tag.setId(newId);
+                            final Tag newTag = tagDao.create(tag);
+                            tag.setId(newTag.getId());
                         } else {
                             tag.setId(oldTag.getId());
                         }
@@ -128,7 +120,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                     })
                     .collect(Collectors.toSet());
             giftCertificate.setTags(assignedTags);
-            //   }
         }
     }
 }

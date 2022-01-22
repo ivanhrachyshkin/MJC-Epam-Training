@@ -1,6 +1,0 @@
-com/epam/esm/config/ApplicationListener.java
- com.epam.esm.config.ApplicationListener
-com/epam/esm/config/ApplicationConfig.java
- com.epam.esm.config.ApplicationConfig
-com/epam/esm/config/SpringDispatcherServletInitializer.java
- com.epam.esm.config.SpringDispatcherServletInitializer

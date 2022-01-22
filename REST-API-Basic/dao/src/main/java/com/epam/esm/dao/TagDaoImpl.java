@@ -23,13 +23,14 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Integer create(final Tag tag) {
+    public Tag create(final Tag tag) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        final String CREATE_QUERY = "INSERT INTO tag (name) VALUES (:name)";//todo
+        final String CREATE_QUERY = "INSERT INTO tag (name) VALUES (:name)";//todo up
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", tag.getName());
         namedParameterJdbcTemplate.update(CREATE_QUERY, namedParameters, keyHolder);
-        return (Integer) keyHolder.getKeys().get("id");
+        tag.setId((Integer) keyHolder.getKeys().get("id"));
+        return tag;
     }
 
     @Override

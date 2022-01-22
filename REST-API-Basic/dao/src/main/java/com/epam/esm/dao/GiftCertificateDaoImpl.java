@@ -11,6 +11,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,15 +21,18 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final GiftCertificatesResultSetExtractor giftCertificatesResultSetExtractor;
+    private final Clock clock;
 
     public GiftCertificateDaoImpl(final NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                  final GiftCertificatesResultSetExtractor giftCertificatesResultSetExtractor) {
+                                  final GiftCertificatesResultSetExtractor giftCertificatesResultSetExtractor,
+                                  final Clock clock) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.giftCertificatesResultSetExtractor = giftCertificatesResultSetExtractor;
+        this.clock = clock;
     }
 
     @Override
-    public Integer create(final GiftCertificate giftCertificate) {
+    public GiftCertificate create(final GiftCertificate giftCertificate) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         final String CREATE_QUERY = "INSERT INTO" +
                 " gift_certificate (name, description, price, duration, create_date, last_update_date)" +
@@ -37,10 +42,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                 .addValue("description", giftCertificate.getDescription())
                 .addValue("price", giftCertificate.getPrice())
                 .addValue("duration", giftCertificate.getDuration())
-                .addValue("create_date", Timestamp.valueOf(giftCertificate.getCreateDate()))
-                .addValue("last_update_date", Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
+                .addValue("create_date", Timestamp.valueOf(LocalDateTime.now(clock)))
+                .addValue("last_update_date", Timestamp.valueOf(LocalDateTime.now(clock)));
         namedParameterJdbcTemplate.update(CREATE_QUERY, namedParameters, keyHolder);
-        return (Integer) keyHolder.getKeys().get("id");
+        giftCertificate.setId((Integer) keyHolder.getKeys().get("id"));
+        return giftCertificate;
     }
 
     @Override
@@ -178,7 +184,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
         if (giftCertificate.getLastUpdateDate() != null) {
             columnToPlaceholder.put("last_update_date", ":last_update_date");
-            columnToValue.put("last_update_date", giftCertificate.getLastUpdateDate());
+            columnToValue.put("last_update_date", Timestamp.valueOf(LocalDateTime.now(clock)));
         }
 
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource(columnToValue);

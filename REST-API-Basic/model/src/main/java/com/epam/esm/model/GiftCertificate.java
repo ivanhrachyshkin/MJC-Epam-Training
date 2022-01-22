@@ -1,13 +1,11 @@
 package com.epam.esm.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
-@Component
 public class GiftCertificate {
 
     private Integer id;
@@ -15,9 +13,7 @@ public class GiftCertificate {
     private String description;
     private Float price;
     private Integer duration;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime createDate;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime lastUpdateDate;
     private Set<Tag> tags;
 

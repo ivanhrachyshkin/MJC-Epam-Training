@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GiftCertificateDao {
 
-    Integer create(GiftCertificate giftCertificate);
+    GiftCertificate create(GiftCertificate giftCertificate);
 
     List<GiftCertificate> readAll(String tag,
                                   String name,
