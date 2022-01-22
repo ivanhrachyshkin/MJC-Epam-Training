@@ -14,6 +14,12 @@ import java.util.List;
 @Component
 public class TagDaoImpl implements TagDao {
 
+    private static final String CREATE_QUERY = "INSERT INTO tag (name) VALUES (:name)";
+    private static final String READ_QUERY = "SELECT id, name FROM tag";
+    private static final String READ_ONE_QUERY = "SELECT id, name FROM tag WHERE id = :id";
+    private static final String READ_ONE_BY_NAME_QUERY = "SELECT id, name FROM tag WHERE name = :name";
+    private static final String DELETE_QUERY = "DELETE FROM tag WHERE id = :id";
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final TagRowMapper tagRowMapper;
 
@@ -25,7 +31,6 @@ public class TagDaoImpl implements TagDao {
     @Override
     public Tag create(final Tag tag) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        final String CREATE_QUERY = "INSERT INTO tag (name) VALUES (:name)";//todo up
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", tag.getName());
         namedParameterJdbcTemplate.update(CREATE_QUERY, namedParameters, keyHolder);
@@ -35,14 +40,11 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> readAll() {
-        final String READ_QUERY = "SELECT id, name FROM tag";
         return namedParameterJdbcTemplate.query(READ_QUERY, tagRowMapper);
     }
 
     @Override
     public Tag readOne(final int id) {
-
-        final String READ_ONE_QUERY = "SELECT id, name FROM tag WHERE id = :id";
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", id);
         final List<Tag> tags =
@@ -52,17 +54,15 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag readOneByName(final String name) {
-        final String READ_ONE_QUERY = "SELECT id, name FROM tag WHERE name = :name";
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", name);
         final List<Tag> tags =
-                namedParameterJdbcTemplate.query(READ_ONE_QUERY, namedParameters, tagRowMapper);
+                namedParameterJdbcTemplate.query(READ_ONE_BY_NAME_QUERY, namedParameters, tagRowMapper);
         return tags.isEmpty() ? null : tags.get(0);
     }
 
     @Override
     public void deleteById(final int id) {
-        final String DELETE_QUERY = "DELETE FROM tag WHERE id = :id";
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", id);
         namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);

@@ -19,6 +19,57 @@ import java.util.stream.Collectors;
 @Component
 public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
+    private static final String CREATE_QUERY = "INSERT INTO" +
+            " gift_certificate (name, description, price, duration, create_date, last_update_date)" +
+            " VALUES (:name, :description, :price, :duration, :create_date, :last_update_date)";
+
+    private static final String READ_QUERY = "SELECT" +
+            " gift_certificate.id," +
+            " gift_certificate.name," +
+            " gift_certificate.description," +
+            " gift_certificate.price," +
+            " gift_certificate.duration," +
+            " gift_certificate.create_date," +
+            " gift_certificate.last_update_date," +
+            " tag.id as tag_id," +
+            " tag.name as tag_name" +
+            " FROM gift_certificate" +
+            " JOIN gift_certificate_tag ON gift_certificate_tag.gift_certificate_id = gift_certificate.id" +
+            " JOIN tag ON gift_certificate_tag.tag_id = tag.id";
+
+    private static final String READ_ONE_QUERY = "SELECT" +
+            " gift_certificate.id," +
+            " gift_certificate.name," +
+            " gift_certificate.description," +
+            " gift_certificate.price," +
+            " gift_certificate.duration," +
+            " gift_certificate.create_date," +
+            " gift_certificate.last_update_date," +
+            " tag.id as tag_id," +
+            " tag.name as tag_name" +
+            " FROM gift_certificate" +
+            " JOIN gift_certificate_tag ON gift_certificate_tag.gift_certificate_id = gift_certificate.id" +
+            " JOIN tag ON gift_certificate_tag.tag_id = tag.id" +
+            " WHERE gift_certificate.id = :id";
+
+    private static final String READ_ONE_BY_NAME_QUERY = "SELECT" +
+            " gift_certificate.id," +
+            " gift_certificate.name," +
+            " gift_certificate.description," +
+            " gift_certificate.price," +
+            " gift_certificate.duration," +
+            " gift_certificate.create_date," +
+            " gift_certificate.last_update_date," +
+            " tag.id as tag_id," +
+            " tag.name as tag_name" +
+            " FROM gift_certificate" +
+            " JOIN gift_certificate_tag ON gift_certificate_tag.gift_certificate_id = gift_certificate.id" +
+            " JOIN tag ON gift_certificate_tag.tag_id = tag.id" +
+            " WHERE gift_certificate.name = :name";
+
+    private static final String UPDATE_QUERY = "UPDATE gift_certificate SET %s WHERE id = :id";
+    private static final String DELETE_QUERY = "DELETE FROM gift_certificate WHERE id = :id";
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final GiftCertificatesResultSetExtractor giftCertificatesResultSetExtractor;
     private final Clock clock;
@@ -34,9 +85,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @Override
     public GiftCertificate create(final GiftCertificate giftCertificate) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        final String CREATE_QUERY = "INSERT INTO" +
-                " gift_certificate (name, description, price, duration, create_date, last_update_date)" +
-                " VALUES (:name, :description, :price, :duration, :create_date, :last_update_date)";
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", giftCertificate.getName())
                 .addValue("description", giftCertificate.getDescription())
@@ -54,20 +102,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                                          final String name,
                                          final String description,
                                          final Boolean asc) {
-        final String READ_QUERY = "SELECT" +
-                " gift_certificate.id," +
-                " gift_certificate.name," +
-                " gift_certificate.description," +
-                " gift_certificate.price," +
-                " gift_certificate.duration," +
-                " gift_certificate.create_date," +
-                " gift_certificate.last_update_date," +
-                " tag.id as tag_id," +
-                " tag.name as tag_name" +
-                " FROM gift_certificate" +
-                " JOIN gift_certificate_tag ON gift_certificate_tag.gift_certificate_id = gift_certificate.id" +
-                " JOIN tag ON gift_certificate_tag.tag_id = tag.id";
-
         final Map<String, Object> columnToValue = new HashMap<>();
         final Set<String> criteria = new HashSet<>();
 
@@ -109,20 +143,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @SuppressWarnings("ConstantConditions")
     @Override
     public GiftCertificate readOne(final int id) {
-        final String READ_ONE_QUERY = "SELECT" +
-                " gift_certificate.id," +
-                " gift_certificate.name," +
-                " gift_certificate.description," +
-                " gift_certificate.price," +
-                " gift_certificate.duration," +
-                " gift_certificate.create_date," +
-                " gift_certificate.last_update_date," +
-                " tag.id as tag_id," +
-                " tag.name as tag_name" +
-                " FROM gift_certificate" +
-                " JOIN gift_certificate_tag ON gift_certificate_tag.gift_certificate_id = gift_certificate.id" +
-                " JOIN tag ON gift_certificate_tag.tag_id = tag.id" +
-                " WHERE gift_certificate.id = :id";
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", id);
         final List<GiftCertificate> giftCertificates = namedParameterJdbcTemplate
@@ -132,31 +152,15 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public GiftCertificate readOneByName(final String name) {
-        final String READ_ONE_QUERY = "SELECT" +
-                " gift_certificate.id," +
-                " gift_certificate.name," +
-                " gift_certificate.description," +
-                " gift_certificate.price," +
-                " gift_certificate.duration," +
-                " gift_certificate.create_date," +
-                " gift_certificate.last_update_date," +
-                " tag.id as tag_id," +
-                " tag.name as tag_name" +
-                " FROM gift_certificate" +
-                " JOIN gift_certificate_tag ON gift_certificate_tag.gift_certificate_id = gift_certificate.id" +
-                " JOIN tag ON gift_certificate_tag.tag_id = tag.id" +
-                " WHERE gift_certificate.name = :name";
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", name);
         final List<GiftCertificate> giftCertificates = namedParameterJdbcTemplate
-                .query(READ_ONE_QUERY, namedParameters, giftCertificatesResultSetExtractor);
+                .query(READ_ONE_BY_NAME_QUERY, namedParameters, giftCertificatesResultSetExtractor);
         return giftCertificates.isEmpty() ? null : giftCertificates.get(0);
     }
 
     @Override
     public void update(final GiftCertificate giftCertificate) {
-
-        final String UPDATE_QUERY = "UPDATE gift_certificate SET %s WHERE id = :id";
         final Map<String, Object> columnToPlaceholder = new HashMap<>();
         final Map<String, Object> columnToValue = new HashMap<>();
 
@@ -199,7 +203,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public void deleteById(final int id) {
-        final String DELETE_QUERY = "DELETE FROM gift_certificate WHERE id = :id";
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", id);
         namedParameterJdbcTemplate.update(DELETE_QUERY, namedParameters);
