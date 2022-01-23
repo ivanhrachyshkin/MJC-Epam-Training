@@ -149,7 +149,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public Optional<GiftCertificate>  readOneByName(final String name) {
+    public Optional<GiftCertificate> readOneByName(final String name) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", name);
         final List<GiftCertificate> giftCertificates = namedParameterJdbcTemplate
@@ -184,10 +184,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
             columnToValue.put("duration", giftCertificate.getDuration());
         }
 
-        if (giftCertificate.getLastUpdateDate() != null) {
-            columnToPlaceholder.put("last_update_date", ":last_update_date");
-            columnToValue.put("last_update_date", Timestamp.valueOf(LocalDateTime.now(clock)));
-        }
+        columnToPlaceholder.put("last_update_date", ":last_update_date");
+        columnToValue.put("last_update_date", Timestamp.valueOf(LocalDateTime.now(clock)));
 
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource(columnToValue);
         final String query = String.format(UPDATE_QUERY, columnToPlaceholder

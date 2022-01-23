@@ -10,10 +10,12 @@
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/ValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/ValidatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +147,7 @@
       <recent name="com.epam.esm.integration" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Tests in 'com.epam.esm.service'">
+  <component name="RunManager" selected="Gradle.GiftCertificateDaoTest">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -156,6 +158,32 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="GiftCertificateDaoTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="env">
+          <map>
+            <entry key="SPRING_PROFILES_ACTIVE" value="test" />
+          </map>
+        </option>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.dao.GiftCertificateDaoTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":dao:test" />
+          </list>
+        </option>
+        <option name="vmOptions" value="" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
     <configuration name="REST-API-Basic [build]" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
@@ -174,111 +202,6 @@
         <option name="vmOptions" value="" />
       </ExternalSystemSettings>
       <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="TagServiceImplTest.shouldThrowException_On_Create" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.TagServiceImplTest.shouldThrowException_On_Create&quot;" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":service:test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="Tests in 'REST-API-Basic.service.test'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests *" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":service:test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="Tests in 'com.epam.esm.service'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.*&quot;" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":service:test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="ValidatorTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.ValidatorTest&quot;" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":service:test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="ValidatorTest.shouldThrowException_On_ReadAllGiftCertificateValidator_ForEmptyTag" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.ValidatorTest.shouldThrowException_On_ReadAllGiftCertificateValidator_ForEmptyTag&quot;" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":service:test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
@@ -303,7 +226,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="tomcate" type="com.poratu.idea.plugins.tomcat" factoryName="SMART_TOMCAT_FACTORY">
+    <configuration name="tomcat" type="com.poratu.idea.plugins.tomcat" factoryName="SMART_TOMCAT_FACTORY">
       <option name="adminPort" value="8005" />
       <option name="contextPath" value="/REST-API-Basic" />
       <option name="docBase" value="$PROJECT_DIR$/REST-API-Basic/src/main/webapp" />
@@ -329,20 +252,12 @@
     </configuration>
     <list>
       <item itemvalue="Gradle.REST-API-Basic [build]" />
-      <item itemvalue="Smart Tomcat.tomcate" />
-      <item itemvalue="Gradle.ValidatorTest" />
-      <item itemvalue="Gradle.ValidatorTest.shouldThrowException_On_ReadAllGiftCertificateValidator_ForEmptyTag" />
-      <item itemvalue="Gradle.Tests in 'REST-API-Basic.service.test'" />
-      <item itemvalue="Gradle.TagServiceImplTest.shouldThrowException_On_Create" />
-      <item itemvalue="Gradle.Tests in 'com.epam.esm.service'" />
+      <item itemvalue="Gradle.GiftCertificateDaoTest" />
+      <item itemvalue="Smart Tomcat.tomcat" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.Tests in 'com.epam.esm.service'" />
-        <item itemvalue="Gradle.TagServiceImplTest.shouldThrowException_On_Create" />
-        <item itemvalue="Gradle.Tests in 'REST-API-Basic.service.test'" />
-        <item itemvalue="Gradle.ValidatorTest" />
-        <item itemvalue="Gradle.ValidatorTest.shouldThrowException_On_ReadAllGiftCertificateValidator_ForEmptyTag" />
+        <item itemvalue="Gradle.GiftCertificateDaoTest" />
       </list>
     </recent_temporary>
   </component>
@@ -369,7 +284,7 @@
       <workItem from="1642785295482" duration="1731000" />
       <workItem from="1642793542226" duration="2636000" />
       <workItem from="1642862758477" duration="6914000" />
-      <workItem from="1642938146773" duration="22594000" />
+      <workItem from="1642938146773" duration="26438000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1642611414363</created>
@@ -490,7 +405,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642962053686</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="added validator tests">
+      <created>1642962828934</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1642962828934</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -543,11 +465,12 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftCertificateDaoTest.ic" NAME="GiftCertificateDaoTest Coverage Results" MODIFIED="1642635915675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftCertificateDaoTest.ic" NAME="GiftCertificateDaoTest Coverage Results" MODIFIED="1642967410859" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MJC_Epam_Training$TagServiceImplTest_shouldThrowException_On_Create.ic" NAME="TagServiceImplTest.shouldThrowException_On_Create Coverage Results" MODIFIED="1642962794232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__com_epam_esm_unit_service_.ic" NAME="Tests in 'com.epam.esm.unit.service' Coverage Results" MODIFIED="1642634769368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftServiceImplTest.ic" NAME="GiftServiceImplTest Coverage Results" MODIFIED="1642955026305" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__REST_API_Basic_service_test_.ic" NAME="Tests in 'REST-API-Basic.service.test' Coverage Results" MODIFIED="1642962528455" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__com_epam_esm_service_.ic" NAME="Tests in 'com.epam.esm.service' Coverage Results" MODIFIED="1642957441335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__com_epam_esm_service_.ic" NAME="Tests in 'com.epam.esm.service' Coverage Results" MODIFIED="1642962809169" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftCertificateServiceImplTest.ic" NAME="GiftCertificateServiceImplTest Coverage Results" MODIFIED="1642955112470" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
