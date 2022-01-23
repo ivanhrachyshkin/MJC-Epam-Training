@@ -1,7 +1,6 @@
 package com.epam.esm.dao;
 
 
-import com.epam.esm.dao.extractor.GiftCertificatesResultSetExtractor;
 import com.epam.esm.model.GiftCertificate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -140,23 +139,22 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         return namedParameterJdbcTemplate.query(query, namedParameters, giftCertificatesResultSetExtractor);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
-    public GiftCertificate readOne(final int id) {
+    public Optional<GiftCertificate> readOne(final int id) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", id);
         final List<GiftCertificate> giftCertificates = namedParameterJdbcTemplate
                 .query(READ_ONE_QUERY, namedParameters, giftCertificatesResultSetExtractor);
-        return giftCertificates.isEmpty() ? null : giftCertificates.get(0);
+        return giftCertificates.isEmpty() ? Optional.empty() : Optional.of(giftCertificates.get(0));
     }
 
     @Override
-    public GiftCertificate readOneByName(final String name) {
+    public Optional<GiftCertificate>  readOneByName(final String name) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", name);
         final List<GiftCertificate> giftCertificates = namedParameterJdbcTemplate
                 .query(READ_ONE_BY_NAME_QUERY, namedParameters, giftCertificatesResultSetExtractor);
-        return giftCertificates.isEmpty() ? null : giftCertificates.get(0);
+        return giftCertificates.isEmpty() ? Optional.empty() : Optional.of(giftCertificates.get(0));
     }
 
     @Override

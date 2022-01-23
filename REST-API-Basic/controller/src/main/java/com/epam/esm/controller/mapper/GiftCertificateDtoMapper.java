@@ -5,6 +5,7 @@ import com.epam.esm.model.GiftCertificateDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,14 +20,15 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
 
     @Override
     public GiftCertificateDto modelToDto(final GiftCertificate giftCertificate) {
-        final GiftCertificateDto giftCertificateDto = modelMapper.map(giftCertificate, GiftCertificateDto.class);
-        return giftCertificateDto;
+        emptyTagsIfNull(giftCertificate);
+        return modelMapper.map(giftCertificate, GiftCertificateDto.class);
 
     }
 
     @Override
     public GiftCertificate dtoToModel(final GiftCertificateDto giftCertificateDto) {
         final GiftCertificate giftCertificate = modelMapper.map(giftCertificateDto, GiftCertificate.class);
+        emptyTagsIfNull(giftCertificate);
         return giftCertificate;
     }
 
@@ -34,7 +36,7 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     public List<GiftCertificateDto> modelsToDto(List<GiftCertificate> giftCertificates) {
         return giftCertificates
                 .stream()
-                .map(giftCertificate -> modelMapper.map(giftCertificate, GiftCertificateDto.class))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
 
     }
@@ -43,7 +45,13 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     public List<GiftCertificate> dtoToModels(List<GiftCertificateDto> giftCertificateDtos) {
         return giftCertificateDtos
                 .stream()
-                .map(giftCertificateDto -> modelMapper.map(giftCertificateDto, GiftCertificate.class))
+                .map(this::dtoToModel)
                 .collect(Collectors.toList());
+    }
+
+    private void emptyTagsIfNull(final GiftCertificate giftCertificate) {
+        if (giftCertificate.getTags() == null) {
+            giftCertificate.setTags(new HashSet<>());
+        }
     }
 }

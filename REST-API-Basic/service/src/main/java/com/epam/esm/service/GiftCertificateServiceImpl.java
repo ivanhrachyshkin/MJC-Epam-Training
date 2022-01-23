@@ -11,9 +11,9 @@ import com.epam.esm.service.validator.UpdateGiftCertificateValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -86,40 +86,38 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private GiftCertificate checkExist(final int id) {
-        final GiftCertificate giftCertificate = giftCertificateDao.readOne(id);
-        if (giftCertificate == null) {
-            throw new NotFoundException("Gift certificate with id = %s not found", id);
-        }
-        return giftCertificate;
+        return giftCertificateDao
+                .readOne(id)
+                .orElseThrow(() -> new ServiceException("Gift certificate with id = %s not found", id));
+
     }
 
     private void checkExistByName(final String name) {
-        final GiftCertificate giftCertificate = giftCertificateDao.readOneByName(name);
-        if (giftCertificate != null) {
-            throw new AlreadyExistException("Gift certificate with name = %s is already exist", name);
-        }
+        giftCertificateDao
+                .readOneByName(name)
+                .ifPresent(giftCertificate -> {
+                    throw new ServiceException("Gift certificate with name = %s is already exist", name);
+                });
     }
 
-    //todo not null -> set
-    @SuppressWarnings("ConstantConditions")
     private void createOrAssignTags(final GiftCertificate giftCertificate) {
-        final Set<Tag> tags = giftCertificate.getTags();
-        if (tags != null) {
-            final Set<Tag> assignedTags = tags
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .peek(tag -> {
-                        final Tag oldTag = tagDao.readOneByName(tag.getName());
-                        if (oldTag == null) {
-                            final Tag newTag = tagDao.create(tag);
-                            tag.setId(newTag.getId());
-                        } else {
-                            tag.setId(oldTag.getId());
-                        }
-                        giftCertificateTagDao.createGiftCertificateTag(giftCertificate.getId(), tag.getId());
-                    })
-                    .collect(Collectors.toSet());
-            giftCertificate.setTags(assignedTags);
+        final Set<Tag> assignedTags = giftCertificate
+                .getTags()
+                .stream()
+                .filter(Objects::nonNull)
+                .peek(tag -> createOrAssignTags(tag, giftCertificate))
+                .collect(Collectors.toSet());
+        giftCertificate.setTags(assignedTags);
+    }
+
+    private void createOrAssignTags(final Tag tag, final GiftCertificate giftCertificate) {
+        final Optional<Tag> oldTag = tagDao.readOneByName(tag.getName());
+        if (!oldTag.isPresent()) {
+            final Tag newTag = tagDao.create(tag);
+            tag.setId(newTag.getId());
+        } else {
+            tag.setId(oldTag.get().getId());
         }
+        giftCertificateTagDao.createGiftCertificateTag(giftCertificate.getId(), tag.getId());
     }
 }

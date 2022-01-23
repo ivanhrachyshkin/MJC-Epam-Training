@@ -4,16 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="added dto">
+    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="shifted up dao queries">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build/tmp/war/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/build/tmp/war/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/build/tmp/war/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/tmp/war/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/ApiError.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/exceptionhandler/ApiError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/exceptionhandler/RestExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/exceptionhandler/RestExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/mapper/GiftCertificateDtoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/mapper/GiftCertificateDtoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/model/build/tmp/war/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/tmp/war/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/extractor/GiftCertificatesResultSetExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificatesResultSetExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/extractor/TagRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/AlreadyExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/ServiceException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/NotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,23 +131,21 @@
       <recent name="com.epam.esm" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.epam.esm.service" />
       <recent name="com.epam.esm.controller.mapper" />
       <recent name="com.epam.esm.model" />
       <recent name="com.epam.esm.unit.service" />
       <recent name="com.epam.esm.integration" />
-      <recent name="com.epam.esm.config" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.REST-API-Basic [clean]">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -301,8 +304,8 @@
       <item itemvalue="Gradle.REST-API-Basic [clean]" />
       <item itemvalue="Gradle.REST-API-Basic [war]" />
       <item itemvalue="Gradle.GiftCertificateDaoTest" />
-      <item itemvalue="Smart Tomcat.tomcate" />
       <item itemvalue="Gradle.Tests in 'com.epam.esm.service'" />
+      <item itemvalue="Smart Tomcat.tomcate" />
     </list>
     <recent_temporary>
       <list>
@@ -335,7 +338,8 @@
       <workItem from="1642748213163" duration="11873000" />
       <workItem from="1642785295482" duration="1731000" />
       <workItem from="1642793542226" duration="2636000" />
-      <workItem from="1642862758477" duration="5666000" />
+      <workItem from="1642862758477" duration="6914000" />
+      <workItem from="1642938146773" duration="3818000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1642611414363</created>
@@ -414,7 +418,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642869858973</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="shifted up dao queries">
+      <created>1642870331427</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1642870331428</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -454,7 +465,8 @@
     <MESSAGE value="added more service unit tests" />
     <MESSAGE value="refactor modules" />
     <MESSAGE value="added dto" />
-    <option name="LAST_COMMIT_MESSAGE" value="added dto" />
+    <MESSAGE value="shifted up dao queries" />
+    <option name="LAST_COMMIT_MESSAGE" value="shifted up dao queries" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

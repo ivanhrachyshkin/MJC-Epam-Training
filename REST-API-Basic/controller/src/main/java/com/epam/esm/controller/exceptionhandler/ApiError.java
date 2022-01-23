@@ -1,4 +1,4 @@
-package com.epam.esm.controller;
+package com.epam.esm.controller.exceptionhandler;
 
 public class ApiError {
 

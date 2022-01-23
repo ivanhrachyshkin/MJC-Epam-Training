@@ -1,4 +1,4 @@
-package com.epam.esm.dao.extractor;
+package com.epam.esm.dao;
 
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;

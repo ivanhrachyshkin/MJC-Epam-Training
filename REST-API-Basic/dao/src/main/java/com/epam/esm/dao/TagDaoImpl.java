@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.dao.extractor.TagRowMapper;
 import com.epam.esm.model.Tag;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -10,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TagDaoImpl implements TagDao {
@@ -44,21 +44,21 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Tag readOne(final int id) {
+    public Optional<Tag> readOne(final int id) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", id);
         final List<Tag> tags =
                 namedParameterJdbcTemplate.query(READ_ONE_QUERY, namedParameters, tagRowMapper);
-        return tags.isEmpty() ? null : tags.get(0);
+        return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
     }
 
     @Override
-    public Tag readOneByName(final String name) {
+    public Optional<Tag>  readOneByName(final String name) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", name);
         final List<Tag> tags =
                 namedParameterJdbcTemplate.query(READ_ONE_BY_NAME_QUERY, namedParameters, tagRowMapper);
-        return tags.isEmpty() ? null : tags.get(0);
+        return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
     }
 
     @Override

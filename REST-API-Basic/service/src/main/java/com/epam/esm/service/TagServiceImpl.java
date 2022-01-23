@@ -54,17 +54,16 @@ public class TagServiceImpl implements TagService {
     }
 
     private Tag checkExist(final int id) {
-        final Tag tag = tagDao.readOne(id);
-        if (tag == null) {
-            throw new NotFoundException("Tag with id = %s not found", id);
-        }
-        return tag;
+        return tagDao
+                .readOne(id)
+                .orElseThrow(() -> new ServiceException("Tag with id = %s not found", id));
     }
 
     private void checkExistByName(final String name) {
-        final Tag tag = tagDao.readOneByName(name);
-        if (tag != null) {
-            throw new AlreadyExistException("Tag with name = %s is already exist", name);
-        }
+        tagDao
+                .readOneByName(name)
+                .ifPresent(tag -> {
+                    throw new ServiceException("Tag with name = %s is already exist", name);
+                });
     }
 }

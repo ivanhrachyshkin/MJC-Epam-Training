@@ -1,8 +1,6 @@
 package com.epam.esm.controller.exceptionhandler;
 
-import com.epam.esm.controller.ApiError;
-import com.epam.esm.service.AlreadyExistException;
-import com.epam.esm.service.NotFoundException;
+import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.validator.ValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,24 +15,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 
-    @ExceptionHandler(ValidationException.class)
+    @ExceptionHandler(ServiceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleValidationException(final Exception e) {
         return new ApiError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundException(final Exception e) {
         return new ApiError(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
-
-    @ExceptionHandler(AlreadyExistException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleAlreadyExistException(final Exception e) {
-        return new ApiError(HttpStatus.CONFLICT.value(), e.getMessage());
-    }
-
 
     @Override
     @ResponseStatus(HttpStatus.BAD_REQUEST)
