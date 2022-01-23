@@ -1,4 +1,4 @@
 dependencies {
-    compile project(':model')
-    compile project(':config')
+    implementation project(':model')
+    implementation project(':config')
 }

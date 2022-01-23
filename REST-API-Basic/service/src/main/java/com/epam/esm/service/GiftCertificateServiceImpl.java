@@ -41,7 +41,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.readAllGiftCertificatesValidator = readAllGiftCertificatesValidator;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     @Transactional
     public GiftCertificate create(final GiftCertificate giftCertificate) {
@@ -49,7 +48,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         checkExistByName(giftCertificate.getName());
         final GiftCertificate newGiftCertificate = giftCertificateDao.create(giftCertificate);
         createOrAssignTags(newGiftCertificate);
-        return giftCertificate;
+        return newGiftCertificate;
     }
 
     @Override
