@@ -14,11 +14,11 @@ public class ReadAllGiftCertificatesValidator {
         }
 
         if (name != null && name.isEmpty()) {
-            throw new ValidationException("Gift name is required");
+            throw new ValidationException("GiftCertificate name is required");
         }
 
         if (description != null && description.isEmpty()) {
-            throw new ValidationException("Gift description is required");
+            throw new ValidationException("GiftCertificate description is required");
         }
     }
 }

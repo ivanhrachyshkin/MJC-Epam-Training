@@ -51,18 +51,15 @@ class TagServiceImplTest {
     @Test
     void shouldThrowException_On_Create() {
         //Given
-        final Tag creatingTag = new Tag();
-        final Tag expectedTag = new Tag(1,"tag1");
-        when(tagDao.readOneByName(creatingTag.getName())).thenReturn(Optional.empty());
-        when(tagDao.create(creatingTag)).thenReturn(expectedTag);
+        final Tag tag = new Tag(1,"tag1");
+        when(tagDao.readOneByName(tag.getName())).thenReturn(Optional.of(tag));
         //When
-        final Tag actualTag = tagService.create(creatingTag);
+       final ServiceException serviceException = assertThrows(ServiceException.class,
+               () -> tagService.create(tag));
         //Then
-        assertEquals(expectedTag, actualTag);
-        verify(createTagValidator, only()).validate(creatingTag);
-        verify(tagDao, times(1)).readOneByName(creatingTag.getName());
-        verify(tagDao, times(1)).create(creatingTag);
-        verifyNoMoreInteractions(tagDao);
+        assertEquals("Tag with name = " + tag.getName() +" is already exist", serviceException.getMessage());
+        verify(createTagValidator, only()).validate(tag);
+        verify(tagDao, only()).readOneByName(tag.getName());
     }
 
     @Test

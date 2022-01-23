@@ -16,27 +16,27 @@ public class CreateGiftCertificateValidator {
     public void validate(final GiftCertificate giftCertificate) {
 
         if (StringUtils.isEmpty(giftCertificate.getName())) {
-            throw new ValidationException("Tag name is required");
+            throw new ValidationException("GiftCertificate name is required");
         }
 
         if (StringUtils.isEmpty(giftCertificate.getDescription())) {
-            throw new ValidationException("Tag description is required");
+            throw new ValidationException("GiftCertificate description is required");
         }
 
         if (giftCertificate.getPrice() == null) {
-            throw new ValidationException("Tag price is required");
+            throw new ValidationException("GiftCertificate price is required");
         }
 
         if (giftCertificate.getPrice() <= 0) {
-            throw new ValidationException("Tag price is non-positive");
+            throw new ValidationException("GiftCertificate price is non-positive");
         }
 
         if (giftCertificate.getDuration() == null) {
-            throw new ValidationException("Tag duration is required");
+            throw new ValidationException("GiftCertificate duration is required");
         }
 
         if (giftCertificate.getDuration() <= 0) {
-            throw new ValidationException("Tag duration is non-positive");
+            throw new ValidationException("GiftCertificate duration is non-positive");
         }
 
         if (giftCertificate.getTags() != null) {
