@@ -22,7 +22,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/REST-API-Basic" />
-            <option value="$PROJECT_DIR$/REST-API-Basic/config" />
             <option value="$PROJECT_DIR$/REST-API-Basic/controller" />
             <option value="$PROJECT_DIR$/REST-API-Basic/dao" />
             <option value="$PROJECT_DIR$/REST-API-Basic/model" />

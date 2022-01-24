@@ -1,28 +1,25 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.config.ApplicationConfig;
+import com.epam.esm.dao.config.DaoConfig;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ApplicationConfig.class)
+@ContextConfiguration(classes = DaoConfig.class)
 @Sql("/create-tables.sql")
 @Sql("/insert-data-tables.sql")
-@WebAppConfiguration
 @TestPropertySource("classpath:application-test.properties")
 public class GiftCertificateDaoTest {
 

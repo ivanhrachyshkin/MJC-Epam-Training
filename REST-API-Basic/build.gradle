@@ -51,7 +51,6 @@ dependencies {
     compile project(':dao')
     compile project(':service')
     compile project(':controller')
-    compile project(':config')
 
     tomcat 'org.apache.tomcat.embed:tomcat-embed-core:9.0.1'
     tomcat 'org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6'

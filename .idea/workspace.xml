@@ -4,22 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="refactor dto, test property source">
-      <change afterPath="$PROJECT_DIR$/REST-API-Basic/runApplication.bat" afterDir="false" />
+    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="added runApplication.bat">
+      <change afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/config/ControllerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/src/main/java/com/epam/esm/config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/config/DaoConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/src/main/java/com/epam/esm/config/ApplicationListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/config/ApplicationListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/src/main/java/com/epam/esm/config/SpringDispatcherServletInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/config/SpringDispatcherServletInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/resources/application-dev.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/src/main/resources/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/resources/application-prod.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/config/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,15 +59,6 @@
         <projects_view>
           <tree_state>
             <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MJC-Epam-Training" type="f1a62948:ProjectNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MJC-Epam-Training" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
@@ -110,6 +111,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
@@ -136,24 +138,38 @@
       <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\service\src\test\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\dao\src\main\resources" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\controller\src\main" />
       <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\dao\src\test\resources" />
       <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\config\src\main\resources" />
       <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic" />
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\java" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
       <recent name="com.epam.esm" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.epam.esm.dao.config" />
       <recent name="com.epam.esm.service" />
       <recent name="com.epam.esm.controller.mapper" />
       <recent name="com.epam.esm.model" />
       <recent name="com.epam.esm.unit.service" />
-      <recent name="com.epam.esm.integration" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.REST-API-Basic [clean]">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="GiftCertificateDaoTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="env">
@@ -377,7 +393,9 @@
       <workItem from="1643013364155" duration="1533000" />
       <workItem from="1643015111712" duration="815000" />
       <workItem from="1643042610006" duration="640000" />
-      <workItem from="1643053662726" duration="3526000" />
+      <workItem from="1643053662726" duration="3636000" />
+      <workItem from="1643057550326" duration="305000" />
+      <workItem from="1643057955446" duration="1114000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1642611414363</created>
@@ -526,7 +544,14 @@
       <option name="project" value="LOCAL" />
       <updated>1643015373314</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="added runApplication.bat">
+      <created>1643057404413</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1643057404414</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -543,7 +568,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/master" />
+                        <option value="HEAD" />
                       </list>
                     </value>
                   </entry>
@@ -575,7 +600,8 @@
     <MESSAGE value="refactor dao tests" />
     <MESSAGE value="refactor delete giftcertificate" />
     <MESSAGE value="refactor dto, test property source" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor dto, test property source" />
+    <MESSAGE value="added runApplication.bat" />
+    <option name="LAST_COMMIT_MESSAGE" value="added runApplication.bat" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
