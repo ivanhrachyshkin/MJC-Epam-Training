@@ -1,4 +1,4 @@
-package com.epam.esm.model;
+package com.epam.esm.controller.dto;
 
 import java.util.Objects;
 
@@ -7,15 +7,11 @@ public class TagDto {
     private Integer id;
     private String name;
 
-    public TagDto(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public TagDto() {
     }
 
-    public TagDto(final String name) {
+    public TagDto(Integer id, String name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -23,12 +19,12 @@ public class TagDto {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -39,8 +35,8 @@ public class TagDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TagDto tag = (TagDto) o;
-        return Objects.equals(id, tag.id) && Objects.equals(name, tag.name);
+        TagDto tagDto = (TagDto) o;
+        return Objects.equals(id, tagDto.id) && Objects.equals(name, tagDto.name);
     }
 
     @Override

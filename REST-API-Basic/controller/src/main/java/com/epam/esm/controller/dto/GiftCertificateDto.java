@@ -1,5 +1,6 @@
-package com.epam.esm.model;
+package com.epam.esm.controller.dto;
 
+import com.epam.esm.model.Tag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;

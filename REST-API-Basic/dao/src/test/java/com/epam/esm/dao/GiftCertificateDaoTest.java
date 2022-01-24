@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -25,7 +26,7 @@ import java.util.List;
 @Sql("/create-tables.sql")
 @Sql("/insert-data-tables.sql")
 @WebAppConfiguration
-@ActiveProfiles("test")
+@TestPropertySource("classpath:application-test.properties")
 public class GiftCertificateDaoTest {
 
     @Autowired
@@ -63,6 +64,7 @@ public class GiftCertificateDaoTest {
     void shouldReturnGiftCertificateWithTags_On_ReadOneByName() {
         final GiftCertificate newGiftCertificateWithTags = giftCertificateDao.readOneByName("g1").get();
         Assertions.assertEquals(oldGiftCertificate1, newGiftCertificateWithTags);
+        //todo return optional
     }
 
     @Test

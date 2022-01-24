@@ -22,6 +22,8 @@ class ValidatorTest {
     private final CreateGiftCertificateValidator createGiftCertificateValidator
             = new CreateGiftCertificateValidator(createTagValidator);
 
+    //todo parametrized test
+
     @Test
     void shouldThrowException_On_CreateTagValidator_ForEmptyName() {
         //Given

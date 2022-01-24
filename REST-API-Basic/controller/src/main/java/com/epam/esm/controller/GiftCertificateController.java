@@ -2,9 +2,8 @@ package com.epam.esm.controller;
 
 import com.epam.esm.controller.mapper.DtoMapper;
 import com.epam.esm.model.GiftCertificate;
-import com.epam.esm.model.GiftCertificateDto;
+import com.epam.esm.controller.dto.GiftCertificateDto;
 import com.epam.esm.service.GiftCertificateService;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

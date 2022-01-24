@@ -42,6 +42,9 @@ class GiftCertificateServiceImplTest {
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
 
+    //todo beforeEach
+    //without null -> anystring
+
     @Test
     void shouldCreateGiftCertificate_On_Create_WithTags() {
         //Given

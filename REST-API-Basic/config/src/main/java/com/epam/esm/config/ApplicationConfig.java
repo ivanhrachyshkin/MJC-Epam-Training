@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 import java.time.Clock;
 
-@SuppressWarnings("SpringPropertySource")
 @Configuration
 @ComponentScan("com.epam.esm")
 @EnableWebMvc

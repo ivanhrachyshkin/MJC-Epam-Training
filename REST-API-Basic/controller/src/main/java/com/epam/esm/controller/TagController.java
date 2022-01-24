@@ -2,7 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.controller.mapper.DtoMapper;
 import com.epam.esm.model.Tag;
-import com.epam.esm.model.TagDto;
+import com.epam.esm.controller.dto.TagDto;
 import com.epam.esm.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

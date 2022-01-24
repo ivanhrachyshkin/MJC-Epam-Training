@@ -1,7 +1,7 @@
 package com.epam.esm.controller.mapper;
 
 import com.epam.esm.model.Tag;
-import com.epam.esm.model.TagDto;
+import com.epam.esm.controller.dto.TagDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
