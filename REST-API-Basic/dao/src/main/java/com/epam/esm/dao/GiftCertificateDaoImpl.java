@@ -83,16 +83,20 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public GiftCertificate create(final GiftCertificate giftCertificate) {
+        final LocalDateTime createDate = LocalDateTime.now(clock);
+        final LocalDateTime lastUpdateDate = LocalDateTime.now(clock);
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", giftCertificate.getName())
                 .addValue("description", giftCertificate.getDescription())
                 .addValue("price", giftCertificate.getPrice())
                 .addValue("duration", giftCertificate.getDuration())
-                .addValue("create_date", Timestamp.valueOf(LocalDateTime.now(clock)))
-                .addValue("last_update_date", Timestamp.valueOf(LocalDateTime.now(clock)));
+                .addValue("create_date", Timestamp.valueOf(createDate))
+                .addValue("last_update_date", Timestamp.valueOf(lastUpdateDate));
         namedParameterJdbcTemplate.update(CREATE_QUERY, namedParameters, keyHolder);
         giftCertificate.setId((Integer) keyHolder.getKeys().get("id"));
+        giftCertificate.setCreateDate(createDate);
+        giftCertificate.setLastUpdateDate(lastUpdateDate);
         return giftCertificate;
     }
 

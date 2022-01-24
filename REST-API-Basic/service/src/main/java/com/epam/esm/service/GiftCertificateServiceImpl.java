@@ -80,8 +80,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public void deleteById(final int id) {
         checkExist(id);
-        giftCertificateDao.deleteById(id);
         giftCertificateTagDao.deleteGiftCertificateTagByCertificateId(id);
+        giftCertificateDao.deleteById(id);
     }
 
     private GiftCertificate checkExist(final int id) {
