@@ -16,10 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ApplicationConfig.class)
@@ -62,9 +59,9 @@ public class GiftCertificateDaoTest {
 
     @Test
     void shouldReturnGiftCertificateWithTags_On_ReadOneByName() {
-        final GiftCertificate newGiftCertificateWithTags = giftCertificateDao.readOneByName("g1").get();
-        Assertions.assertEquals(oldGiftCertificate1, newGiftCertificateWithTags);
-        //todo return optional
+        final Optional<GiftCertificate> newGiftCertificateWithTags = giftCertificateDao.readOneByName("g1");
+        Assertions.assertTrue(newGiftCertificateWithTags.isPresent());
+        Assertions.assertEquals(oldGiftCertificate1, newGiftCertificateWithTags.get());
     }
 
     @Test
@@ -75,8 +72,9 @@ public class GiftCertificateDaoTest {
 
     @Test
     void shouldReturnGiftCertificateWithTags_On_ReadOne() {
-        final GiftCertificate newGiftCertificateWithTags = giftCertificateDao.readOne(1).get();
-        Assertions.assertEquals(oldGiftCertificate1, newGiftCertificateWithTags);
+        final Optional<GiftCertificate> giftCertificate = giftCertificateDao.readOne(1);
+        Assertions.assertTrue(giftCertificate.isPresent());
+        Assertions.assertEquals(oldGiftCertificate1, giftCertificate.get());
     }
 
     @Test
@@ -95,7 +93,6 @@ public class GiftCertificateDaoTest {
 
     @Test
     void shouldReturnAllGiftCertificates_On_Read() {
-
         Assertions.assertEquals(oldGiftCertificates,
                 giftCertificateDao.readAll(null, null, null, null));
     }
