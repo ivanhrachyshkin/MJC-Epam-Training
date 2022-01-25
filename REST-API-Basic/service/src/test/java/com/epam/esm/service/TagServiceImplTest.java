@@ -35,7 +35,7 @@ class TagServiceImplTest {
     void shouldCreateTag_On_Create() {
         //Given
         final Tag creatingTag = new Tag("tag1");
-        final Tag expectedTag = new Tag(1,"tag1");
+        final Tag expectedTag = new Tag(1, "tag1");
         when(tagDao.readOneByName(creatingTag.getName())).thenReturn(Optional.empty());
         when(tagDao.create(creatingTag)).thenReturn(expectedTag);
         //When
@@ -51,13 +51,13 @@ class TagServiceImplTest {
     @Test
     void shouldThrowException_On_Create() {
         //Given
-        final Tag tag = new Tag(1,"tag1");
+        final Tag tag = new Tag(1, "tag1");
         when(tagDao.readOneByName(tag.getName())).thenReturn(Optional.of(tag));
         //When
-       final ServiceException serviceException = assertThrows(ServiceException.class,
-               () -> tagService.create(tag));
+        final ServiceException serviceException = assertThrows(ServiceException.class,
+                () -> tagService.create(tag));
         //Then
-        assertEquals("Tag with name = " + tag.getName() +" is already exist", serviceException.getMessage());
+        assertEquals("Tag with name = " + tag.getName() + " is already exist", serviceException.getMessage());
         verify(createTagValidator, only()).validate(tag);
         verify(tagDao, only()).readOneByName(tag.getName());
     }
@@ -105,7 +105,7 @@ class TagServiceImplTest {
     @Test
     void shouldDeleteTag_On_DeleteById() {
         //Given
-        final Tag tag = new Tag(1,"tag1");
+        final Tag tag = new Tag(1, "tag1");
         when(tagDao.readOne(tag.getId())).thenReturn(Optional.of(tag));
         //When
         tagService.deleteById(tag.getId());

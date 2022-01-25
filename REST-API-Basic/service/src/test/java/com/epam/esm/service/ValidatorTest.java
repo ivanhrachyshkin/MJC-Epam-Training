@@ -30,7 +30,8 @@ class ValidatorTest {
     static Stream<Arguments> createGiftCertificateValidatorDataProvider() {
         return Stream.of(
                 Arguments.arguments("GiftCertificate name is required", null, StringUtils.EMPTY, null, null),
-                Arguments.arguments("GiftCertificate name is required", StringUtils.EMPTY, StringUtils.EMPTY, null, null),
+                Arguments.arguments("GiftCertificate name is required",
+                        StringUtils.EMPTY, StringUtils.EMPTY, null, null),
                 Arguments.arguments("GiftCertificate description is required", "name", null, null, null),
                 Arguments.arguments("GiftCertificate description is required", "name", StringUtils.EMPTY, null, null),
                 Arguments.arguments("GiftCertificate price is required", "name", "desc", null, null),
@@ -68,7 +69,6 @@ class ValidatorTest {
     ) {
         //Given
         final GiftCertificate giftCertificate = getGiftCertificate(name, description, price, duration);
-        ;
         //When
         final ValidationException validationException
                 = assertThrows(ValidationException.class,
