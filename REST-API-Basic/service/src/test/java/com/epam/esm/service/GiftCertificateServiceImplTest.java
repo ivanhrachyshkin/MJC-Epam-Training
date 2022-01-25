@@ -84,7 +84,6 @@ class GiftCertificateServiceImplTest {
                 .createGiftCertificateTag(giftCertificate1.getId(), tag1.getId());
         verify(giftCertificateTagDao, times(1))
                 .createGiftCertificateTag(giftCertificate1.getId(), tag1.getId());
-        verifyNoMoreInteractions(giftCertificateTagDao);
     }
 
     @Test

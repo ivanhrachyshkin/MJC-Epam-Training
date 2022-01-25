@@ -27,31 +27,30 @@ class TagServiceImplTest {
     private GiftCertificateTagDao giftCertificateTagDao;
     @Mock
     private CreateTagValidator createTagValidator;
-
     @InjectMocks
     private TagServiceImpl tagService;
+
+    final Tag tag = new Tag(1, "tag1");
+    final Tag tag2 = new Tag(2, "tag2");
 
     @Test
     void shouldCreateTag_On_Create() {
         //Given
-        final Tag creatingTag = new Tag("tag1");
-        final Tag expectedTag = new Tag(1, "tag1");
-        when(tagDao.readOneByName(creatingTag.getName())).thenReturn(Optional.empty());
-        when(tagDao.create(creatingTag)).thenReturn(expectedTag);
+        when(tagDao.readOneByName(tag.getName())).thenReturn(Optional.empty());
+        when(tagDao.create(tag)).thenReturn(tag);
         //When
-        final Tag actualTag = tagService.create(creatingTag);
+        final Tag actualTag = tagService.create(tag);
         //Then
-        assertEquals(expectedTag, actualTag);
-        verify(createTagValidator, only()).validate(creatingTag);
-        verify(tagDao, times(1)).readOneByName(creatingTag.getName());
-        verify(tagDao, times(1)).create(creatingTag);
+        assertEquals(tag, actualTag);
+        verify(createTagValidator, only()).validate(tag);
+        verify(tagDao, times(1)).readOneByName(tag.getName());
+        verify(tagDao, times(1)).create(tag);
         verifyNoMoreInteractions(tagDao);
     }
 
     @Test
     void shouldThrowException_On_Create() {
         //Given
-        final Tag tag = new Tag(1, "tag1");
         when(tagDao.readOneByName(tag.getName())).thenReturn(Optional.of(tag));
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
@@ -64,22 +63,19 @@ class TagServiceImplTest {
 
     @Test
     void shouldReturnTag_On_ReadOne() {
-        //Given
-        final Tag expectedTag = new Tag(1, "tag1");
+        when(tagDao.readOne(tag.getId())).thenReturn(Optional.of(tag));
         //When
-        when(tagDao.readOne(expectedTag.getId())).thenReturn(Optional.of(expectedTag));
-        final Tag actualTag = tagService.readOne(expectedTag.getId());
+        final Tag actualTag = tagService.readOne(tag.getId());
         //Then
-        assertEquals(expectedTag, actualTag);
-        verify(tagDao, only()).readOne(expectedTag.getId());
+        assertEquals(tag, actualTag);
+        verify(tagDao, only()).readOne(tag.getId());
     }
 
     @Test
     void shouldThrowException_On_ReadOne_NotFound() {
         //Given
-        final Tag tag = new Tag(1, "tag1");
-        //When
         when(tagDao.readOne(tag.getId())).thenReturn(Optional.empty());
+        //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> tagService.readOne(tag.getId()));
         //Then
@@ -91,9 +87,7 @@ class TagServiceImplTest {
     @Test
     void shouldReturnTags_On_ReadAll() {
         //Given
-        final Tag tag1 = new Tag(1, "tag1");
-        final Tag tag2 = new Tag(2, "tag2");
-        final List<Tag> expectedTags = Arrays.asList(tag1, tag2);
+        final List<Tag> expectedTags = Arrays.asList(tag, tag2);
         //When
         when(tagDao.readAll()).thenReturn(expectedTags);
         final List<Tag> actualTags = tagService.readAll();
@@ -105,7 +99,6 @@ class TagServiceImplTest {
     @Test
     void shouldDeleteTag_On_DeleteById() {
         //Given
-        final Tag tag = new Tag(1, "tag1");
         when(tagDao.readOne(tag.getId())).thenReturn(Optional.of(tag));
         //When
         tagService.deleteById(tag.getId());
