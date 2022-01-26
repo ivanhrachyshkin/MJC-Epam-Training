@@ -25,7 +25,6 @@ public class GiftCertificateController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
-
         final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
         final GiftCertificate createdGiftCertificate = giftCertificateService.create(giftCertificate);
         return mapper.modelToDto(createdGiftCertificate);
