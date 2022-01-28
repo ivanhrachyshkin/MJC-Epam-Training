@@ -1,6 +1,5 @@
 package com.epam.esm.service.dto;
 
-import com.epam.esm.model.Tag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
@@ -18,7 +17,7 @@ public class GiftCertificateDto {
     private LocalDateTime createDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime lastUpdateDate;
-    private Set<TagDto> dtoTags;
+    private Set<TagDto> tags;
 
     public GiftCertificateDto() {
     }
@@ -79,12 +78,12 @@ public class GiftCertificateDto {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Set<TagDto> getDtoTags() {
-        return dtoTags;
+    public Set<TagDto> getTags() {
+        return tags;
     }
 
-    public void setDtoTags(Set<TagDto> dtoTags) {
-        this.dtoTags = dtoTags;
+    public void setTags(Set<TagDto> tags) {
+        this.tags = tags;
     }
 
     @Override
@@ -99,11 +98,11 @@ public class GiftCertificateDto {
                 && Objects.equals(duration, that.duration)
                 && Objects.equals(createDate, that.createDate)
                 && Objects.equals(lastUpdateDate, that.lastUpdateDate)
-                && Objects.equals(dtoTags, that.dtoTags);
+                && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, dtoTags);
+        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tags);
     }
 }

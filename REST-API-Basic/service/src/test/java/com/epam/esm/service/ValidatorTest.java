@@ -2,7 +2,6 @@ package com.epam.esm.service;
 
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
-import com.epam.esm.service.dtomapper.TagDtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
 import com.epam.esm.service.validator.TagValidator;
 import com.epam.esm.service.validator.ValidationException;
@@ -13,7 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 
 import java.util.stream.Stream;
 

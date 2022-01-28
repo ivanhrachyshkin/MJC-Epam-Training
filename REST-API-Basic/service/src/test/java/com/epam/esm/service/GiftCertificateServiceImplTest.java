@@ -62,7 +62,7 @@ class GiftCertificateServiceImplTest {
         dtoTag2 = new TagDto(2, "tag2");
         giftCertificateDto1.setId(1);
         giftCertificateDto1.setName("giftCertificate1");
-        giftCertificateDto1.setDtoTags(new HashSet<>(Arrays.asList(dtoTag1, dtoTag2)));
+        giftCertificateDto1.setTags(new HashSet<>(Arrays.asList(dtoTag1, dtoTag2)));
     }
 
     @Test
@@ -124,22 +124,22 @@ class GiftCertificateServiceImplTest {
 
         final GiftCertificateDto giftCertificateDto2 = new GiftCertificateDto();
         giftCertificateDto2.setName("giftCertificate2");
-        giftCertificateDto2.setDtoTags(new HashSet<>(Arrays.asList(dtoTag1, dtoTag2)));
+        giftCertificateDto2.setTags(new HashSet<>(Arrays.asList(dtoTag1, dtoTag2)));
 
         final List<GiftCertificate> giftCertificates = Arrays.asList(giftCertificate1, giftCertificate2);
         final List<GiftCertificateDto> expectedGiftCertificates
                 = Arrays.asList(giftCertificateDto1, giftCertificateDto2);
         //When
-        when(giftCertificateDao.readAll(null, null, null, null))
+        when(giftCertificateDao.readAll(null, null, null, null, null))
                 .thenReturn(giftCertificates);
         when(mapper.modelsToDto(giftCertificates)).thenReturn(expectedGiftCertificates);
 
         final List<GiftCertificateDto> actualGiftCertificates
-                = giftCertificateService.readAll(null, null, null, null);
+                = giftCertificateService.readAll(null, null, null, null, null);
         //Then
         assertEquals(expectedGiftCertificates, actualGiftCertificates);
         verify(giftCertificateValidator, only()).readAllValidate(null, null, null);
-        verify(giftCertificateDao, only()).readAll(null, null, null, null);
+        verify(giftCertificateDao, only()).readAll(null, null, null, null, null);
     }
 
     @Test

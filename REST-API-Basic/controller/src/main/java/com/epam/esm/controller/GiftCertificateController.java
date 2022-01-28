@@ -30,8 +30,9 @@ public class GiftCertificateController {
     public List<GiftCertificateDto> readAll(@RequestParam(required = false) final String tag,
                                             @RequestParam(required = false) final String name,
                                             @RequestParam(required = false) final String description,
-                                            @RequestParam(required = false) final Boolean asc) {
-        return giftCertificateService.readAll(tag, name, description, asc);
+                                            @RequestParam(required = false) final Boolean dateSortDirection,
+                                            @RequestParam(required = false) final Boolean nameSortDirection) {
+        return giftCertificateService.readAll(tag, name, description, dateSortDirection, nameSortDirection);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

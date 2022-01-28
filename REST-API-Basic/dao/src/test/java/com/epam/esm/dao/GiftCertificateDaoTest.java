@@ -13,7 +13,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @ExtendWith(SpringExtension.class)
@@ -50,6 +49,15 @@ public class GiftCertificateDaoTest {
             2,
             Timestamp.valueOf("2020-02-02 02:02:02.222").toLocalDateTime(),
             Timestamp.valueOf("2020-02-02 02:02:02.222").toLocalDateTime(),
+            tags2);
+
+    final GiftCertificate oldGiftCertificate3 = new GiftCertificate(
+            "g3",
+            "d3",
+            3.0F,
+            3,
+            Timestamp.valueOf("2030-03-03 03:03:03.333").toLocalDateTime(),
+            Timestamp.valueOf("2030-03-03 03:03:03.333").toLocalDateTime(),
             tags2);
 
     final List<GiftCertificate> oldGiftCertificates = Arrays.asList(oldGiftCertificate1, oldGiftCertificate2);
@@ -91,154 +99,197 @@ public class GiftCertificateDaoTest {
     @Test
     void shouldReturnAllGiftCertificates_On_Read() {
         Assertions.assertEquals(oldGiftCertificates,
-                giftCertificateDao.readAll(null, null, null, null));
+                giftCertificateDao
+                        .readAll(null, null, null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTag_Positive() {
         Assertions.assertEquals(Collections.singletonList(oldGiftCertificate1),
-                giftCertificateDao.readAll("secondTag", null, null, null));
+                giftCertificateDao
+                        .readAll("secondTag", null, null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTag_Negative() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTags", null, null, null));
+                giftCertificateDao
+                        .readAll("secondTags", null, null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadName() {
         Assertions.assertEquals(Collections.singletonList(oldGiftCertificate1),
-                giftCertificateDao.readAll(null, "g1", null, null));
+                giftCertificateDao
+                        .readAll(null, "g1", null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadName_Negative() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll(null, "asd", null, null));
+                giftCertificateDao.
+                        readAll(null, "asd", null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadDescription_Positive() {
         Assertions.assertEquals(Collections.singletonList(oldGiftCertificate2),
-                giftCertificateDao.readAll(null, null, "d2", null));
+                giftCertificateDao
+                        .readAll(null, null, "d2", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadDescription_Negative() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll(null, null, "fg", null));
+                giftCertificateDao
+                        .readAll(null, null, "fg", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadSort_ASC() {
         Assertions.assertEquals(oldGiftCertificates,
-                giftCertificateDao.readAll(null, null, null, true));
+                giftCertificateDao
+                        .readAll(null, null, null, true, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadSort_DESC() {
         Assertions.assertNotEquals(oldGiftCertificates,
-                giftCertificateDao.readAll(null, null, null, false));
+                giftCertificateDao
+                        .readAll(null, null, null, false, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndName_Positive() {
         Assertions.assertEquals(Collections.singletonList(oldGiftCertificate1),
-                giftCertificateDao.readAll("secondTag", "1", null, null));
+                giftCertificateDao
+                        .readAll("secondTag", "1", null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTag", "2", null, null));
+                giftCertificateDao
+                        .readAll("secondTag", "2", null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForTag() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTag2", "g1", null, null));
+                giftCertificateDao
+                        .readAll("secondTag2", "g1", null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForName() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTag", "fgd", null, null));
+                giftCertificateDao
+                        .readAll("secondTag", "fgd", null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndName_Negative_ForTagAndName() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTaga", "fgd", null, null));
+                giftCertificateDao
+                        .readAll("secoTag", "fgd", null, null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Positive() {
         Assertions.assertEquals(Collections.singletonList(oldGiftCertificate2),
-                giftCertificateDao.readAll("firstTag", null, "2", null));
+                giftCertificateDao
+                        .readAll("firstTag", null, "2", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTag", null, "2", null));
+                giftCertificateDao
+                        .readAll("secondTag", null, "2", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForTag() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTag2a", null, "1", null));
+                giftCertificateDao
+                        .readAll("secondTag2a", null, "1", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForDescription() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTag", null, "dfg", null));
+                giftCertificateDao
+                        .readAll("secondTag", null, "dfg", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadTagAndDescription_Negative_ForTagAndDescription() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll("secondTaga", null, "asd", null));
+                giftCertificateDao
+                        .readAll("seTaga", null, "asd", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Positive() {
         Assertions.assertEquals(Collections.singletonList(oldGiftCertificate1),
-                giftCertificateDao.readAll(null, "1", "1", null));
+                giftCertificateDao.readAll(null, "1", "1", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll(null, "1", "2", true));
+                giftCertificateDao.readAll(null, "1", "2", true, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForName() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll(null, "eh", "2", null));
+                giftCertificateDao
+                        .readAll(null, "eh", "2", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForDescription() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll(null, "1", "lkjh", null));
+                giftCertificateDao
+                        .readAll(null, "1", "lkjh", null, null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative_ForNameAndDescription() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll(null, "asd", "asd", null));
+                giftCertificateDao
+                        .readAll(null, "asd", "asd", null, null));
     }
 
     @Test
-    void shouldUpdateGiftCertificateWithOldTags_On_CreateWithOldTags() {
+    void shouldUpdateGiftCertificate_On_Update() {
+        //Given
         oldGiftCertificate1.setName("newName");
-        oldGiftCertificate1.setCreateDate(LocalDateTime.now());
-        oldGiftCertificate1.setLastUpdateDate(LocalDateTime.now());
+        //When
         giftCertificateDao.update(oldGiftCertificate1);
-        Assertions.assertEquals(oldGiftCertificate1.getId(),
-                giftCertificateDao.readOneByName("newName").get().getId());
+        final Optional<GiftCertificate> giftCertificate = giftCertificateDao.readOneByName("newName");
+        //Then
+        Assertions.assertTrue(giftCertificate.isPresent());
+        Assertions.assertEquals(oldGiftCertificate1.getName(), giftCertificate.get().getName());
+        Assertions.assertEquals(oldGiftCertificate1.getDescription(), giftCertificate.get().getDescription());
+        Assertions.assertEquals(oldGiftCertificate1.getPrice(), giftCertificate.get().getPrice());
+        Assertions.assertEquals(oldGiftCertificate1.getDuration(), giftCertificate.get().getDuration());
+        Assertions.assertEquals(oldGiftCertificate1.getCreateDate(), giftCertificate.get().getCreateDate());
+        Assertions.assertNotNull(oldGiftCertificate1.getLastUpdateDate());
+    }
+
+    @Test
+    void shouldCreateGiftCertificate_On_Create() {
+        //When
+        final GiftCertificate giftCertificate = giftCertificateDao.create(oldGiftCertificate3);
+        //Then
+        System.out.println(giftCertificate);
+        Assertions.assertEquals(oldGiftCertificate3.getName(), giftCertificate.getName());
+        Assertions.assertEquals(oldGiftCertificate3.getDescription(), giftCertificate.getDescription());
+        Assertions.assertEquals(oldGiftCertificate3.getPrice(), giftCertificate.getPrice());
+        Assertions.assertEquals(oldGiftCertificate3.getDuration(), giftCertificate.getDuration());
+        Assertions.assertNotNull(giftCertificate.getCreateDate());
+        Assertions.assertNotNull(giftCertificate.getLastUpdateDate());
     }
 }

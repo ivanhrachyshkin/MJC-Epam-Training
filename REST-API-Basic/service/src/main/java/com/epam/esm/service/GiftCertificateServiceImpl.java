@@ -53,9 +53,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public List<GiftCertificateDto> readAll(final String tag,
                                             final String name,
                                             final String description,
-                                            final Boolean asc) {
+                                            final Boolean dateSortDirection,
+                                            final Boolean nameSortDirection) {
         giftCertificateValidator.readAllValidate(tag, name, description);
-        List<GiftCertificate> giftCertificates = giftCertificateDao.readAll(tag, name, description, asc);
+        List<GiftCertificate> giftCertificates
+                = giftCertificateDao.readAll(tag, name, description, dateSortDirection, nameSortDirection);
         return mapper.modelsToDto(giftCertificates);
     }
 

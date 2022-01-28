@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -34,7 +35,7 @@ public class TagDaoImpl implements TagDao {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", tag.getName());
         namedParameterJdbcTemplate.update(CREATE_QUERY, namedParameters, keyHolder);
-        tag.setId((Integer) keyHolder.getKeys().get("id"));
+        tag.setId(((Number) Objects.requireNonNull(keyHolder.getKeys()).get("id")).intValue());
         return tag;
     }
 
@@ -53,7 +54,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Optional<Tag>  readOneByName(final String name) {
+    public Optional<Tag> readOneByName(final String name) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", name);
         final List<Tag> tags =
