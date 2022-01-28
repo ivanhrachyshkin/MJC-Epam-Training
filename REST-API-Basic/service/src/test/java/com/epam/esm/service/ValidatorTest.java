@@ -1,31 +1,31 @@
 package com.epam.esm.service;
 
-import com.epam.esm.model.GiftCertificate;
-import com.epam.esm.model.Tag;
-import com.epam.esm.service.validator.*;
+import com.epam.esm.service.dto.GiftCertificateDto;
+import com.epam.esm.service.dto.TagDto;
+import com.epam.esm.service.dtomapper.TagDtoMapper;
+import com.epam.esm.service.validator.GiftCertificateValidator;
+import com.epam.esm.service.validator.TagValidator;
+import com.epam.esm.service.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(MockitoExtension.class)
 class ValidatorTest {
 
-    private final CreateTagValidator createTagValidator
-            = new CreateTagValidator();
-    private final UpdateGiftCertificateValidator updateGiftCertificateValidator
-            = new UpdateGiftCertificateValidator();
-    private final ReadAllGiftCertificatesValidator readAllGiftCertificatesValidator
-            = new ReadAllGiftCertificatesValidator();
-    private final CreateGiftCertificateValidator createGiftCertificateValidator
-            = new CreateGiftCertificateValidator(createTagValidator);
+    private final TagValidator tagValidator = new TagValidator();
+    private final GiftCertificateValidator giftCertificateValidator
+            = new GiftCertificateValidator(tagValidator);
 
     static Stream<Arguments> createGiftCertificateValidatorDataProvider() {
         return Stream.of(
@@ -68,11 +68,11 @@ class ValidatorTest {
             final Integer duration
     ) {
         //Given
-        final GiftCertificate giftCertificate = getGiftCertificate(name, description, price, duration);
+        final GiftCertificateDto giftCertificateDto = getGiftCertificateDto(name, description, price, duration);
         //When
         final ValidationException validationException
                 = assertThrows(ValidationException.class,
-                () -> createGiftCertificateValidator.validate(giftCertificate));
+                () -> giftCertificateValidator.createValidate(giftCertificateDto));
         //Then
         assertEquals(expected, validationException.getMessage());
     }
@@ -87,11 +87,11 @@ class ValidatorTest {
             final Integer duration
     ) {
         //Given
-        final GiftCertificate giftCertificate = getGiftCertificate(name, description, price, duration);
+        final GiftCertificateDto giftCertificateDto = getGiftCertificateDto(name, description, price, duration);
         //When
         final ValidationException validationException
                 = assertThrows(ValidationException.class,
-                () -> updateGiftCertificateValidator.validate(giftCertificate));
+                () -> giftCertificateValidator.updateValidate(giftCertificateDto));
         //Then
         assertEquals(expected, validationException.getMessage());
     }
@@ -105,18 +105,17 @@ class ValidatorTest {
         //When
         final ValidationException validationException
                 = assertThrows(ValidationException.class,
-                () -> readAllGiftCertificatesValidator.validate(tag, name, description));
+                () -> giftCertificateValidator.readAllValidate(tag, name, description));
         //Then
         assertEquals(expected, validationException.getMessage());
     }
 
     @Test
     void shouldThrowException_On_CreateTagValidator_ForEmptyName() {
-        //Given
-        final Tag tag = new Tag();
         //When
+        final TagDto tagDto = new TagDto();
         final ValidationException validationException
-                = assertThrows(ValidationException.class, () -> createTagValidator.validate(tag));
+                = assertThrows(ValidationException.class, () -> tagValidator.createValidate(tagDto));
         //Then
         assertEquals("Tag name is required", validationException.getMessage());
     }
@@ -124,50 +123,44 @@ class ValidatorTest {
     @Test
     void shouldPath_On_CreateGiftCertificateValidator() {
         //Given
-        final GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setName("name");
-        giftCertificate.setDescription("description");
-        giftCertificate.setPrice(1.0F);
-        giftCertificate.setDuration(11);
-        giftCertificate.setTags(new HashSet<>(Collections.singletonList(new Tag("name"))));
+        final GiftCertificateDto giftCertificateDto
+                = getGiftCertificateDto("name", "description", 1.0F, 11);
         //When
-        createGiftCertificateValidator.validate(giftCertificate);
+        giftCertificateValidator.createValidate(giftCertificateDto);
     }
 
     @Test
     void shouldPath_On_UpdateGiftCertificateValidator() {
         //Given
-        final GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setName("name");
-        giftCertificate.setDescription("description");
-        giftCertificate.setPrice(1.0F);
-        giftCertificate.setDuration(11);
+        final GiftCertificateDto giftCertificateDto
+                = getGiftCertificateDto("name", "description", 1.0F, 11);
         //When
-        updateGiftCertificateValidator.validate(giftCertificate);
+        giftCertificateValidator.updateValidate(giftCertificateDto);
     }
 
     @Test
     void shouldTPath_On_ReadAllGiftCertificateValidator() {
-        readAllGiftCertificatesValidator.validate("a", "a", null);
+        giftCertificateValidator.readAllValidate("a", "a", null);
     }
 
     @Test
     void shouldPath_On_CreateTagValidator_ForEmptyName() {
         //Given
-        final Tag tag = new Tag("name");
+        final TagDto tagDto = new TagDto();
+        tagDto.setName("name");
         //When
-        createTagValidator.validate(tag);
+        tagValidator.createValidate(tagDto);
     }
 
-    private GiftCertificate getGiftCertificate(final String name,
-                                               final String description,
-                                               final Float price,
-                                               final Integer duration) {
-        GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setName(name);
-        giftCertificate.setDescription(description);
-        giftCertificate.setPrice(price);
-        giftCertificate.setDuration(duration);
-        return giftCertificate;
+    private GiftCertificateDto getGiftCertificateDto(final String name,
+                                                     final String description,
+                                                     final Float price,
+                                                     final Integer duration) {
+        GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
+        giftCertificateDto.setName(name);
+        giftCertificateDto.setDescription(description);
+        giftCertificateDto.setPrice(price);
+        giftCertificateDto.setDuration(duration);
+        return giftCertificateDto;
     }
 }

@@ -1,8 +1,7 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.controller.mapper.DtoMapper;
-import com.epam.esm.model.GiftCertificate;
-import com.epam.esm.controller.dto.GiftCertificateDto;
+
+import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,19 +14,15 @@ import java.util.List;
 public class GiftCertificateController {
 
     private final GiftCertificateService giftCertificateService;
-    private final DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
 
-    public GiftCertificateController(GiftCertificateService giftCertificateService, DtoMapper<GiftCertificate, GiftCertificateDto> mapper) {
+    public GiftCertificateController(final GiftCertificateService giftCertificateService) {
         this.giftCertificateService = giftCertificateService;
-        this.mapper = mapper;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
-        final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
-        final GiftCertificate createdGiftCertificate = giftCertificateService.create(giftCertificate);
-        return mapper.modelToDto(createdGiftCertificate);
+        return giftCertificateService.create(giftCertificateDto);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,15 +31,13 @@ public class GiftCertificateController {
                                             @RequestParam(required = false) final String name,
                                             @RequestParam(required = false) final String description,
                                             @RequestParam(required = false) final Boolean asc) {
-        final List<GiftCertificate> giftCertificates = giftCertificateService.readAll(tag, name, description, asc);
-        return mapper.modelsToDto(giftCertificates);
+        return giftCertificateService.readAll(tag, name, description, asc);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto readOne(@PathVariable final int id) {
-        final GiftCertificate giftCertificate = giftCertificateService.readOne(id);
-        return mapper.modelToDto(giftCertificate);
+        return giftCertificateService.readOne(id);
     }
 
     @PatchMapping(value = "/{id}",
@@ -52,10 +45,8 @@ public class GiftCertificateController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public GiftCertificateDto update(@PathVariable final int id, @RequestBody final GiftCertificateDto giftCertificateDto) {
-        final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
-        giftCertificate.setId(id);
-        final GiftCertificate updatedGiftCertificate = giftCertificateService.update(giftCertificate);
-        return mapper.modelToDto(updatedGiftCertificate);
+        giftCertificateDto.setId(id);
+        return giftCertificateService.update(giftCertificateDto);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -4,15 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="refactor GiftCertificateServiceImplTest">
+    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="refactor TagServiceImplTest">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/jarAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/GiftCertificateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/GiftCertificateController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/TagController.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/TagController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/dto/GiftCertificateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dto/GiftCertificateDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/dto/TagDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dto/TagDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/mapper/DtoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dtomapper/DtoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/mapper/GiftCertificateDtoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dtomapper/GiftCertificateDtoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/mapper/TagDtoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dtomapper/TagDtoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagService.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/CreateGiftCertificateValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/GiftCertificateValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/CreateTagValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/TagValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/ReadAllGiftCertificatesValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/UpdateGiftCertificateValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/GiftCertificateServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/GiftCertificateServiceImplTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/TagServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/TagServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/ValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/ValidatorTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +77,36 @@
                 <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build setup" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="documentation" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="help" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="verification" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -133,7 +184,7 @@
       <recent name="com.epam.esm.unit.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Tests in 'com.epam.esm.service'">
+  <component name="RunManager" selected="Gradle.ValidatorTest">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -145,54 +196,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GiftCertificateDaoTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GiftCertificateServiceImplTest.shouldReturnGiftCertificates_On_ReadAll" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.dao.GiftCertificateDaoTest&quot;" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":dao:test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="GiftCertificateServiceImplTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.GiftCertificateServiceImplTest&quot;" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":service:test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="GiftCertificateServiceImplTest.shouldUpdateGiftCertificate_On_Update_WithTags" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.GiftCertificateServiceImplTest.shouldUpdateGiftCertificate_On_Update_WithTags&quot;" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.GiftCertificateServiceImplTest.shouldReturnGiftCertificates_On_ReadAll&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -229,12 +238,33 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="TagServiceImplTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="TagServiceImplTest.shouldDeleteTag_On_DeleteById" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.TagServiceImplTest&quot;" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.TagServiceImplTest.shouldDeleteTag_On_DeleteById&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":service:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="TagServiceImplTest.shouldReturnTags_On_ReadAll" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.TagServiceImplTest.shouldReturnTags_On_ReadAll&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -256,6 +286,27 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
         <option name="externalSystemIdString" value="GRADLE" />
         <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.*&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":service:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="ValidatorTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.ValidatorTest&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -318,19 +369,19 @@
     <list>
       <item itemvalue="Gradle.REST-API-Basic [build]" />
       <item itemvalue="Smart Tomcat.tomcat" />
-      <item itemvalue="Gradle.GiftCertificateServiceImplTest" />
-      <item itemvalue="Gradle.GiftCertificateServiceImplTest.shouldUpdateGiftCertificate_On_Update_WithTags" />
-      <item itemvalue="Gradle.GiftCertificateDaoTest" />
-      <item itemvalue="Gradle.TagServiceImplTest" />
+      <item itemvalue="Gradle.TagServiceImplTest.shouldReturnTags_On_ReadAll" />
+      <item itemvalue="Gradle.TagServiceImplTest.shouldDeleteTag_On_DeleteById" />
+      <item itemvalue="Gradle.GiftCertificateServiceImplTest.shouldReturnGiftCertificates_On_ReadAll" />
+      <item itemvalue="Gradle.ValidatorTest" />
       <item itemvalue="Gradle.Tests in 'com.epam.esm.service'" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.ValidatorTest" />
         <item itemvalue="Gradle.Tests in 'com.epam.esm.service'" />
-        <item itemvalue="Gradle.TagServiceImplTest" />
-        <item itemvalue="Gradle.GiftCertificateDaoTest" />
-        <item itemvalue="Gradle.GiftCertificateServiceImplTest.shouldUpdateGiftCertificate_On_Update_WithTags" />
-        <item itemvalue="Gradle.GiftCertificateServiceImplTest" />
+        <item itemvalue="Gradle.GiftCertificateServiceImplTest.shouldReturnGiftCertificates_On_ReadAll" />
+        <item itemvalue="Gradle.TagServiceImplTest.shouldDeleteTag_On_DeleteById" />
+        <item itemvalue="Gradle.TagServiceImplTest.shouldReturnTags_On_ReadAll" />
       </list>
     </recent_temporary>
   </component>
@@ -366,7 +417,14 @@
       <workItem from="1643053662726" duration="3636000" />
       <workItem from="1643057550326" duration="305000" />
       <workItem from="1643057955446" duration="5247000" />
-      <workItem from="1643093572456" duration="8571000" />
+      <workItem from="1643093572456" duration="10824000" />
+      <workItem from="1643126656207" duration="3808000" />
+      <workItem from="1643140438371" duration="1243000" />
+      <workItem from="1643141780807" duration="1473000" />
+      <workItem from="1643184331763" duration="754000" />
+      <workItem from="1643222400296" duration="1243000" />
+      <workItem from="1643290937564" duration="601000" />
+      <workItem from="1643360562111" duration="9538000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1642611414363</created>
@@ -543,7 +601,14 @@
       <option name="project" value="LOCAL" />
       <updated>1643103865230</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="refactor TagServiceImplTest">
+      <created>1643112543130</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1643112543130</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -587,7 +652,6 @@
     <MESSAGE value="added optional, refactor DtoMapper" />
     <MESSAGE value="refactor build.gradle added tomcat plugin" />
     <MESSAGE value="refactor GiftServiceImplTest" />
-    <MESSAGE value="refactor TagServiceImplTest" />
     <MESSAGE value="added validator tests" />
     <MESSAGE value="refactor dao tests" />
     <MESSAGE value="refactor delete giftcertificate" />
@@ -596,7 +660,8 @@
     <MESSAGE value="refactor configs" />
     <MESSAGE value="refactor ValidatorTest: added parameterized tests" />
     <MESSAGE value="refactor GiftCertificateServiceImplTest" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor GiftCertificateServiceImplTest" />
+    <MESSAGE value="refactor TagServiceImplTest" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor TagServiceImplTest" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

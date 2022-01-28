@@ -1,16 +1,17 @@
 package com.epam.esm.service;
 
 import com.epam.esm.model.Tag;
+import com.epam.esm.service.dto.TagDto;
 
 import java.util.List;
 
 public interface TagService {
 
-    Tag create(Tag tag);
+    TagDto create(TagDto tagDto);
 
-    List<Tag> readAll();
+    List<TagDto> readAll();
 
-    Tag readOne(int id);
+    TagDto readOne(int id);
 
     void deleteById(int id);
 }
