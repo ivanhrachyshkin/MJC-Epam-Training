@@ -1,4 +1,4 @@
-package com.epam.esm.service.dtomapper;
+package com.epam.esm.service.dto.mapper;
 
 import java.util.List;
 

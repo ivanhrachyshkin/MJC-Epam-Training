@@ -1,0 +1,2 @@
+com/epam/esm/dao/GiftCertificateDaoTest.java
+ com.epam.esm.dao.GiftCertificateDaoTest

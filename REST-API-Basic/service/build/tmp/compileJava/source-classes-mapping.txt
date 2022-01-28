@@ -1,0 +1,26 @@
+com/epam/esm/service/GiftCertificateService.java
+ com.epam.esm.service.GiftCertificateService
+com/epam/esm/service/dto/mapper/TagDtoMapper.java
+ com.epam.esm.service.dto.mapper.TagDtoMapper
+com/epam/esm/service/dto/mapper/DtoMapper.java
+ com.epam.esm.service.dto.mapper.DtoMapper
+com/epam/esm/service/dto/TagDto.java
+ com.epam.esm.service.dto.TagDto
+com/epam/esm/service/dto/mapper/GiftCertificateDtoMapper.java
+ com.epam.esm.service.dto.mapper.GiftCertificateDtoMapper
+com/epam/esm/service/TagService.java
+ com.epam.esm.service.TagService
+com/epam/esm/service/validator/ValidationException.java
+ com.epam.esm.service.validator.ValidationException
+com/epam/esm/service/dto/GiftCertificateDto.java
+ com.epam.esm.service.dto.GiftCertificateDto
+com/epam/esm/service/ServiceException.java
+ com.epam.esm.service.ServiceException
+com/epam/esm/service/validator/TagValidator.java
+ com.epam.esm.service.validator.TagValidator
+com/epam/esm/service/TagServiceImpl.java
+ com.epam.esm.service.TagServiceImpl
+com/epam/esm/service/validator/GiftCertificateValidator.java
+ com.epam.esm.service.validator.GiftCertificateValidator
+com/epam/esm/service/GiftCertificateServiceImpl.java
+ com.epam.esm.service.GiftCertificateServiceImpl

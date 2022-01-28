@@ -4,7 +4,7 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
-import com.epam.esm.service.dtomapper.DtoMapper;
+import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.TagValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,6 +23,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
 
+    private final DummyRb dummyRb = new DummyRb();
     @Mock
     private DtoMapper<Tag, TagDto> mapper;
     @Mock
@@ -42,6 +42,7 @@ class TagServiceImplTest {
 
     @BeforeEach
     public void setUp() {
+        ReflectionTestUtils.setField(tagService, "rb", dummyRb);
         tag1 = new Tag(1, "tag1");
         tag2 = new Tag(2, "tag2");
         tagDto1 = new TagDto(1, "tag1");
@@ -71,13 +72,15 @@ class TagServiceImplTest {
     @Test
     void shouldThrowException_On_Create() {
         //Given
+        dummyRb.setMessage("tag.alreadyExists.name","Tag with name = %s is already exist");
+        final String message = String.format("Tag with name = %s is already exist", tag1.getName());
         when(tagDao.readOneByName(tag1.getName())).thenReturn(Optional.of(tag1));
         when(mapper.dtoToModel(tagDto1)).thenReturn(tag1);
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> tagService.create(tagDto1));
         //Then
-        assertEquals("Tag with name = " + tag1.getName() + " is already exist", serviceException.getMessage());
+        assertEquals(message, serviceException.getMessage());
         verify(tagValidator, only()).createValidate(tagDto1);
         verify(tagDao, only()).readOneByName(tag1.getName());
         verify(mapper, only()).dtoToModel(tagDto1);
@@ -99,13 +102,14 @@ class TagServiceImplTest {
     @Test
     void shouldThrowException_On_ReadOne_NotFound() {
         //Given
+        dummyRb.setMessage("tag.notFound.id","Tag with id = %s not found");
+        final String message = String.format("Tag with id = %s not found", tag1.getId());
         when(tagDao.readOne(tag1.getId())).thenReturn(Optional.empty());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> tagService.readOne(tag1.getId()));
         //Then
-        assertEquals("Tag with id = " + tag1.getId() + " not found",
-                serviceException.getMessage());
+        assertEquals(message,serviceException.getMessage());
         verify(tagDao, only()).readOne(tag1.getId());
     }
 

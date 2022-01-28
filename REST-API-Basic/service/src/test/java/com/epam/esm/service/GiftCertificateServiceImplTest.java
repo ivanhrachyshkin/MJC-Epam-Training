@@ -7,7 +7,7 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
-import com.epam.esm.service.dtomapper.DtoMapper;
+import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,6 +26,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
 
+    private final DummyRb dummyRb = new DummyRb();
     @Mock
     private DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
     @Mock
@@ -50,6 +49,7 @@ class GiftCertificateServiceImplTest {
 
     @BeforeEach
     public void setUp() {
+        ReflectionTestUtils.setField(giftCertificateService, "rb", dummyRb);
         giftCertificate1 = new GiftCertificate();
         tag1 = new Tag(1, "tag1");
         tag2 = new Tag(2, "tag2");
@@ -102,14 +102,15 @@ class GiftCertificateServiceImplTest {
     @Test
     void shouldThrowException_On_Create_WithTags() {
         //Given
+        dummyRb.setMessage("giftCertificate.alreadyExists.name","Gift certificate with name = %s is already exist");
+        final String message = String.format("Gift certificate with name = %s is already exist", giftCertificate1.getName());
         when(giftCertificateDao.readOneByName(giftCertificate1.getName())).thenReturn(Optional.of(giftCertificate1));
         when(mapper.dtoToModel(giftCertificateDto1)).thenReturn(giftCertificate1);
         //When
         final ServiceException serviceException
                 = assertThrows(ServiceException.class, () -> giftCertificateService.create(giftCertificateDto1));
         //Then
-        assertEquals("Gift certificate with name = " + giftCertificate1.getName() + " is already exist",
-                serviceException.getMessage());
+        assertEquals(message, serviceException.getMessage());
         verify(giftCertificateValidator, only()).createValidate(giftCertificateDto1);
         verify(giftCertificateDao, only()).readOneByName(giftCertificate1.getName());
         verify(mapper, only()).dtoToModel(giftCertificateDto1);
@@ -155,13 +156,16 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void shouldThrowException_On_ReadOne() {
-        //When
+        //Given
+        dummyRb.setMessage("giftCertificate.notFound.id","Gift certificate with id = %s not found");
         when(giftCertificateDao.readOne(giftCertificate1.getId())).thenReturn(Optional.empty());
+        final String message = String.format("Gift certificate with id = %s not found", giftCertificate1.getId());
+        //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> giftCertificateService.readOne(giftCertificate1.getId()));
         //Then
-        assertEquals("Gift certificate with id = " + giftCertificate1.getId() + " not found",
-                serviceException.getMessage());
+
+        assertEquals(message, serviceException.getMessage());
         verify(giftCertificateDao, only()).readOne(giftCertificate1.getId());
     }
 

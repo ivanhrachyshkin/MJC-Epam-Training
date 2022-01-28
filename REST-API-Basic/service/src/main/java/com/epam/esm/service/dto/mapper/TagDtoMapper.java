@@ -1,4 +1,4 @@
-package com.epam.esm.service.dtomapper;
+package com.epam.esm.service.dto.mapper;
 
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;

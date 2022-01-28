@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="move dto to service layer, refactor validation, refactor tests">
+    <list default="true" id="6ad7a7c0-2a7b-49dd-b82a-71ec67c0c746" name="Default Changelist" comment="refactor GiftCertificateServiceImplTest">
+      <change afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/DummyRb.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/TagValidatorTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
@@ -16,18 +18,42 @@
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/6.7/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/GiftCertificateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/GiftCertificateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/GiftCertificateDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/main/java/com/epam/esm/dao/TagDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/src/test/java/com/epam/esm/dao/GiftCertificateDaoTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/config/ControllerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/controller/src/main/java/com/epam/esm/controller/config/ControllerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/classes/com.epam.esm.dao.GiftCertificateDaoTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/classes/com.epam.esm.dao.GiftCertificateDaoTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/css/base-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/css/base-style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/js/report.js" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/js/report.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/packages/com.epam.esm.dao.html" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/reports/tests/test/packages/com.epam.esm.dao.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/test-results/test/TEST-com.epam.esm.dao.GiftCertificateDaoTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/test-results/test/TEST-com.epam.esm.dao.GiftCertificateDaoTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/test-results/test/binary/output.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/test-results/test/binary/output.bin.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/test-results/test/binary/results.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/dao/build/tmp/compileTestJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/dao/build/tmp/compileTestJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/model/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/model/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/css/base-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/css/base-style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/js/report.js" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/js/report.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/packages/com.epam.esm.service.html" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/reports/tests/test/packages/com.epam.esm.service.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/test-results/test/binary/results.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/build/tmp/compileTestJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/build/tmp/compileTestJava/source-classes-mapping.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/GiftCertificateServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dto/GiftCertificateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dto/GiftCertificateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dtomapper/GiftCertificateDtoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/dtomapper/GiftCertificateDtoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/TagServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/GiftCertificateValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/GiftCertificateValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/TagValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/main/java/com/epam/esm/service/validator/TagValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/GiftCertificateServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/GiftCertificateServiceImplTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/ValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/ValidatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/TagServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/TagServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/ValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/java/com/epam/esm/service/GiftCertificateValidatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST-API-Basic/service/src/test/resources/message.properties" beforeDir="false" afterPath="$PROJECT_DIR$/REST-API-Basic/service/src/test/resources/message.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,36 +98,6 @@
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
               </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build setup" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="documentation" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="help" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="other" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="REST-API-Basic" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="verification" type="c8890929:TasksNode$1" />
-              </path>
             </expand>
             <select />
           </tree_state>
@@ -114,6 +110,7 @@
       <list>
         <option value="FxmlFile" />
         <option value="Interface" />
+        <option value="Kotlin Class" />
         <option value="Class" />
       </list>
     </option>
@@ -144,41 +141,41 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="jdk.selected.JAVA_MODULE" value="1.8" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/REST-API-Basic" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/REST-API-Basic/src/main/webapp/WEB-INF/swagger" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.editor" />
+    <property name="settings.editor.selected.configurable" value="File.Encoding" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic" />
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\dao\src\test\resources" />
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\gradle\wrapper" />
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\config\src\main\resources" />
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\service\src\test\resources" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\webapp\WEB-INF\swagger" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\webapp\WEB-INF\resources\webjars" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\src\main\webapp\static\plug" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\service\src\test\resources" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\service\src\test\java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\service\src\main\resources" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\service\src\test\resources" />
+      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\service\src\test\java\com\epam\esm\service" />
       <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\dao\src\main\resources" />
-      <recent name="D:\EPAM\java-projects\MJC-Epam-Training\REST-API-Basic\controller\src\main" />
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\dao\src\test\resources" />
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic\config\src\main\resources" />
-      <recent name="C:\Users\Антон\Desktop\java-projects\MJC-Epam-Training\REST-API-Basic" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
       <recent name="com.epam.esm" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.epam.esm.dao.config" />
       <recent name="com.epam.esm.service" />
+      <recent name="com.epam.esm.service.config" />
+      <recent name="com.epam.esm.dao.config" />
       <recent name="com.epam.esm.controller.mapper" />
       <recent name="com.epam.esm.model" />
-      <recent name="com.epam.esm.unit.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.GiftCertificateDaoTest">
+  <component name="RunManager" selected="Gradle.Tests in 'com.epam.esm.service'">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -190,18 +187,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GiftCertificateDaoTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GiftCertificateValidatorTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.dao.GiftCertificateDaoTest&quot;" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.GiftCertificateValidatorTest&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value=":dao:test" />
+            <option value=":service:test" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -211,18 +208,18 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="GiftCertificateDaoTest.shouldCreateGiftCertificate_On_Update" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GiftCertificateValidatorTest.shouldThrowException_On_ReadAllGiftCertificateValidator_ForEmptyDescription" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.dao.GiftCertificateDaoTest.shouldCreateGiftCertificate_On_Update&quot;" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.GiftCertificateValidatorTest.shouldThrowException_On_ReadAllGiftCertificateValidator_ForEmptyDescription&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value=":dao:test" />
+            <option value=":service:test" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -232,39 +229,18 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="GiftCertificateDaoTest.shouldReturnAllGiftCertificates_On_ReadDescription_Negative" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GiftCertificateValidatorTest.shouldThrowException_On_UpdateGiftCertificateValidator" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.dao.GiftCertificateDaoTest.shouldReturnAllGiftCertificates_On_ReadDescription_Negative&quot;" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.GiftCertificateValidatorTest.shouldThrowException_On_UpdateGiftCertificateValidator&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value=":dao:test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="GiftCertificateDaoTest.shouldUpdateGiftCertificate_On_Update" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.epam.esm.dao.GiftCertificateDaoTest.shouldUpdateGiftCertificate_On_Update&quot;" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":dao:test" />
+            <option value=":service:test" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -295,23 +271,44 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="REST-API-Basic [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="TagValidatorTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.TagValidatorTest&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value="clean" />
+            <option value=":service:test" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Tests in 'com.epam.esm.service'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/REST-API-Basic" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.epam.esm.service.*&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":service:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
@@ -363,19 +360,19 @@
     <list>
       <item itemvalue="Gradle.REST-API-Basic [build]" />
       <item itemvalue="Smart Tomcat.tomcat" />
-      <item itemvalue="Gradle.REST-API-Basic [clean]" />
-      <item itemvalue="Gradle.GiftCertificateDaoTest.shouldReturnAllGiftCertificates_On_ReadDescription_Negative" />
-      <item itemvalue="Gradle.GiftCertificateDaoTest" />
-      <item itemvalue="Gradle.GiftCertificateDaoTest.shouldCreateGiftCertificate_On_Update" />
-      <item itemvalue="Gradle.GiftCertificateDaoTest.shouldUpdateGiftCertificate_On_Update" />
+      <item itemvalue="Gradle.GiftCertificateValidatorTest" />
+      <item itemvalue="Gradle.GiftCertificateValidatorTest.shouldThrowException_On_UpdateGiftCertificateValidator" />
+      <item itemvalue="Gradle.GiftCertificateValidatorTest.shouldThrowException_On_ReadAllGiftCertificateValidator_ForEmptyDescription" />
+      <item itemvalue="Gradle.TagValidatorTest" />
+      <item itemvalue="Gradle.Tests in 'com.epam.esm.service'" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.GiftCertificateDaoTest" />
-        <item itemvalue="Gradle.GiftCertificateDaoTest.shouldUpdateGiftCertificate_On_Update" />
-        <item itemvalue="Gradle.GiftCertificateDaoTest.shouldCreateGiftCertificate_On_Update" />
-        <item itemvalue="Gradle.GiftCertificateDaoTest.shouldReturnAllGiftCertificates_On_ReadDescription_Negative" />
-        <item itemvalue="Gradle.REST-API-Basic [clean]" />
+        <item itemvalue="Gradle.Tests in 'com.epam.esm.service'" />
+        <item itemvalue="Gradle.TagValidatorTest" />
+        <item itemvalue="Gradle.GiftCertificateValidatorTest" />
+        <item itemvalue="Gradle.GiftCertificateValidatorTest.shouldThrowException_On_ReadAllGiftCertificateValidator_ForEmptyDescription" />
+        <item itemvalue="Gradle.GiftCertificateValidatorTest.shouldThrowException_On_UpdateGiftCertificateValidator" />
       </list>
     </recent_temporary>
   </component>
@@ -419,6 +416,10 @@
       <workItem from="1643222400296" duration="1243000" />
       <workItem from="1643290937564" duration="601000" />
       <workItem from="1643360562111" duration="18929000" />
+      <workItem from="1643448196792" duration="2105000" />
+      <workItem from="1643470203519" duration="854000" />
+      <workItem from="1643471145894" duration="65000" />
+      <workItem from="1643536731482" duration="5514000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1642611414363</created>
@@ -609,7 +610,21 @@
       <option name="project" value="LOCAL" />
       <updated>1643373854707</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="added rb, refactor tests">
+      <created>1643406988444</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1643406988444</updated>
+    </task>
+    <task id="LOCAL-00029" summary="added rb, refactor tests">
+      <created>1643407463758</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1643407463758</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -626,7 +641,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="HEAD" />
+                        <option value="origin/rest-api-basic" />
                       </list>
                     </value>
                   </entry>
@@ -663,20 +678,21 @@
     <MESSAGE value="refactor GiftCertificateServiceImplTest" />
     <MESSAGE value="refactor TagServiceImplTest" />
     <MESSAGE value="move dto to service layer, refactor validation, refactor tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="move dto to service layer, refactor validation, refactor tests" />
+    <MESSAGE value="added rb, refactor tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="added rb, refactor tests" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftCertificateDaoTest.ic" NAME="GiftCertificateDaoTest Coverage Results" MODIFIED="1643384050211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftCertificateDaoTest.ic" NAME="GiftCertificateDaoTest Coverage Results" MODIFIED="1643063124874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$TagServiceImplTest_shouldThrowException_On_Create.ic" NAME="TagServiceImplTest.shouldThrowException_On_Create Coverage Results" MODIFIED="1642962794232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__com_epam_esm_unit_service_.ic" NAME="Tests in 'com.epam.esm.unit.service' Coverage Results" MODIFIED="1642634769368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftServiceImplTest.ic" NAME="GiftServiceImplTest Coverage Results" MODIFIED="1642955026305" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__REST_API_Basic_service_test_.ic" NAME="Tests in 'REST-API-Basic.service.test' Coverage Results" MODIFIED="1642962528455" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__REST_API_Basic_dao_test_.ic" NAME="Tests in 'REST-API-Basic.dao.test' Coverage Results" MODIFIED="1643375064439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__com_epam_esm_service_.ic" NAME="Tests in 'com.epam.esm.service' Coverage Results" MODIFIED="1643374960931" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MJC_Epam_Training$Tests_in__com_epam_esm_service_.ic" NAME="Tests in 'com.epam.esm.service' Coverage Results" MODIFIED="1643063052496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MJC_Epam_Training$GiftCertificateServiceImplTest.ic" NAME="GiftCertificateServiceImplTest Coverage Results" MODIFIED="1642955112470" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
