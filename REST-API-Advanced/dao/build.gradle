@@ -5,5 +5,4 @@ dependencies {
     implementation libs.c3p0
     implementation libs.postgresql
     implementation project(':model')
-
 }

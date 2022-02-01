@@ -1,7 +1,5 @@
 group 'com.epm'
 version '1.0'
-
-
 repositories {
     mavenCentral()
 }

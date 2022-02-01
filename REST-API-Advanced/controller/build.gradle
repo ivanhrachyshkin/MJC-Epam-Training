@@ -1,6 +1,7 @@
 dependencies {
     implementation libs.spring.boot.starter
     implementation libs.spring.boot.starter.web
+    implementation libs.spring.boot.starter.hateoas
     implementation libs.modelmapper
     implementation project(':service')
 }

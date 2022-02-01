@@ -2,9 +2,13 @@ package com.epam.esm.controller;
 
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDto;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.util.List;
 
@@ -39,9 +43,14 @@ public class TagController {
      * @return the response body representation of the tags.
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public List<TagDto> readAll() {
-        return tagService.readAll();
+    public HttpEntity<List<TagDto>> readAll() {
+        final List<TagDto> tags = tagService.readAll();
+        tags.forEach(tagDto -> tagDto
+                .add(linkTo(methodOn(TagController.class)
+                        .readAll())
+                        .slash(tagDto.getId())
+                        .withSelfRel()));
+        return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
     /**
@@ -51,13 +60,15 @@ public class TagController {
      * @return
      */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public TagDto readOne(@PathVariable final int id) {
-        return tagService.readOne(id);
+    public HttpEntity<TagDto> readOne(@PathVariable final int id) {
+        TagDto tagDto = tagService.readOne(id);
+        tagDto.add(linkTo(methodOn(TagController.class).readOne(id)).withSelfRel());
+        return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
     /**
      * The intention of mapping - handling of the delete operation.
+     *
      * @param id the request path variable representation of the tag's id.
      */
     @DeleteMapping(value = "/{id}")
