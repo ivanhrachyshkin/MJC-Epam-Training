@@ -1,0 +1,12 @@
+dependencies {
+    implementation libs.spring.boot.starter
+    implementation libs.spring.boot.starter.test
+    implementation libs.mockito.core
+    implementation libs.junit.jupiter.params
+    implementation libs.jackson.datatype.jsr310
+    implementation libs.modelmapper
+    implementation libs.spring.orm
+    implementation libs.hibernate.core
+    implementation project(':model')
+    implementation project(':dao')
+}
