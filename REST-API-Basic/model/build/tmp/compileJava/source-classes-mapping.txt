@@ -1,4 +1,0 @@
-com/epam/esm/model/Tag.java
- com.epam.esm.model.Tag
-com/epam/esm/model/GiftCertificate.java
- com.epam.esm.model.GiftCertificate

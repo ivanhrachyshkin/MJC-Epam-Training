@@ -8,6 +8,8 @@
 *.ctxt
 
 .idea/
+.gradle/
+build/
 *.iml
 
 # Mobile Tools for Java (J2ME)
