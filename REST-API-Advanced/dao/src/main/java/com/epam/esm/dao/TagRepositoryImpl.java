@@ -3,10 +3,13 @@ package com.epam.esm.dao;
 import com.epam.esm.model.Tag;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class TagRepositoryImpl implements TagRepository {
@@ -18,6 +21,7 @@ public class TagRepositoryImpl implements TagRepository {
     private static final String DELETE_QUERY = "DELETE FROM tag WHERE id = :id";
 
     private final SessionFactory sessionFactory;
+
     public TagRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -29,21 +33,33 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public List<Tag> readAll() {
-        return null;
+        final Session session = sessionFactory.getCurrentSession();
+        final TypedQuery<Tag> query = session.createQuery("SELECT e FROM Tag e", Tag.class);
+        query.setFirstResult(0);// todo flexible pagination
+        query.setMaxResults(10);
+        return query.getResultList();
     }
 
     @Override
-    public Tag readOne(final int id) {
-       final Session session = sessionFactory.getCurrentSession();
-        return session.get(Tag.class, id);
+    public Optional<Tag> readOne(final int id) {
+        final Session session = sessionFactory.getCurrentSession();
+        return Optional.ofNullable(session.get(Tag.class, id));
     }
 
     @Override
     public Optional<Tag> readOneByName(final String name) {
-        return null;
+        final Session session = sessionFactory.getCurrentSession();
+        final TypedQuery<Tag> query
+                = session.createQuery("SELECT e FROM Tag e WHERE e.name = ?1", Tag.class);
+        return Optional.ofNullable(query.setParameter(1, name).getSingleResult());
     }
 
     @Override
     public void deleteById(final int id) {
+        final Session session = sessionFactory.getCurrentSession();
+        final Tag tag = session.get(Tag.class, id);
+        session.remove(tag);
+        session.flush();
+        session.clear();
     }
 }

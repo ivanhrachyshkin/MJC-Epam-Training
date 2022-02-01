@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -32,37 +33,38 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public List<TagDto> readAll() {
-//        final List<Tag> tags = tagDao.readAll();
-//        return mapper.modelsToDto(tags);
-        return null;
+        final List<Tag> tags = tagRepository.readAll();
+        return mapper.modelsToDto(tags);
     }
 
     @Override
+    @Transactional
     public TagDto readOne(final int id) {
-        final Tag tag = tagRepository.readOne(id);
+        Tag tag = checkExist(id);
         return mapper.modelToDto(tag);
     }
 
     @Override
-
+    @Transactional
     public void deleteById(final int id) {
-//        checkExist(id);
-//        giftCertificateTagDao.deleteGiftCertificateTagByTagId(id);
-//        tagDao.deleteById(id);
+        checkExist(id);
+        //giftCertificateTagDao.deleteGiftCertificateTagByTagId(id);
+        tagRepository.deleteById(id);
     }
 
-//    private Tag checkExist(final int id) {
-//        return tagDao
-//                .readOne(id)
-//                .orElseThrow(() -> new ServiceException(rb.getString("tag.notFound.id"), id));
-//    }
-//
-//    private void checkExistByName(final String name) {
-//        tagDao
-//                .readOneByName(name)
-//                .ifPresent(tag -> {
-//                    throw new ServiceException(rb.getString("tag.alreadyExists.name"), name);
-//                });
-//    }
+    private Tag checkExist(final int id) {
+        return tagRepository
+                .readOne(id)
+                .orElseThrow(() -> new ServiceException("tag.notFound.id", id));
+    }
+
+    private void checkExistByName(final String name) {
+        tagRepository
+                .readOneByName(name)
+                .ifPresent(tag -> {
+                    throw new ServiceException("tag.alreadyExists.name", name);
+                });
+    }
 }

@@ -11,7 +11,7 @@ public interface TagRepository {
 
     List<Tag> readAll();
 
-    Tag readOne(int id);
+    Optional<Tag> readOne(int id);
 
     Optional<Tag>  readOneByName(final String name);
 
