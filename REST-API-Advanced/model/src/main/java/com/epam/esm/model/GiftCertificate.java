@@ -1,18 +1,36 @@
 package com.epam.esm.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "gift_certificate")
 public class GiftCertificate {
 
+    @Id
+    @GeneratedValue
+    @Column
     private Integer id;
+    @Column
     private String name;
+    @Column
     private String description;
+    @Column
     private Float price;
+    @Column
     private Integer duration;
+    @Column(name = "create_date")
     private LocalDateTime createDate;
+    @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "gift_certificate_tag",
+            joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn (name = "tag_id")
+    )
     private Set<Tag> tags;
 
     public GiftCertificate(Integer id, String name, String description, Float price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags) {

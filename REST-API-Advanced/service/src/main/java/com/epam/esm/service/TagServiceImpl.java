@@ -4,8 +4,7 @@ import com.epam.esm.dao.TagRepository;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import com.epam.esm.service.validator.TagValidator;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,22 +13,24 @@ import java.util.List;
 @Service
 public class TagServiceImpl implements TagService {
 
-    private final DtoMapper<Tag, TagDto> mapper;
     private final TagRepository tagRepository;
+    private final TagValidator tagValidator;
+    private final DtoMapper<Tag, TagDto> mapper;
 
-    public TagServiceImpl(DtoMapper<Tag, TagDto> mapper, TagRepository tagRepository) {
-        this.mapper = mapper;
+    public TagServiceImpl(TagRepository tagRepository, TagValidator tagValidator, DtoMapper<Tag, TagDto> mapper) {
         this.tagRepository = tagRepository;
+        this.tagValidator = tagValidator;
+        this.mapper = mapper;
     }
 
     @Override
+    @Transactional
     public TagDto create(final TagDto tagDto) {
-//        tagValidator.createValidate(tagDto);
-//        final Tag tag = mapper.dtoToModel(tagDto);
-//        checkExistByName(tag.getName());
-//        final Tag newTag = tagDao.create(tag);
-//        return mapper.modelToDto(newTag);
-        return null;
+        tagValidator.createValidate(tagDto);
+        final Tag tag = mapper.dtoToModel(tagDto);
+        checkExistByName(tag.getName());
+        final Tag newTag = tagRepository.create(tag);
+        return mapper.modelToDto(newTag);
     }
 
     @Override
@@ -50,7 +51,6 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public void deleteById(final int id) {
         checkExist(id);
-        //giftCertificateTagDao.deleteGiftCertificateTagByTagId(id);
         tagRepository.deleteById(id);
     }
 

@@ -44,13 +44,9 @@ public class TagController {
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<List<TagDto>> readAll() {
-        final List<TagDto> tags = tagService.readAll();
-        tags.forEach(tagDto -> tagDto
-                .add(linkTo(methodOn(TagController.class)
-                        .readAll())
-                        .slash(tagDto.getId())
-                        .withSelfRel()));
-        return new ResponseEntity<>(tags, HttpStatus.OK);
+        final List<TagDto> dtoTags = tagService.readAll();
+        dtoTags.forEach(this::linkTagDto);
+        return new ResponseEntity<>(dtoTags, HttpStatus.OK);
     }
 
     /**
@@ -61,8 +57,8 @@ public class TagController {
      */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<TagDto> readOne(@PathVariable final int id) {
-        TagDto tagDto = tagService.readOne(id);
-        tagDto.add(linkTo(methodOn(TagController.class).readOne(id)).withSelfRel());
+        final TagDto tagDto = tagService.readOne(id);
+        linkTagDto(tagDto);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
@@ -75,5 +71,13 @@ public class TagController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable final int id) {
         tagService.deleteById(id);
+    }
+
+    private void linkTagDto(final TagDto tagDto) {
+        tagDto
+                .add(linkTo(methodOn(TagController.class)
+                        .readAll())
+                        .slash(tagDto.getId())
+                        .withSelfRel());
     }
 }
