@@ -55,10 +55,10 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         final Set<String> sortCriteria = new LinkedHashSet<>();
         final Map<Integer, Object> values = new HashMap<>();
 
-//        if (tag != null) {
-//            whereCriteria.add("e.tag.name LIKE ?1");
-//            values.put(1, tag); // todo
-//        }
+        if (tag != null) {
+            whereCriteria.add("tag1.name LIKE ?1");
+            values.put(1, tag); // todo
+        }
 
         if (name != null) {
             whereCriteria.add("e.name LIKE ?2");

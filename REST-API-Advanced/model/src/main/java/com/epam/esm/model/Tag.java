@@ -15,17 +15,22 @@ public class Tag {
     private Integer id;
     @Column
     private String name;
+    @ManyToMany(mappedBy = "tags")
+    private Set<GiftCertificate> giftCertificates = new HashSet<>();
 
     public Tag(Integer id, String name) {
         this.id = id;
         this.name = name;
+        this.giftCertificates = giftCertificates;
+    }
+
+    public Tag(Integer id, String name, Set<GiftCertificate> giftCertificates) {
+        this.id = id;
+        this.name = name;
+        this.giftCertificates = giftCertificates;
     }
 
     public Tag() {
-    }
-
-    public Tag(final String name) {
-        this.name = name;
     }
 
     public Integer getId() {
@@ -44,24 +49,24 @@ public class Tag {
         this.name = name;
     }
 
+    public Set<GiftCertificate> getGiftCertificates() {
+        return giftCertificates;
+    }
+
+    public void setGiftCertificates(Set<GiftCertificate> giftCertificates) {
+        this.giftCertificates = giftCertificates;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return Objects.equals(id, tag.id) && Objects.equals(name, tag.name);
+        return Objects.equals(id, tag.id) && Objects.equals(name, tag.name) && Objects.equals(giftCertificates, tag.giftCertificates);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return Objects.hash(id, name, giftCertificates);
     }
 }

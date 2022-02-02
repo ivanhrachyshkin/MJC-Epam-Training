@@ -36,7 +36,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
         checkExistByName(giftCertificate.getName());
         final GiftCertificate newGiftCertificate = giftCertificateRepository.create(giftCertificate);
-        createOrAssignTags(newGiftCertificate);
         return mapper.modelToDto(newGiftCertificate);
     }
 
@@ -46,10 +45,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                             final String description,
                                             final Boolean dateSortDirection,
                                             final Boolean nameSortDirection) {
-      //giftCertificateValidator.readAllValidate(tag, name, description);
-      List<GiftCertificate> giftCertificates
-              = giftCertificateRepository.readAll(tag, name, description, dateSortDirection, nameSortDirection);
-      return mapper.modelsToDto(giftCertificates);
+        giftCertificateValidator.readAllValidate(tag, name, description);
+        List<GiftCertificate> giftCertificates
+                = giftCertificateRepository.readAll(tag, name, description, dateSortDirection, nameSortDirection);
+        return mapper.modelsToDto(giftCertificates);
     }
 
     @Override
@@ -76,9 +75,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public void deleteById(final int id) {
-        final GiftCertificate giftCertificate = checkExist(id);
+        checkExist(id);
         giftCertificateRepository.deleteById(id);
-        // giftCertificateTagDao.deleteGiftCertificateTagByCertificateId(id);
     }
 
     private GiftCertificate checkExist(final int id) {
@@ -94,26 +92,5 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .ifPresent(giftCertificate -> {
                     throw new ServiceException("giftCertificate.alreadyExists.name", name);
                 });
-    }
-
-    private void createOrAssignTags(final GiftCertificate giftCertificate) {
-//        final Set<Tag> assignedTags = giftCertificate
-//                .getTags()
-//                .stream()
-//                .filter(Objects::nonNull)
-//                .peek(tag -> createOrAssignTags(tag, giftCertificate))
-//                .collect(Collectors.toSet());
-//        giftCertificate.setTags(assignedTags);
-    }
-
-    private void createOrAssignTags(final Tag tag, final GiftCertificate giftCertificate) {
-//        final Optional<Tag> oldTag = tagDao.readOneByName(tag.getName());
-//        if (!oldTag.isPresent()) {
-//            final Tag newTag = tagDao.create(tag);
-//            tag.setId(newTag.getId());
-//        } else {
-//            tag.setId(oldTag.get().getId());
-//        }
-//        giftCertificateTagDao.createGiftCertificateTag(giftCertificate.getId(), tag.getId());
     }
 }
