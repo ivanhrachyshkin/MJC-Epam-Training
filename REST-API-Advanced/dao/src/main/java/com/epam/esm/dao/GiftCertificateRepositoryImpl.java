@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TypedQuery;
-import java.io.Serializable;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -17,7 +16,6 @@ import java.util.*;
 @Component
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
 
-    private static final String UPDATE_QUERY = "UPDATE gift_certificate SET %s WHERE id = :id";
 
     private static final String READ_QUERY = "SELECT e FROM GiftCertificate e";
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM GiftCertificate e WHERE e.name = ?1";
@@ -34,20 +32,16 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
+    @Transactional
     public GiftCertificate create(final GiftCertificate giftCertificate) {
         giftCertificate.setCreateDate(LocalDateTime.now(clock));
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
-        final Set<Tag> tags = giftCertificate.getTags();
         final Session session = sessionFactory.getCurrentSession();
-        tags.forEach(tag -> {tagRepository
-                .readOneByName(tag.getName())
-                .ifPresent(tag1 -> tag.setId(tag1.getId()));
-        });
+        final Set<Tag> tags = giftCertificate.getTags();
+        setTagId(tags);
         session.clear();
-        giftCertificate.setTags(tags);
         session.save(giftCertificate);
         session.flush();
-        System.out.println("new ID" + giftCertificate.getId());
         return giftCertificate;
     }
 
@@ -98,7 +92,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         }
 
         final String finalQuery = READ_QUERY + where + sort;
-        System.out.println(finalQuery);
         final TypedQuery<GiftCertificate> query = session.createQuery(finalQuery, GiftCertificate.class);
         query.setFirstResult(0);// todo flexible pagination and methods
         query.setMaxResults(10);
@@ -129,42 +122,13 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public void update(final GiftCertificate giftCertificate) {
-//        final Map<String, Object> columnToPlaceholder = new HashMap<>();
-//        final Map<String, Object> columnToValue = new HashMap<>();
-//
-//        columnToValue.put("id", giftCertificate.getId());
-//
-//        if (giftCertificate.getName() != null) {
-//            columnToPlaceholder.put("name", ":name");
-//            columnToValue.put("name", giftCertificate.getName());
-//        }
-//
-//        if (giftCertificate.getDescription() != null) {
-//            columnToPlaceholder.put("description", ":description");
-//            columnToValue.put("description", giftCertificate.getDescription());
-//        }
-//
-//        if (giftCertificate.getPrice() != null) {
-//            columnToPlaceholder.put("price", ":price");
-//            columnToValue.put("price", giftCertificate.getPrice());
-//        }
-//
-//        if (giftCertificate.getDuration() != null) {
-//            columnToPlaceholder.put("duration", ":duration");
-//            columnToValue.put("duration", giftCertificate.getDuration());
-//        }
-//
-//        columnToPlaceholder.put("last_update_date", ":last_update_date");
-//        columnToValue.put("last_update_date", Timestamp.valueOf(LocalDateTime.now(clock)));
-//
-//        final MapSqlParameterSource namedParameters = new MapSqlParameterSource(columnToValue);
-//        final String query = String.format(UPDATE_QUERY, columnToPlaceholder
-//                .entrySet()
-//                .stream()
-//                .map(entry -> entry.getKey() + "=" + entry.getValue())
-//                .collect(Collectors.joining(", ")));
-//
-//      namedParameterJdbcTemplate.update(query, namedParameters);
+        giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
+        final Session session = sessionFactory.getCurrentSession();
+        final Set<Tag> tags = giftCertificate.getTags();
+        setTagId(tags);
+        session.clear();
+        session.saveOrUpdate(giftCertificate);
+        session.flush();
     }
 
     @Override
@@ -174,5 +138,16 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         session.remove(giftCertificate);
         session.flush();
         session.clear();
+    }
+
+    private void setTagId(final Set<Tag> tags) {
+        tags.forEach(tag -> {
+            final Optional<Tag> optionalTag = tagRepository.readOneByName(tag.getName());
+            if (optionalTag.isPresent()) {
+                tag.setId(optionalTag.get().getId());
+            } else {
+                tag.setId(null);
+            }
+        });
     }
 }

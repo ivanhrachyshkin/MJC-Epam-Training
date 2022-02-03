@@ -35,9 +35,10 @@ public class GiftCertificateController {
      * @return the response body representation of the gift certificate.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.create(giftCertificateDto);
+    public HttpEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
+        final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
+        linkGiftCertificateDto(createdGiftCertificateDto);
+        return new ResponseEntity<>(giftCertificateDto, HttpStatus.CREATED);
     }
 
     /**
@@ -95,10 +96,10 @@ public class GiftCertificateController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public GiftCertificateDto update(@PathVariable final int id,
-                                     @RequestBody final GiftCertificateDto giftCertificateDto) {
+    public void update(@PathVariable final int id,
+                       @RequestBody final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.setId(id);
-        return giftCertificateService.update(giftCertificateDto);
+        giftCertificateService.update(giftCertificateDto);
     }
 
     /**

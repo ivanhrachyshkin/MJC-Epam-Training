@@ -62,14 +62,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto update(final GiftCertificateDto giftCertificateDto) {
-//        giftCertificateValidator.updateValidate(giftCertificateDto);
-//        final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
-//        checkExist(giftCertificate.getId());
-//        checkExistByName(giftCertificate.getName());
-//        giftCertificateDao.update(giftCertificate);
-//        createOrAssignTags(giftCertificate);
-//        return mapper.modelToDto(giftCertificate);
-        return null;
+        giftCertificateValidator.updateValidate(giftCertificateDto);
+        final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
+        checkExist(giftCertificate.getId());
+        checkExistByName(giftCertificate.getName());
+        giftCertificateRepository.update(giftCertificate);
+        return mapper.modelToDto(giftCertificate);
     }
 
     @Override
