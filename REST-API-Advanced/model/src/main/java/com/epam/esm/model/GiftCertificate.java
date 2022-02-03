@@ -154,12 +154,11 @@ public class GiftCertificate {
                 && Objects.equals(price, that.price)
                 && Objects.equals(duration, that.duration)
                 && Objects.equals(createDate, that.createDate)
-                && Objects.equals(lastUpdateDate, that.lastUpdateDate)
                 && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tags);
+        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate);
     }
 }

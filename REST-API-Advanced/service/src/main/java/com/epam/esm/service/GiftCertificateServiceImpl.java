@@ -40,6 +40,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    @Transactional
     public List<GiftCertificateDto> readAll(final String tag,
                                             final String name,
                                             final String description,

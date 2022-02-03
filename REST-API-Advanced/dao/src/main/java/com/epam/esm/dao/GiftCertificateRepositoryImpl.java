@@ -3,6 +3,7 @@ package com.epam.esm.dao;
 
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
@@ -16,16 +17,28 @@ import java.util.*;
 @Component
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
 
-
-    private static final String READ_QUERY = "SELECT e FROM GiftCertificate e";
+    private static final String READ_QUERY = "SELECT DISTINCT am from GiftCertificate am inner join am.tags ar";
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM GiftCertificate e WHERE e.name = ?1";
+    private static final String ASC = "ASC";
+    private static final String DESC = "DESC";
+    private static final String TAG_NAME_LIKE = "ar.name LIKE ?1";
+    private static final String NAME_LIKE = "am.name LIKE ?2";
+    private static final String DESCRIPTION_LIKE = "am.description LIKE ?3";
+    private static final String CREATE_DATE_QUERY = "am.createDate ";
+    private static final String NAME_QUERY = "am.name " ;
+    private static final String WHERE_DELIMITER = " AND ";
+    private static final String ORDER_DELIMITER = ", ";
+    private static final String WHERE = " WHERE ";
+    private static final String ORDER_BY = " ORDER BY ";
+
 
     private final TagRepository tagRepository;
     private final SessionFactory sessionFactory;
     private final Clock clock;
 
-
-    public GiftCertificateRepositoryImpl(TagRepository tagRepository, SessionFactory sessionFactory, Clock clock) {
+    public GiftCertificateRepositoryImpl(final TagRepository tagRepository,
+                                         final SessionFactory sessionFactory,
+                                         final Clock clock) {
         this.tagRepository = tagRepository;
         this.sessionFactory = sessionFactory;
         this.clock = clock;
@@ -36,6 +49,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public GiftCertificate create(final GiftCertificate giftCertificate) {
         giftCertificate.setCreateDate(LocalDateTime.now(clock));
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
+
         final Session session = sessionFactory.getCurrentSession();
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
@@ -53,54 +67,52 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                                          final Boolean dateSortDirection,
                                          final Boolean nameSortDirection) {
         final Session session = sessionFactory.getCurrentSession();
-
         final Set<String> whereCriteria = new LinkedHashSet<>();
-        final Set<String> sortCriteria = new LinkedHashSet<>();
         final Map<Integer, Object> values = new HashMap<>();
 
         if (tag != null) {
-            whereCriteria.add("tag1.name LIKE ?1");
-            values.put(1, tag); // todo
+            whereCriteria.add(TAG_NAME_LIKE);
+            values.put(1, tag);
         }
 
         if (name != null) {
-            whereCriteria.add("e.name LIKE ?2");
+            whereCriteria.add(NAME_LIKE);
             values.put(2, name);
         }
 
         if (description != null) {
-            whereCriteria.add("e.description LIKE ?3");
+            whereCriteria.add(DESCRIPTION_LIKE);
             values.put(3, description);
         }
 
-        String where = "";
+        String where = StringUtils.EMPTY;
         if (!whereCriteria.isEmpty()) {
-            where = " WHERE " + String.join(" AND ", whereCriteria);
+            where = WHERE + String.join(WHERE_DELIMITER, whereCriteria);
         }
 
+        final Set<String> sortCriteria = new LinkedHashSet<>();
         if (dateSortDirection != null) {
-            sortCriteria.add("e.createDate " + (dateSortDirection ? "ASC" : "DESC"));
+            sortCriteria.add(CREATE_DATE_QUERY + (dateSortDirection ? ASC : DESC));
         }
 
         if (nameSortDirection != null) {
-            sortCriteria.add("e.name " + (nameSortDirection ? "ASC" : "DESC"));
+            sortCriteria.add(NAME_QUERY + (nameSortDirection ? ASC : DESC));
         }
 
-        String sort = "";
+        String sort = StringUtils.EMPTY;
         if (!sortCriteria.isEmpty()) {
-            sort = " ORDER BY " + String.join(", ", sortCriteria);
+            sort = ORDER_BY + String.join(ORDER_DELIMITER, sortCriteria);
         }
 
         final String finalQuery = READ_QUERY + where + sort;
-        final TypedQuery<GiftCertificate> query = session.createQuery(finalQuery, GiftCertificate.class);
-        query.setFirstResult(0);// todo flexible pagination and methods
-        query.setMaxResults(10);
+        final TypedQuery<GiftCertificate> typedQuery = session.createQuery(finalQuery, GiftCertificate.class);
+
         if (!values.isEmpty()) {
-            values.forEach((position, value) -> {
-                query.setParameter(position, "%" + value + "%");
-            });
+            values.forEach((position, value) -> typedQuery.setParameter(position, "%" + value + "%"));
         }
-        return query.getResultList();
+
+        paginateQuery(typedQuery, 1);
+        return typedQuery.getResultList();
     }
 
     @Override
@@ -123,6 +135,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     @Override
     public void update(final GiftCertificate giftCertificate) {
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
+
         final Session session = sessionFactory.getCurrentSession();
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
@@ -149,5 +162,10 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                 tag.setId(null);
             }
         });
+    }
+
+    private void paginateQuery(final TypedQuery<GiftCertificate> typedQuery, final int pageNumber) {
+        typedQuery.setFirstResult(pageNumber - 1);
+        typedQuery.setMaxResults(10);
     }
 }

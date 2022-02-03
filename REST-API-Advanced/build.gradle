@@ -20,6 +20,7 @@ allprojects {
 
     dependencies {
         implementation libs.lombok
+        implementation libs.commons.lang3
     }
 
     test {
