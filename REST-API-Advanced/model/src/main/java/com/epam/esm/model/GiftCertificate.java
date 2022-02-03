@@ -26,15 +26,21 @@ public class GiftCertificate {
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "gift_certificate_tag",
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
-            inverseJoinColumns = @JoinColumn (name = "tag_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
-    public GiftCertificate(final Integer id, String name, String description, Float price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags) {
+    public GiftCertificate(final Integer id,
+                           final String name,
+                           final String description,
+                           final Float price,
+                           final Integer duration,
+                           final LocalDateTime createDate,
+                           final LocalDateTime lastUpdateDate,
+                           final Set<Tag> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,7 +51,13 @@ public class GiftCertificate {
         this.tags = tags;
     }
 
-    public GiftCertificate(Integer id, String name, String description, Float price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+    public GiftCertificate(final Integer id,
+                           final String name,
+                           final String description,
+                           final Float price,
+                           final Integer duration,
+                           final LocalDateTime createDate,
+                           final LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -133,36 +145,15 @@ public class GiftCertificate {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final GiftCertificate that = (GiftCertificate) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
-                && Objects.equals(description, that.description)
-                && Objects.equals(price, that.price)
-                && Objects.equals(duration, that.duration)
-                && Objects.equals(createDate, that.createDate)
-                && Objects.equals(lastUpdateDate, that.lastUpdateDate)
-                && Objects.equals(tags, that.tags);
+        GiftCertificate that = (GiftCertificate) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(duration, that.duration) && Objects.equals(createDate, that.createDate) && Objects.equals(lastUpdateDate, that.lastUpdateDate) && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tags);
-    }
-
-    @Override
-    public String toString() {
-        return "GiftCertificate{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", duration=" + duration +
-                ", createDate=" + createDate +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", tags=" + tags +
-                '}';
     }
 }

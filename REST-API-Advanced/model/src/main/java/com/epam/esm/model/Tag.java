@@ -1,9 +1,7 @@
 package com.epam.esm.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "tag")
@@ -13,21 +11,14 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Integer id;
-    @Column
+    @Column(unique = true)
     private String name;
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "tags")
     private Set<GiftCertificate> giftCertificates = new HashSet<>();
 
     public Tag(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.giftCertificates = giftCertificates;
-    }
-
-    public Tag(Integer id, String name, Set<GiftCertificate> giftCertificates) {
-        this.id = id;
-        this.name = name;
-        this.giftCertificates = giftCertificates;
     }
 
     public Tag() {

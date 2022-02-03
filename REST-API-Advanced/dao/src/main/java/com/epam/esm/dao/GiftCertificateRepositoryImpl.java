@@ -2,6 +2,7 @@ package com.epam.esm.dao;
 
 
 import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Tag;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
@@ -21,24 +22,32 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String READ_QUERY = "SELECT e FROM GiftCertificate e";
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM GiftCertificate e WHERE e.name = ?1";
 
+    private final TagRepository tagRepository;
     private final SessionFactory sessionFactory;
     private final Clock clock;
 
-    public GiftCertificateRepositoryImpl(final SessionFactory sessionFactory, final Clock clock) {
+
+    public GiftCertificateRepositoryImpl(TagRepository tagRepository, SessionFactory sessionFactory, Clock clock) {
+        this.tagRepository = tagRepository;
         this.sessionFactory = sessionFactory;
         this.clock = clock;
     }
-
 
     @Override
     public GiftCertificate create(final GiftCertificate giftCertificate) {
         giftCertificate.setCreateDate(LocalDateTime.now(clock));
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
+        final Set<Tag> tags = giftCertificate.getTags();
         final Session session = sessionFactory.getCurrentSession();
-        final Serializable id = session.save(giftCertificate);
-        session.flush();
+        tags.forEach(tag -> {tagRepository
+                .readOneByName(tag.getName())
+                .ifPresent(tag1 -> tag.setId(tag1.getId()));
+        });
         session.clear();
-        giftCertificate.setId((Integer) id);
+        giftCertificate.setTags(tags);
+        session.save(giftCertificate);
+        session.flush();
+        System.out.println("new ID" + giftCertificate.getId());
         return giftCertificate;
     }
 
@@ -94,7 +103,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         query.setFirstResult(0);// todo flexible pagination and methods
         query.setMaxResults(10);
         if (!values.isEmpty()) {
-            values.forEach((position, value) -> {query.setParameter(position, "%" + value + "%");
+            values.forEach((position, value) -> {
+                query.setParameter(position, "%" + value + "%");
             });
         }
         return query.getResultList();
