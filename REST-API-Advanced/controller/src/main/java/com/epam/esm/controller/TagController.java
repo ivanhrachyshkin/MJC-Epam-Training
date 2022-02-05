@@ -30,9 +30,10 @@ public class TagController {
      * @return the response body representation of the tag.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public TagDto create(@RequestBody final TagDto tagDto) {
-        return tagService.create(tagDto);
+    public HttpEntity<TagDto> create(@RequestBody final TagDto tagDto) {
+        final TagDto createdTag = tagService.create(tagDto);
+        linkTagDto(createdTag);
+        return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
     }
 
     /**

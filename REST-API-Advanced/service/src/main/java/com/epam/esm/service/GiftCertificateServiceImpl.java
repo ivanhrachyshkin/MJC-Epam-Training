@@ -56,8 +56,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
         checkExist(giftCertificate.getId());
         checkExistByName(giftCertificate.getName());
-        giftCertificateRepository.update(giftCertificate);
-        return mapper.modelToDto(giftCertificate);
+        final GiftCertificate updatedGiftCertificate = giftCertificateRepository.update(giftCertificate);
+        return mapper.modelToDto(updatedGiftCertificate);
     }
 
     @Override

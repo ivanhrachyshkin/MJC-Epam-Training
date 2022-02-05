@@ -22,10 +22,15 @@ allprojects {
         implementation libs.lombok
         annotationProcessor libs.lombok
         implementation libs.commons.lang3
+        implementation libs.jackson.annotations
     }
 
     test {
         useJUnitPlatform()
+    }
+
+    bootJar {
+        mainClass.set("com.epam.esm.Application")
     }
 }
 
@@ -36,6 +41,8 @@ dependencies {
     implementation project(':service')
     implementation project(':controller')
 }
+
+
 
 
 

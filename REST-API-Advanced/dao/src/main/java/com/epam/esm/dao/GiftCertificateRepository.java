@@ -19,7 +19,7 @@ public interface GiftCertificateRepository {
 
     Optional<GiftCertificate> readOneByName(String name);
 
-    void update(GiftCertificate giftCertificate);
+    GiftCertificate update(GiftCertificate giftCertificate);
 
     void deleteById(int id);
 }

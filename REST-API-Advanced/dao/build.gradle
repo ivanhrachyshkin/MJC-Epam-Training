@@ -1,8 +1,8 @@
 dependencies {
     implementation libs.spring.boot.starter
-    implementation libs.spring.orm
     implementation libs.hibernate.core
     implementation libs.c3p0
     implementation libs.postgresql
+    implementation libs.spring.data.jpa
     implementation project(':model')
 }

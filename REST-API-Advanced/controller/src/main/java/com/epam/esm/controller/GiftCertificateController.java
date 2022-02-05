@@ -35,7 +35,6 @@ public class GiftCertificateController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
         final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
-        System.out.println(createdGiftCertificateDto);
         linkGiftCertificateDto(createdGiftCertificateDto);
         return new ResponseEntity<>(createdGiftCertificateDto, HttpStatus.CREATED);
     }
@@ -59,12 +58,7 @@ public class GiftCertificateController {
         final List<GiftCertificateDto> dtoGiftCertificates
                 = giftCertificateService.readAll(tag, name, description, dateSort, nameSort);
 
-        dtoGiftCertificates.forEach(giftCertificateDto -> {
-            linkGiftCertificateDto(giftCertificateDto);
-            giftCertificateDto
-                    .getTags()
-                    .forEach(this::linkTagDto);
-        });
+        dtoGiftCertificates.forEach(this::linkGiftCertificateDto);
         return new ResponseEntity<>(dtoGiftCertificates, HttpStatus.OK);
     }
 
@@ -78,9 +72,6 @@ public class GiftCertificateController {
     public HttpEntity<GiftCertificateDto> readOne(@PathVariable final int id) {
         final GiftCertificateDto giftCertificateDto = giftCertificateService.readOne(id);
         linkGiftCertificateDto(giftCertificateDto);
-        giftCertificateDto
-                .getTags()
-                .forEach(this::linkTagDto);
         return new ResponseEntity<>(giftCertificateDto, HttpStatus.OK);
     }
 
@@ -94,11 +85,12 @@ public class GiftCertificateController {
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable final int id,
-                       @RequestBody final GiftCertificateDto giftCertificateDto) {
+    public HttpEntity<GiftCertificateDto> update(@PathVariable final int id,
+                                                 @RequestBody final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.setId(id);
-        giftCertificateService.update(giftCertificateDto);
+        final GiftCertificateDto updatedGiftCertificateDto = giftCertificateService.update(giftCertificateDto);
+        linkGiftCertificateDto(giftCertificateDto);
+        return new ResponseEntity<>(updatedGiftCertificateDto, HttpStatus.NO_CONTENT);
     }
 
     /**
@@ -124,5 +116,9 @@ public class GiftCertificateController {
         giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
                 .readOne(giftCertificateDto.getId()))
                 .withSelfRel());
+
+        giftCertificateDto
+                .getTags()
+                .forEach(this::linkTagDto);
     }
 }

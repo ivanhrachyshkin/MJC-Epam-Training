@@ -3,14 +3,13 @@ package com.epam.esm.dao;
 
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -28,39 +27,36 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String NAME_LIKE = "am.name LIKE ?2";
     private static final String DESCRIPTION_LIKE = "am.description LIKE ?3";
     private static final String CREATE_DATE_QUERY = "am.createDate ";
-    private static final String NAME_QUERY = "am.name " ;
+    private static final String NAME_QUERY = "am.name ";
     private static final String WHERE_DELIMITER = " AND ";
     private static final String ORDER_DELIMITER = ", ";
     private static final String WHERE = " WHERE ";
     private static final String ORDER_BY = " ORDER BY ";
 
+    @PersistenceContext
+    private final EntityManager entityManager;
     private final TagRepository tagRepository;
-    private final SessionFactory sessionFactory;
     private final Clock clock;
 
     @Override
-    @Transactional
     public GiftCertificate create(final GiftCertificate giftCertificate) {
+        giftCertificate.setId(null);
         giftCertificate.setCreateDate(LocalDateTime.now(clock));
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
-
-        final Session session = sessionFactory.getCurrentSession();
+        entityManager.persist(giftCertificate);
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
-        session.clear();
-        session.save(giftCertificate);
-        session.flush();
+        entityManager.merge(giftCertificate);
+        entityManager.flush();
         return giftCertificate;
     }
 
     @Override
-    @Transactional
     public List<GiftCertificate> readAll(final String tag,
                                          final String name,
                                          final String description,
                                          final Boolean dateSortDirection,
                                          final Boolean nameSortDirection) {
-        final Session session = sessionFactory.getCurrentSession();
         final Set<String> whereCriteria = new LinkedHashSet<>();
         final Map<Integer, Object> values = new HashMap<>();
 
@@ -99,7 +95,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         }
 
         final String finalQuery = READ_QUERY + where + sort;
-        final TypedQuery<GiftCertificate> typedQuery = session.createQuery(finalQuery, GiftCertificate.class);
+        final TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(finalQuery, GiftCertificate.class);
 
         if (!values.isEmpty()) {
             values.forEach((position, value) -> typedQuery.setParameter(position, "%" + value + "%"));
@@ -111,15 +107,13 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public Optional<GiftCertificate> readOne(final int id) {
-        final Session session = sessionFactory.getCurrentSession();
-        return Optional.ofNullable(session.get(GiftCertificate.class, id));
+        return Optional.ofNullable(entityManager.find(GiftCertificate.class, id));
     }
 
     @Override
     public Optional<GiftCertificate> readOneByName(final String name) {
-        final Session session = sessionFactory.getCurrentSession();
         final TypedQuery<GiftCertificate> query
-                = session.createQuery(READ_ONE_BY_NAME_QUERY, GiftCertificate.class);
+                = entityManager.createQuery(READ_ONE_BY_NAME_QUERY, GiftCertificate.class);
         final List<GiftCertificate> giftCertificates = query.setParameter(1, name).getResultList();
         return giftCertificates.isEmpty()
                 ? Optional.empty()
@@ -127,24 +121,19 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public void update(final GiftCertificate giftCertificate) {
+    public GiftCertificate update(final GiftCertificate giftCertificate) {
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
-
-        final Session session = sessionFactory.getCurrentSession();
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
-        session.clear();
-        session.saveOrUpdate(giftCertificate);
-        session.flush();
+        entityManager.merge(giftCertificate);
+        entityManager.flush();
+        return giftCertificate;
     }
 
     @Override
     public void deleteById(final int id) {
-        final Session session = sessionFactory.getCurrentSession();
-        final GiftCertificate giftCertificate = session.get(GiftCertificate.class, id);
-        session.remove(giftCertificate);
-        session.flush();
-        session.clear();
+        final GiftCertificate giftCertificate = entityManager.find(GiftCertificate.class, id);
+        entityManager.remove(giftCertificate);
     }
 
     private void setTagId(final Set<Tag> tags) {
@@ -154,6 +143,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                 tag.setId(optionalTag.get().getId());
             } else {
                 tag.setId(null);
+                entityManager.persist(tag);
             }
         });
     }

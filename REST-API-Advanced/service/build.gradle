@@ -7,7 +7,6 @@ dependencies {
     implementation libs.jackson.datatype.jsr310
     implementation libs.modelmapper
     implementation libs.spring.orm
-    implementation libs.hibernate.core
     implementation project(':model')
     implementation project(':dao')
 }

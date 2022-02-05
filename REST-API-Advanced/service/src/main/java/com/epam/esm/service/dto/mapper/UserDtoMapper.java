@@ -1,10 +1,8 @@
 package com.epam.esm.service.dto.mapper;
 
 import com.epam.esm.model.Order;
-import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
 import com.epam.esm.service.dto.OrderDto;
-import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,17 +15,16 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class UserMapper implements DtoMapper<User, UserDto> {
+public class UserDtoMapper implements DtoMapper<User, UserDto> {
 
     private final ModelMapper modelMapper;
 
     @Override
     public UserDto modelToDto(final User user) {
-        emptyTagsIfNull(user);
         final Set<OrderDto> dtoOrders = user
-             .getOrders()
+                .getOrders()
                 .stream()
-                .map(order -> modelMapper.map(order, OrderDto.class))
+                .map(order -> new OrderDto(order.getId()))
                 .collect(Collectors.toSet());
         final UserDto dtoUser = modelMapper.map(user, UserDto.class);
         dtoUser.setOrders(dtoOrders);

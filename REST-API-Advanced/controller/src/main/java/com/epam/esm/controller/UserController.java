@@ -19,9 +19,6 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-/**
- * The intention of controller - handling of the /gift resource.
- */
 @RestController
 @RequestMapping(value = "/user")
 @RequiredArgsConstructor
@@ -34,35 +31,31 @@ public class UserController {
         final List<UserDto> dtoUsers
                 = userService.readAll();
 
-        dtoUsers.forEach(userDto -> {
-            linkGiftCertificateDto(userDto);
-            userDto
-                    .getOrders()
-                    .forEach(this::linkOrderDto);
-        });
+        dtoUsers.forEach(this::linkUserDto);
         return new ResponseEntity<>(dtoUsers, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<UserDto> readOne(@PathVariable final int id) {
         final UserDto userDto = userService.readOne(id);
-        linkGiftCertificateDto(userDto);
-        userDto
-                .getOrders()
-                .forEach(this::linkOrderDto);
+        linkUserDto(userDto);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     private void linkOrderDto(final OrderDto orderDto) {
         orderDto
-                .add(linkTo(methodOn(UserController.class)
-                        .readAll())
+                .add(linkTo(methodOn(OrderController.class)
+                        .readOne(orderDto.getId()))
                         .withSelfRel());
     }
 
-    private void linkGiftCertificateDto(final UserDto userDto) {
+    private void linkUserDto(final UserDto userDto) {
         userDto.add(linkTo(methodOn(UserController.class)
                 .readOne(userDto.getId()))
                 .withSelfRel());
+
+        userDto
+                .getOrders()
+                .forEach(this::linkOrderDto);
     }
 }
