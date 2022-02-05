@@ -3,6 +3,8 @@ package com.epam.esm.dao;
 
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
 
     private static final String READ_QUERY = "SELECT DISTINCT am from GiftCertificate am inner join am.tags ar";
@@ -31,18 +34,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String WHERE = " WHERE ";
     private static final String ORDER_BY = " ORDER BY ";
 
-
     private final TagRepository tagRepository;
     private final SessionFactory sessionFactory;
     private final Clock clock;
-
-    public GiftCertificateRepositoryImpl(final TagRepository tagRepository,
-                                         final SessionFactory sessionFactory,
-                                         final Clock clock) {
-        this.tagRepository = tagRepository;
-        this.sessionFactory = sessionFactory;
-        this.clock = clock;
-    }
 
     @Override
     @Transactional

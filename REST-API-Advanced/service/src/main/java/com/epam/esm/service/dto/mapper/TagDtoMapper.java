@@ -2,6 +2,7 @@ package com.epam.esm.service.dto.mapper;
 
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -9,25 +10,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class TagDtoMapper implements DtoMapper<Tag, TagDto> {
 
     private final ModelMapper modelMapper;
 
-    public TagDtoMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
-
     @Override
     public TagDto modelToDto(final Tag tag) {
-        final TagDto tagDto = modelMapper.map(tag, TagDto.class);
-        return tagDto;
+        return modelMapper.map(tag, TagDto.class);
 
     }
 
     @Override
     public Tag dtoToModel(final TagDto tagDto) {
-        final Tag tag = modelMapper.map(tagDto, Tag.class);
-        return tag;
+        return modelMapper.map(tagDto, Tag.class);
     }
 
     @Override

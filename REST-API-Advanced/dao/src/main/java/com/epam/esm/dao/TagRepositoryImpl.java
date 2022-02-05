@@ -1,6 +1,8 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class TagRepositoryImpl implements TagRepository {
 
     private static final String CREATE_QUERY = "INSERT INTO tag (name) VALUES (:name)";
@@ -18,10 +21,6 @@ public class TagRepositoryImpl implements TagRepository {
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM Tag e WHERE e.name = ?1";
 
     private final SessionFactory sessionFactory;
-
-    public TagRepositoryImpl(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Override
     public Tag create(final Tag tag) {
@@ -37,8 +36,7 @@ public class TagRepositoryImpl implements TagRepository {
     public List<Tag> readAll() {
         final Session session = sessionFactory.getCurrentSession();
         final TypedQuery<Tag> query = session.createQuery(READ_QUERY, Tag.class);
-        query.setFirstResult(0);// todo flexible pagination
-        query.setMaxResults(10);
+        paginateQuery(query, 1);
         return query.getResultList();
     }
 
@@ -66,5 +64,10 @@ public class TagRepositoryImpl implements TagRepository {
         session.remove(tag);
         session.flush();
         session.clear();
+    }
+
+    private void paginateQuery(final TypedQuery<Tag> typedQuery, final int pageNumber) {
+        typedQuery.setFirstResult(pageNumber - 1);
+        typedQuery.setMaxResults(10);
     }
 }

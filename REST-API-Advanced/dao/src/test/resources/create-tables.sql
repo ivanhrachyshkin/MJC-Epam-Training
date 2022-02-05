@@ -23,10 +23,20 @@ CREATE TABLE tag
 
 CREATE TABLE gift_certificate_tag
 (
-    gift_certificate_id INTEGER NOT NULL,
     tag_id              INTEGER NOT NULL,
+    gift_certificate_id INTEGER NOT NULL,
 
-    FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificate(id),
-    FOREIGN KEY (tag_id) REFERENCES tag(id),
+    FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE,
+    FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificate (id) ON DELETE CASCADE,
     UNIQUE (gift_certificate_id, tag_id)
 );
+
+create table ORDER
+(
+    id SERIAL NOT NULL PRIMARY KEY,
+    user_id             INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    gift_certificate_id INTEGER NOT NULL REFERENCES gift_certificate (id) ON DELETE CASCADE,
+    price               REAL    not NULL,
+    date                TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    UNIQUE (user_id, gift_certificate_id)
+)

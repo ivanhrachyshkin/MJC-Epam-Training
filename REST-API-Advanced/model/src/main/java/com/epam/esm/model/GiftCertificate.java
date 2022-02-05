@@ -1,12 +1,16 @@
 package com.epam.esm.model;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalIdCache;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "gift_certificate")
+@Table(name = "gift_certificate", schema = "public")
 public class GiftCertificate {
 
     @Id
@@ -26,65 +30,36 @@ public class GiftCertificate {
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "gift_certificate_tag",
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
-    public GiftCertificate(final Integer id,
-                           final String name,
-                           final String description,
-                           final Float price,
-                           final Integer duration,
-                           final LocalDateTime createDate,
-                           final LocalDateTime lastUpdateDate,
-                           final Set<Tag> tags) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
-    }
-
-    public GiftCertificate(final Integer id,
-                           final String name,
-                           final String description,
-                           final Float price,
-                           final Integer duration,
-                           final LocalDateTime createDate,
-                           final LocalDateTime lastUpdateDate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public GiftCertificate(String name, String description, Float price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
-    }
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders = new HashSet<>();
 
     public GiftCertificate() {
+    }
+
+    public GiftCertificate(Integer id, String name, String description, Float price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags, Set<Order> orders) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
+        this.orders = orders;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(final Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -92,7 +67,7 @@ public class GiftCertificate {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -100,7 +75,7 @@ public class GiftCertificate {
         return description;
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -108,7 +83,7 @@ public class GiftCertificate {
         return price;
     }
 
-    public void setPrice(final Float price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
@@ -116,7 +91,7 @@ public class GiftCertificate {
         return duration;
     }
 
-    public void setDuration(final Integer duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
@@ -124,7 +99,7 @@ public class GiftCertificate {
         return createDate;
     }
 
-    public void setCreateDate(final LocalDateTime createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
@@ -132,7 +107,7 @@ public class GiftCertificate {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(final LocalDateTime lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
@@ -140,25 +115,15 @@ public class GiftCertificate {
         return tags;
     }
 
-    public void setTags(final Set<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GiftCertificate that = (GiftCertificate) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
-                && Objects.equals(description, that.description)
-                && Objects.equals(price, that.price)
-                && Objects.equals(duration, that.duration)
-                && Objects.equals(createDate, that.createDate)
-                && Objects.equals(tags, that.tags);
+    public Set<Order> getOrders() {
+        return orders;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate);
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 }

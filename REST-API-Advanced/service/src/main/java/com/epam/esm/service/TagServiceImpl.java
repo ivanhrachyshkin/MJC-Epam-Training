@@ -5,23 +5,19 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.TagValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
     private final DtoMapper<Tag, TagDto> mapper;
-
-    public TagServiceImpl(TagRepository tagRepository, TagValidator tagValidator, DtoMapper<Tag, TagDto> mapper) {
-        this.tagRepository = tagRepository;
-        this.tagValidator = tagValidator;
-        this.mapper = mapper;
-    }
 
     @Override
     @Transactional

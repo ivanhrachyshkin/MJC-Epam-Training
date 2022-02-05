@@ -13,7 +13,7 @@ public class Tag {
     private Integer id;
     @Column(unique = true)
     private String name;
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags")
     private Set<GiftCertificate> giftCertificates = new HashSet<>();
 
     public Tag(Integer id, String name) {

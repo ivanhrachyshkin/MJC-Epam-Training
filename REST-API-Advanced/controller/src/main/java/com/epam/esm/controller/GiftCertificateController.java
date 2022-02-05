@@ -4,6 +4,7 @@ package com.epam.esm.controller;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,13 +21,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
  */
 @RestController
 @RequestMapping(value = "/gift")
+@RequiredArgsConstructor
 public class GiftCertificateController {
 
     private final GiftCertificateService giftCertificateService;
-
-    public GiftCertificateController(final GiftCertificateService giftCertificateService) {
-        this.giftCertificateService = giftCertificateService;
-    }
 
     /**
      * The intention of mapping - handling of the creation operation.
@@ -37,8 +35,9 @@ public class GiftCertificateController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
         final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
+        System.out.println(createdGiftCertificateDto);
         linkGiftCertificateDto(createdGiftCertificateDto);
-        return new ResponseEntity<>(giftCertificateDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdGiftCertificateDto, HttpStatus.CREATED);
     }
 
     /**

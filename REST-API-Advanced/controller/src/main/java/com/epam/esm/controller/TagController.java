@@ -2,6 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,13 +18,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/tag")
+@RequiredArgsConstructor
 public class TagController {
 
     private final TagService tagService;
-
-    public TagController(TagService tagService) {
-        this.tagService = tagService;
-    }
 
     /**
      * The intention of mapping - handling of the creation operation.

@@ -4,6 +4,7 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +14,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, GiftCertificateDto> {
 
     private final ModelMapper modelMapper;
-
-    public GiftCertificateDtoMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public GiftCertificateDto modelToDto(final GiftCertificate giftCertificate) {
