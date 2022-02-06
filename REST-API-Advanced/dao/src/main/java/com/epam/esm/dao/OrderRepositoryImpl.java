@@ -1,8 +1,6 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.model.Order;
-import com.epam.esm.model.Tag;
-import com.epam.esm.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepository {
 
-    private static final String READ_QUERY = "SELECT e FROM Order e";
+    private static final String READ_QUERY = "SELECT DISTINCT am from Order am inner join am.user ar";
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -28,17 +26,29 @@ public class OrderRepositoryImpl implements OrderRepository {
         return order;
     }
 
+    @SuppressWarnings("JpaQlInspection")
     @Override
-    public List<Order> readAll() {
-        final TypedQuery<Order> query = entityManager.createQuery(READ_QUERY, Order.class);
-        paginateQuery(query, 1);
-        return query.getResultList();
+    public List<Order> readAll(final Integer userId) {
+
+        String query = READ_QUERY;
+        TypedQuery<Order> typedQuery;
+        if (userId != null) {
+            query = query + " WHERE ar.id = ?1";
+            typedQuery = entityManager.createQuery(query, Order.class);
+            typedQuery.setParameter(1, userId);
+        } else {
+            typedQuery = entityManager.createQuery(query, Order.class);
+        }
+
+        paginateQuery(typedQuery, 1);
+        return typedQuery.getResultList();
     }
 
     @Override
     public Optional<Order> readOne(final int id) {
         return Optional.ofNullable(entityManager.find(Order.class, id));
     }
+
 
     @Override
     public void deleteById(final int id) {

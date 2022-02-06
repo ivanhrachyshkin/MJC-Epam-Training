@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -104,21 +103,21 @@ public class GiftCertificateController {
         giftCertificateService.deleteById(id);
     }
 
-    private void linkTagDto(final TagDto tagDto) {
-        tagDto
-                .add(linkTo(methodOn(TagController.class)
-                        .readAll())
-                        .slash(tagDto.getId())
-                        .withSelfRel());
-    }
-
     private void linkGiftCertificateDto(final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
                 .readOne(giftCertificateDto.getId()))
                 .withSelfRel());
 
         giftCertificateDto
-                .getTags()
+                .getDtoTags()
                 .forEach(this::linkTagDto);
+    }
+
+    private void linkTagDto(final TagDto tagDto) {
+        tagDto
+                .add(linkTo(methodOn(TagController.class)
+                        .readAll())
+                        .slash(tagDto.getId())
+                        .withSelfRel());
     }
 }

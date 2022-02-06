@@ -9,7 +9,7 @@ public interface OrderRepository {
 
     Order create(Order order);
 
-    List<Order> readAll();
+    List<Order> readAll(Integer userId);
 
     Optional<Order> readOne(int id);
 

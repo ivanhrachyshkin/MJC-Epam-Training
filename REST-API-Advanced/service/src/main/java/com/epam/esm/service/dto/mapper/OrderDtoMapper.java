@@ -1,8 +1,11 @@
 package com.epam.esm.service.dto.mapper;
 
+import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.User;
+import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -19,12 +22,20 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
 
     @Override
     public OrderDto modelToDto(final Order order) {
-        return modelMapper.map(order, OrderDto.class);
+        final OrderDto orderDto = modelMapper.map(order, OrderDto.class);
+        orderDto.setUserDto(new UserDto(order.getUser().getId()));
+        orderDto.setGiftCertificateDto(new GiftCertificateDto(order.getGiftCertificate().getId()));
+        return orderDto;
     }
 
     @Override
     public Order dtoToModel(final OrderDto orderDto) {
-        return modelMapper.map(orderDto, Order.class);
+        final Order order = modelMapper.map(orderDto, Order.class);
+        final User user = modelMapper.map(orderDto.getUserDto(), User.class);
+        final GiftCertificate giftCertificate = modelMapper.map(orderDto.getGiftCertificateDto(), GiftCertificate.class);
+        order.setUser(user);
+        order.setGiftCertificate(giftCertificate);
+        return order;
     }
 
     @Override

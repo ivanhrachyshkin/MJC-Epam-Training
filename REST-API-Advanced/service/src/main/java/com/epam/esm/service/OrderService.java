@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface OrderService {
 
-  //  OrderDto create(OrderDto orderDto);
+    //  OrderDto create(OrderDto orderDto);
 
-    List<OrderDto> readAll();
+    List<OrderDto> readAll(Integer userId);
 
     OrderDto readOne(int id);
 
-   // void deleteById(int id);
+    // void deleteById(int id);
 }

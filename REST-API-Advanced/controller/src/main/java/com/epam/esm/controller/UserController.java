@@ -55,7 +55,7 @@ public class UserController {
                 .withSelfRel());
 
         userDto
-                .getOrders()
+                .getDtoOrders()
                 .forEach(this::linkOrderDto);
     }
 }

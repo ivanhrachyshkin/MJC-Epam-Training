@@ -75,8 +75,8 @@ public class GiftCertificateValidator {
             throw new ValidationException("validator.giftCertificate.duration.negative");
         }
 
-        if (giftCertificateDto.getTags() != null) {
-            giftCertificateDto.getTags().forEach(tagValidator::createValidate);
+        if (giftCertificateDto.getDtoTags() != null) {
+            giftCertificateDto.getDtoTags().forEach(tagValidator::createValidate);
         }
     }
 }

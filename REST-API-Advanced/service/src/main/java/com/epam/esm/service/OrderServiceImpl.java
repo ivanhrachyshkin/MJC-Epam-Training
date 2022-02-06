@@ -1,15 +1,10 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.OrderRepository;
-import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.Order;
-import com.epam.esm.model.User;
 import com.epam.esm.service.dto.OrderDto;
-import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
-import com.epam.esm.service.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
-import org.mockito.internal.matchers.Or;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +20,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public List<OrderDto> readAll() {
-        final List<Order> orders = orderRepository.readAll();
+    public List<OrderDto> readAll(final Integer userId) {
+        final List<Order> orders = orderRepository.readAll(userId);
         return mapper.modelsToDto(orders);
     }
 

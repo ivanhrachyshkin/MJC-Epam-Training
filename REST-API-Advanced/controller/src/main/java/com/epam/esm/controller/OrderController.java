@@ -5,6 +5,7 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -25,18 +26,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final GiftCertificateService giftCertificateService;
     private final OrderService orderService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
-        final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
-        return new ResponseEntity<>(createdGiftCertificateDto, HttpStatus.CREATED);
-    }
+//    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public HttpEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
+//        final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
+//        return new ResponseEntity<>(createdGiftCertificateDto, HttpStatus.CREATED);
+//    }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<List<OrderDto>> readAll() {
-        final List<OrderDto> dtoOrders = orderService.readAll();
+    public HttpEntity<List<OrderDto>> readAll(@RequestParam(required = false) final Integer userId) {
+        final List<OrderDto> dtoOrders = orderService.readAll(userId);
         dtoOrders.forEach(this::linkOrderDto);
         return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
     }
@@ -48,27 +48,24 @@ public class OrderController {
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
-    @PatchMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<GiftCertificateDto> update(@PathVariable final int id,
-                                                 @RequestBody final GiftCertificateDto giftCertificateDto) {
-        giftCertificateDto.setId(id);
-        final GiftCertificateDto updatedGiftCertificateDto = giftCertificateService.update(giftCertificateDto);
-
-        return new ResponseEntity<>(updatedGiftCertificateDto, HttpStatus.NO_CONTENT);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable int id) {
-        giftCertificateService.deleteById(id);
-    }
-
-
     private void linkOrderDto(final OrderDto orderDto) {
         orderDto.add(linkTo(methodOn(OrderController.class)
                 .readOne(orderDto.getId()))
+                .withSelfRel());
+
+        linkUserDto(orderDto.getUserDto());
+        linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+    }
+
+    private void linkGiftCertificateDto(final GiftCertificateDto giftCertificateDto) {
+        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
+                .readOne(giftCertificateDto.getId()))
+                .withSelfRel());
+    }
+
+    private void linkUserDto(final UserDto userDto) {
+        userDto.add(linkTo(methodOn(UserController.class)
+                .readOne(userDto.getId()))
                 .withSelfRel());
     }
 }

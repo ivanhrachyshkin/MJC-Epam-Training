@@ -21,13 +21,13 @@ public class UserDtoMapper implements DtoMapper<User, UserDto> {
 
     @Override
     public UserDto modelToDto(final User user) {
+        final UserDto dtoUser = modelMapper.map(user, UserDto.class);
         final Set<OrderDto> dtoOrders = user
                 .getOrders()
                 .stream()
                 .map(order -> new OrderDto(order.getId()))
                 .collect(Collectors.toSet());
-        final UserDto dtoUser = modelMapper.map(user, UserDto.class);
-        dtoUser.setOrders(dtoOrders);
+        dtoUser.setDtoOrders(dtoOrders);
         return dtoUser;
     }
 
@@ -35,8 +35,8 @@ public class UserDtoMapper implements DtoMapper<User, UserDto> {
     public User dtoToModel(final UserDto userDto) {
         final User user = modelMapper.map(userDto, User.class);
         emptyTagsIfNull(user);
-        final Set<Order> orders = user
-                .getOrders()
+        final Set<Order> orders = userDto
+                .getDtoOrders()
                 .stream()
                 .map(orderDto -> modelMapper.map(orderDto, Order.class))
                 .collect(Collectors.toSet());
