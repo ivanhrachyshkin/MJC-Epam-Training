@@ -1,7 +1,6 @@
 package com.epam.esm.controller;
 
 
-import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
@@ -28,11 +27,12 @@ public class OrderController {
 
     private final OrderService orderService;
 
-//    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public HttpEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
-//        final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
-//        return new ResponseEntity<>(createdGiftCertificateDto, HttpStatus.CREATED);
-//    }
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<OrderDto> create(@RequestBody OrderDto orderDto) {
+        final OrderDto createdOrderDto = orderService.create(orderDto);
+        linkOrderDto(createdOrderDto);
+        return new ResponseEntity<>(createdOrderDto, HttpStatus.CREATED);
+    }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<List<OrderDto>> readAll(@RequestParam(required = false) final Integer userId) {

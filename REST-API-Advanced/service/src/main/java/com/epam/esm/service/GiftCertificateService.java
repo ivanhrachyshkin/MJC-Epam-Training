@@ -8,7 +8,7 @@ public interface GiftCertificateService {
 
     GiftCertificateDto create(GiftCertificateDto giftCertificateDto);
 
-    List<GiftCertificateDto> readAll(String tag,
+    List<GiftCertificateDto> readAll(List<String> tags,
                                      String name,
                                      String description,
                                      Boolean dateSortDirection,

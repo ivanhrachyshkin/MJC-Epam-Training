@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Service
 @RequiredArgsConstructor
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
+    private final ResourceBundle rb;
     private final GiftCertificateRepository giftCertificateRepository;
     private final DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
     private final GiftCertificateValidator giftCertificateValidator;
@@ -31,14 +33,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public List<GiftCertificateDto> readAll(final String tag,
+    public List<GiftCertificateDto> readAll(final List<String> tags,
                                             final String name,
                                             final String description,
                                             final Boolean dateSortDirection,
                                             final Boolean nameSortDirection) {
-        giftCertificateValidator.readAllValidate(tag, name, description);
+        giftCertificateValidator.readAllValidate(tags, name, description);
         List<GiftCertificate> giftCertificates
-                = giftCertificateRepository.readAll(tag, name, description, dateSortDirection, nameSortDirection);
+                = giftCertificateRepository.readAll(tags, name, description, dateSortDirection, nameSortDirection);
         return mapper.modelsToDto(giftCertificates);
     }
 
@@ -70,7 +72,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private GiftCertificate checkExist(final int id) {
         return giftCertificateRepository
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException("giftCertificate.notFound.id", id));
+                .orElseThrow(() -> new ServiceException(rb.getString("giftCertificate.notFound.id"), id));
 
     }
 
@@ -78,7 +80,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateRepository
                 .readOneByName(name)
                 .ifPresent(giftCertificate -> {
-                    throw new ServiceException("giftCertificate.alreadyExists.name", name);
+                    throw new ServiceException(rb.getString("giftCertificate.alreadyExists.name"), name);
                 });
     }
 }

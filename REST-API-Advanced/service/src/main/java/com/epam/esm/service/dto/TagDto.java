@@ -5,10 +5,15 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TagDto extends RepresentationModel<TagDto> {
 
     private Integer id;
     private String name;
+
+    public TagDto(Integer id) {
+        this.id = id;
+    }
 }

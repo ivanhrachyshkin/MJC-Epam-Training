@@ -9,7 +9,7 @@ public interface GiftCertificateRepository {
 
     GiftCertificate create(GiftCertificate giftCertificate);
 
-    List<GiftCertificate> readAll(String tag,
+    List<GiftCertificate> readAll(List<String> tags,
                                   String name,
                                   String description,
                                   Boolean dateSortDirection,

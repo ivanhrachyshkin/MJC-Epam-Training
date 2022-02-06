@@ -23,7 +23,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM GiftCertificate e WHERE e.name = ?1";
     private static final String ASC = "ASC";
     private static final String DESC = "DESC";
-    private static final String TAG_NAME_LIKE = "ar.name LIKE ?1";
+    private static final String TAG_NAME_LIKE = "ar.name LIKE ?";
     private static final String NAME_LIKE = "am.name LIKE ?2";
     private static final String DESCRIPTION_LIKE = "am.description LIKE ?3";
     private static final String CREATE_DATE_QUERY = "am.createDate ";
@@ -52,7 +52,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<GiftCertificate> readAll(final String tag,
+    public List<GiftCertificate> readAll(final List<String> tags,
                                          final String name,
                                          final String description,
                                          final Boolean dateSortDirection,
@@ -60,9 +60,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         final Set<String> whereCriteria = new LinkedHashSet<>();
         final Map<Integer, Object> values = new HashMap<>();
 
-        if (tag != null) {
-            whereCriteria.add(TAG_NAME_LIKE);
-            values.put(1, tag);
+        if (tags != null && !tags.isEmpty()) {
+            int n = 1;
+            tags.forEach(tag -> {
+                whereCriteria.add(TAG_NAME_LIKE + n);
+                values.put(n, tag);
+            });
         }
 
         if (name != null) {

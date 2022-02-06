@@ -1,7 +1,5 @@
 package com.epam.esm.service.dto;
 
-import com.epam.esm.model.GiftCertificate;
-import com.epam.esm.model.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

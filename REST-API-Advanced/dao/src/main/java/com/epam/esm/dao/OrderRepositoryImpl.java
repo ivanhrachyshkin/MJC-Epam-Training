@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,12 +18,18 @@ import java.util.Optional;
 public class OrderRepositoryImpl implements OrderRepository {
 
     private static final String READ_QUERY = "SELECT DISTINCT am from Order am inner join am.user ar";
+    @SuppressWarnings("JpaQlInspection")
+    private static final String READ_ONE_BY_IDS = "SELECT DISTINCT am from Order am " +
+            "inner join am.user au inner join am.giftCertificate ag WHERE au.id = ?1 AND ag.id = ?2";
 
     @PersistenceContext
     private final EntityManager entityManager;
+    private final Clock clock;
 
     @Override
     public Order create(final Order order) {
+        order.setId(null);
+        order.setDate(LocalDateTime.now(clock));
         entityManager.persist(order);
         entityManager.flush();
         return order;
@@ -49,6 +58,17 @@ public class OrderRepositoryImpl implements OrderRepository {
         return Optional.ofNullable(entityManager.find(Order.class, id));
     }
 
+    @Override
+    public Optional<Order> readOneByIds(final int userId, final int giftCertificateId) {
+        final TypedQuery<Order> query
+                = entityManager.createQuery(READ_ONE_BY_IDS, Order.class);
+        query.setParameter(1, userId);
+        query.setParameter(2, giftCertificateId);
+        final List<Order> giftCertificates = query.getResultList();
+        return giftCertificates.isEmpty()
+                ? Optional.empty()
+                : Optional.of(giftCertificates.get(0));
+    }
 
     @Override
     public void deleteById(final int id) {

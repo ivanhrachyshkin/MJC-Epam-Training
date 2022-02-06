@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Service
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
+    private final ResourceBundle rb;
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
     private final DtoMapper<Tag, TagDto> mapper;
@@ -53,14 +55,14 @@ public class TagServiceImpl implements TagService {
     private Tag checkExist(final int id) {
         return tagRepository
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException("tag.notFound.id", id));
+                .orElseThrow(() -> new ServiceException(rb.getString("tag.notFound.id"), id));
     }
 
     private void checkExistByName(final String name) {
         tagRepository
                 .readOneByName(name)
                 .ifPresent(tag -> {
-                    throw new ServiceException("tag.alreadyExists.name", name);
+                    throw new ServiceException(rb.getString("tag.alreadyExists.name"), name);
                 });
     }
 }

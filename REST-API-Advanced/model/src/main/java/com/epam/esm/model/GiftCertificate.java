@@ -39,7 +39,6 @@ public class GiftCertificate {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "giftCertificate")
     private Set<Order> orders = new HashSet<>();
 }

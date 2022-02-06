@@ -41,7 +41,7 @@ public class GiftCertificateController {
     /**
      * The intention of mapping - handling of the read operation.
      *
-     * @param tag         the request param representation of the tag's name.
+     * @param tags         the request param representation of the tag's name.
      * @param name        the request param representation of the gift certificate's name.
      * @param description the request param representation of the gift certificate's description.
      * @param dateSort    the request param representation of sort direction by date.
@@ -49,13 +49,13 @@ public class GiftCertificateController {
      * @return the response body representation of the gift certificates.
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<List<GiftCertificateDto>> readAll(@RequestParam(required = false) final String tag,
+    public HttpEntity<List<GiftCertificateDto>> readAll(@RequestParam(required = false) final List<String> tags,
                                                         @RequestParam(required = false) final String name,
                                                         @RequestParam(required = false) final String description,
                                                         @RequestParam(required = false) final Boolean dateSort,
                                                         @RequestParam(required = false) final Boolean nameSort) {
         final List<GiftCertificateDto> dtoGiftCertificates
-                = giftCertificateService.readAll(tag, name, description, dateSort, nameSort);
+                = giftCertificateService.readAll(tags, name, description, dateSort, nameSort);
 
         dtoGiftCertificates.forEach(this::linkGiftCertificateDto);
         return new ResponseEntity<>(dtoGiftCertificates, HttpStatus.OK);
