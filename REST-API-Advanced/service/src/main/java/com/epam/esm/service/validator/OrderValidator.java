@@ -17,14 +17,6 @@ public class OrderValidator {
 
     public void createValidate(final OrderDto orderDto) {
 
-        if (orderDto.getGiftCertificateDto().getId() == null) {
-            throw new ValidationException(rb.getString("validator.order.giftId.required"));
-        }
-
-        if (orderDto.getGiftCertificateDto().getId() <= 0) {
-            throw new ValidationException(rb.getString("validator.order.giftId.negative"));
-        }
-
         if (orderDto.getUserDto().getId() == null) {
             throw new ValidationException(rb.getString("validator.order.userId.required"));
         }
@@ -33,5 +25,12 @@ public class OrderValidator {
             throw new ValidationException(rb.getString("validator.order.userId.negative"));
         }
 
+        if (orderDto.getGiftCertificateDto().getId() == null) {
+            throw new ValidationException(rb.getString("validator.order.giftId.required"));
+        }
+
+        if (orderDto.getGiftCertificateDto().getId() <= 0) {
+            throw new ValidationException(rb.getString("validator.order.giftId.negative"));
+        }
     }
 }

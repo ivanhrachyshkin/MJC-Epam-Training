@@ -13,7 +13,7 @@ public class TagDto extends RepresentationModel<TagDto> {
     private Integer id;
     private String name;
 
-    public TagDto(Integer id) {
+    public TagDto(final Integer id) {
         this.id = id;
     }
 }

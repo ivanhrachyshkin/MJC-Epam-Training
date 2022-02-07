@@ -1,10 +1,8 @@
 package com.epam.esm.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,9 +10,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "order", schema = "public")
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class Order implements Serializable {
 
     @Id
@@ -30,4 +28,8 @@ public class Order implements Serializable {
     private Float price;
     @Column
     private LocalDateTime date;
+
+    public Order(final Integer id) {
+        this.id = id;
+    }
 }

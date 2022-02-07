@@ -22,7 +22,7 @@ public class OrderDto extends RepresentationModel<OrderDto> {
     private UserDto userDto;
     private GiftCertificateDto giftCertificateDto;
 
-    public OrderDto(Integer id) {
+    public OrderDto(final Integer id) {
         this.id = id;
     }
 }

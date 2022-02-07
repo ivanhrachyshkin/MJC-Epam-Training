@@ -32,7 +32,8 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
     public Order dtoToModel(final OrderDto orderDto) {
         final Order order = modelMapper.map(orderDto, Order.class);
         final User user = modelMapper.map(orderDto.getUserDto(), User.class);
-        final GiftCertificate giftCertificate = modelMapper.map(orderDto.getGiftCertificateDto(), GiftCertificate.class);
+        final GiftCertificate giftCertificate
+                = modelMapper.map(orderDto.getGiftCertificateDto(), GiftCertificate.class);
         order.setUser(user);
         order.setGiftCertificate(giftCertificate);
         return order;
@@ -52,11 +53,5 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
                 .stream()
                 .map(this::dtoToModel)
                 .collect(Collectors.toList());
-    }
-
-    private void emptyTagsIfNull(final User user) {
-        if (user.getOrders() == null) {
-            user.setOrders(Collections.emptySet());
-        }
     }
 }

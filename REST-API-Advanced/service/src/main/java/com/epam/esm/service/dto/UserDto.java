@@ -16,7 +16,7 @@ public class UserDto extends RepresentationModel<UserDto> {
     private String email;
     private Set<OrderDto> dtoOrders;
 
-    public UserDto(Integer id) {
+    public UserDto(final Integer id) {
         this.id = id;
     }
 }

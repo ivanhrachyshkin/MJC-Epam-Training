@@ -10,9 +10,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tag")
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class Tag {
 
     @Id
@@ -22,4 +22,8 @@ public class Tag {
     private String name;
     @ManyToMany(mappedBy = "tags")
     private Set<GiftCertificate> giftCertificates = new HashSet<>();
+
+    public Tag(final Integer id) {
+        this.id = id;
+    }
 }

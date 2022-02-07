@@ -40,7 +40,7 @@ public class GiftCertificateValidator {
 
         if (tags != null && !tags.isEmpty()) {
             tags.forEach(tag -> {
-                if (tag != null && tag.isEmpty()) {
+                if (tag == null || tag.isEmpty()) {
                     throw new ValidationException(rb.getString("validator.tag.name.empty"));
                 }
             });

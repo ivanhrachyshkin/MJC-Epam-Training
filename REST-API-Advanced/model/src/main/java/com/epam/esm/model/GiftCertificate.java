@@ -1,6 +1,5 @@
 package com.epam.esm.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +11,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "gift_certificate", schema = "public")
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class GiftCertificate {
 
     @Id
@@ -41,4 +40,8 @@ public class GiftCertificate {
 
     @OneToMany(mappedBy = "giftCertificate")
     private Set<Order> orders = new HashSet<>();
+
+    public GiftCertificate(final Integer id) {
+        this.id = id;
+    }
 }

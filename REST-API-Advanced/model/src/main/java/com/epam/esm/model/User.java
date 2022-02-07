@@ -3,7 +3,6 @@ package com.epam.esm.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -14,7 +13,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class User {
 
     @Id
@@ -25,4 +23,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Order> orders = new HashSet<>();
+
+    public User(final Integer id) {
+        this.id = id;
+    }
 }

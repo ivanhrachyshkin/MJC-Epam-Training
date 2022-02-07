@@ -54,8 +54,8 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     }
 
     @Override
-    public List<GiftCertificate> dtoToModels(List<GiftCertificateDto> giftCertificateDtos) {
-        return giftCertificateDtos
+    public List<GiftCertificate> dtoToModels(List<GiftCertificateDto> dtoGiftCertificates) {
+        return dtoGiftCertificates
                 .stream()
                 .map(this::dtoToModel)
                 .collect(Collectors.toList());
