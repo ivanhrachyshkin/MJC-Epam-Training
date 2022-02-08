@@ -3,6 +3,7 @@ package com.epam.esm.service.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -104,5 +105,19 @@ public class GiftCertificateDto {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tags);
+    }
+
+    @Override
+    public String toString() {
+        return "GiftCertificateDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", tags=" + tags +
+                '}';
     }
 }

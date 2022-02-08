@@ -24,12 +24,12 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     @Override
     public GiftCertificateDto modelToDto(final GiftCertificate giftCertificate) {
         emptyTagsIfNull(giftCertificate);
+        final GiftCertificateDto dtoGiftCertificate = modelMapper.map(giftCertificate, GiftCertificateDto.class);
         final Set<TagDto> dtoTags = giftCertificate
                 .getTags()
                 .stream()
                 .map(tag -> modelMapper.map(tag, TagDto.class))
                 .collect(Collectors.toSet());
-        final GiftCertificateDto dtoGiftCertificate = modelMapper.map(giftCertificate, GiftCertificateDto.class);
         dtoGiftCertificate.setTags(dtoTags);
         return dtoGiftCertificate;
     }
@@ -38,7 +38,7 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     public GiftCertificate dtoToModel(final GiftCertificateDto giftCertificateDto) {
         final GiftCertificate giftCertificate = modelMapper.map(giftCertificateDto, GiftCertificate.class);
         emptyTagsIfNull(giftCertificate);
-        final Set<Tag> tags = giftCertificate
+        final Set<Tag> tags = giftCertificateDto
                 .getTags()
                 .stream()
                 .map(tagDto -> modelMapper.map(tagDto, Tag.class))

@@ -43,7 +43,7 @@ public class TagDtoMapper implements DtoMapper<Tag, TagDto> {
     public List<Tag> dtoToModels(List<TagDto> tagDtos) {
         return tagDtos
                 .stream()
-                .map(tagDto -> modelMapper.map(tagDtos, Tag.class))
+                .map(tagDto -> modelMapper.map(tagDto, Tag.class))
                 .collect(Collectors.toList());
     }
 
