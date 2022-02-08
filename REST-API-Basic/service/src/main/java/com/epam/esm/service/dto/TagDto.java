@@ -1,4 +1,4 @@
-package com.epam.esm.controller.dto;
+package com.epam.esm.service.dto;
 
 import java.util.Objects;
 

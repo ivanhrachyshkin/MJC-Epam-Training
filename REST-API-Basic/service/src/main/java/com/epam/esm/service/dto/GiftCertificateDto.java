@@ -1,6 +1,5 @@
-package com.epam.esm.controller.dto;
+package com.epam.esm.service.dto;
 
-import com.epam.esm.model.Tag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
@@ -18,38 +17,7 @@ public class GiftCertificateDto {
     private LocalDateTime createDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime lastUpdateDate;
-    private Set<Tag> tags;
-
-    public GiftCertificateDto(Integer id, String name, String description, Float price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
-    }
-
-    public GiftCertificateDto(Integer id, String name, String description, Float price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public GiftCertificateDto(String name, String description, Float price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
-    }
+    private Set<TagDto> tags;
 
     public GiftCertificateDto() {
     }
@@ -58,7 +26,7 @@ public class GiftCertificateDto {
         return id;
     }
 
-    public void setId(final Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -66,7 +34,7 @@ public class GiftCertificateDto {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -74,7 +42,7 @@ public class GiftCertificateDto {
         return description;
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -82,7 +50,7 @@ public class GiftCertificateDto {
         return price;
     }
 
-    public void setPrice(final Float price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
@@ -90,7 +58,7 @@ public class GiftCertificateDto {
         return duration;
     }
 
-    public void setDuration(final Integer duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
@@ -98,7 +66,7 @@ public class GiftCertificateDto {
         return createDate;
     }
 
-    public void setCreateDate(final LocalDateTime createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
@@ -106,23 +74,23 @@ public class GiftCertificateDto {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(final LocalDateTime lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Set<Tag> getTags() {
+    public Set<TagDto> getTags() {
         return tags;
     }
 
-    public void setTags(final Set<Tag> tags) {
+    public void setTags(Set<TagDto> tags) {
         this.tags = tags;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final GiftCertificateDto that = (GiftCertificateDto) o;
+        GiftCertificateDto that = (GiftCertificateDto) o;
         return Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
                 && Objects.equals(description, that.description)

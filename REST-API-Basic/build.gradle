@@ -17,6 +17,7 @@ allprojects {
         testImplementation platform('org.junit:junit-bom:5.8.2')
         testImplementation 'org.junit.jupiter:junit-jupiter'
         testImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
+        testImplementation 'org.mockito:mockito-core:4.2.0'
         testImplementation 'com.h2database:h2:2.0.206'
         testImplementation 'org.springframework:spring-test:5.2.19.RELEASE'
         testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
@@ -37,11 +38,10 @@ allprojects {
 }
 
 dependencies {
-    compile project(':model')
-    compile project(':dao')
-    compile project(':service')
-    compile project(':controller')
-
+    implementation project(':model')
+    implementation project(':dao')
+    implementation project(':service')
+    implementation project(':controller')
 }
 
 jar {

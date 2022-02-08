@@ -94,7 +94,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                 .addValue("create_date", Timestamp.valueOf(createDate))
                 .addValue("last_update_date", Timestamp.valueOf(lastUpdateDate));
         namedParameterJdbcTemplate.update(CREATE_QUERY, namedParameters, keyHolder);
-        giftCertificate.setId((Integer) keyHolder.getKeys().get("id"));
+        giftCertificate.setId(((Number) Objects.requireNonNull(keyHolder.getKeys()).get("id")).intValue());
         giftCertificate.setCreateDate(createDate);
         giftCertificate.setLastUpdateDate(lastUpdateDate);
         return giftCertificate;
@@ -104,37 +104,42 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     public List<GiftCertificate> readAll(final String tag,
                                          final String name,
                                          final String description,
-                                         final Boolean asc) {
+                                         final Boolean dateSortDirection,
+                                         final Boolean nameSortDirection) {
         final Map<String, Object> columnToValue = new HashMap<>();
-        final Set<String> criteria = new HashSet<>();
-
+        final Set<String> whereCriteria = new HashSet<>();
         if (tag != null) {
             columnToValue.put("tag", tag);
-            criteria.add("gift_certificate.id IN (" +
+            whereCriteria.add("gift_certificate.id IN (" +
                     " SELECT gift_certificate_tag.gift_certificate_id" +
                     " FROM gift_certificate_tag" +
                     " JOIN tag ON gift_certificate_tag.tag_id = tag.id" +
                     " WHERE tag.name = :tag)");
         }
-
         if (name != null) {
             columnToValue.put("name", "%" + name + "%");
-            criteria.add("gift_certificate.name LIKE :name");
+            whereCriteria.add("gift_certificate.name LIKE :name");
         }
-
         if (description != null) {
             columnToValue.put("description", "%" + description + "%");
-            criteria.add("gift_certificate.description LIKE :description");
+            whereCriteria.add("gift_certificate.description LIKE :description");
         }
-
         String where = "";
-        if (!criteria.isEmpty()) {
-            where = " WHERE " + String.join(" AND ", criteria);
+        if (!whereCriteria.isEmpty()) {
+            where = " WHERE " + String.join(" AND ", whereCriteria);
         }
 
+
+        final Set<String> sortCriteria = new HashSet<>();
+        if (dateSortDirection != null) {
+            sortCriteria.add(" create_date " + (dateSortDirection ? "ASC" : "DESC"));
+        }
+        if (nameSortDirection != null) {
+            sortCriteria.add(" name " + (nameSortDirection ? "ASC" : "DESC"));
+        }
         String sort = "";
-        if (asc != null) {
-            sort = " ORDER BY create_date " + (asc ? "ASC" : "DESC");
+        if (!sortCriteria.isEmpty()) {
+            sort = " ORDER BY " + String.join(", ", sortCriteria);
         }
 
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource(columnToValue);

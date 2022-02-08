@@ -5,75 +5,78 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
-import com.epam.esm.service.validator.CreateGiftCertificateValidator;
-import com.epam.esm.service.validator.ReadAllGiftCertificatesValidator;
-import com.epam.esm.service.validator.UpdateGiftCertificateValidator;
+import com.epam.esm.service.dto.GiftCertificateDto;
+import com.epam.esm.service.dto.mapper.DtoMapper;
+import com.epam.esm.service.validator.GiftCertificateValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
+    private final ResourceBundle rb;
+    private final DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
     private final GiftCertificateDao giftCertificateDao;
     private final TagDao tagDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
-    private final CreateGiftCertificateValidator createGiftCertificateValidator;
-    private final UpdateGiftCertificateValidator updateGiftCertificateValidator;
-    private final ReadAllGiftCertificatesValidator readAllGiftCertificatesValidator;
+    private final GiftCertificateValidator giftCertificateValidator;
 
-    public GiftCertificateServiceImpl(final GiftCertificateDao giftCertificateDao,
-                                      final TagDao tagDao,
-                                      final GiftCertificateTagDao giftCertificateTagDao,
-                                      final CreateGiftCertificateValidator createGiftCertificateValidator,
-                                      final UpdateGiftCertificateValidator updateGiftCertificateValidator,
-                                      final ReadAllGiftCertificatesValidator readAllGiftCertificatesValidator) {
+    public GiftCertificateServiceImpl(ResourceBundle rb,
+                                      DtoMapper<GiftCertificate, GiftCertificateDto> mapper,
+                                      GiftCertificateDao giftCertificateDao,
+                                      TagDao tagDao,
+                                      GiftCertificateTagDao giftCertificateTagDao,
+                                      GiftCertificateValidator giftCertificateValidator) {
+        this.rb = rb;
+        this.mapper = mapper;
         this.giftCertificateDao = giftCertificateDao;
         this.tagDao = tagDao;
         this.giftCertificateTagDao = giftCertificateTagDao;
-        this.createGiftCertificateValidator = createGiftCertificateValidator;
-        this.updateGiftCertificateValidator = updateGiftCertificateValidator;
-        this.readAllGiftCertificatesValidator = readAllGiftCertificatesValidator;
+        this.giftCertificateValidator = giftCertificateValidator;
     }
 
     @Override
     @Transactional
-    public GiftCertificate create(final GiftCertificate giftCertificate) {
-        createGiftCertificateValidator.validate(giftCertificate);
+    public GiftCertificateDto create(final GiftCertificateDto giftCertificateDto) {
+        giftCertificateValidator.createValidate(giftCertificateDto);
+        final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
         checkExistByName(giftCertificate.getName());
         final GiftCertificate newGiftCertificate = giftCertificateDao.create(giftCertificate);
         createOrAssignTags(newGiftCertificate);
-        return newGiftCertificate;
+        return mapper.modelToDto(newGiftCertificate);
     }
 
     @Override
-    public List<GiftCertificate> readAll(final String tag,
-                                         final String name,
-                                         final String description,
-                                         final Boolean asc) {
-        readAllGiftCertificatesValidator.validate(tag, name, description);
-        return giftCertificateDao.readAll(tag, name, description, asc);
+    public List<GiftCertificateDto> readAll(final String tag,
+                                            final String name,
+                                            final String description,
+                                            final Boolean dateSortDirection,
+                                            final Boolean nameSortDirection) {
+        giftCertificateValidator.readAllValidate(tag, name, description);
+        List<GiftCertificate> giftCertificates
+                = giftCertificateDao.readAll(tag, name, description, dateSortDirection, nameSortDirection);
+        return mapper.modelsToDto(giftCertificates);
     }
 
     @Override
-    public GiftCertificate readOne(final int id) {
-        return checkExist(id);
+    public GiftCertificateDto readOne(final int id) {
+        GiftCertificate giftCertificate = checkExist(id);
+        return mapper.modelToDto(giftCertificate);
     }
 
     @Override
     @Transactional
-    public GiftCertificate update(final GiftCertificate giftCertificate) {
-        updateGiftCertificateValidator.validate(giftCertificate);
+    public GiftCertificateDto update(final GiftCertificateDto giftCertificateDto) {
+        giftCertificateValidator.updateValidate(giftCertificateDto);
+        final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
         checkExist(giftCertificate.getId());
         checkExistByName(giftCertificate.getName());
         giftCertificateDao.update(giftCertificate);
         createOrAssignTags(giftCertificate);
-        return giftCertificate;
+        return mapper.modelToDto(giftCertificate);
     }
 
     @Override
@@ -87,7 +90,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private GiftCertificate checkExist(final int id) {
         return giftCertificateDao
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException("Gift certificate with id = %s not found", id));
+                .orElseThrow(() -> new ServiceException(rb.getString("giftCertificate.notFound.id"), id));
 
     }
 
@@ -95,7 +98,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao
                 .readOneByName(name)
                 .ifPresent(giftCertificate -> {
-                    throw new ServiceException("Gift certificate with name = %s is already exist", name);
+                    throw new ServiceException(rb.getString("giftCertificate.alreadyExists.name"), name);
                 });
     }
 
