@@ -104,8 +104,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     public List<GiftCertificate> readAll(final String tag,
                                          final String name,
                                          final String description,
-                                         final Boolean dateSortDirection,
-                                         final Boolean nameSortDirection) {
+                                         final String dateSort,
+                                         final String nameSort) {
         final Map<String, Object> columnToValue = new HashMap<>();
         final Set<String> whereCriteria = new HashSet<>();
         if (tag != null) {
@@ -131,11 +131,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
 
         final Set<String> sortCriteria = new HashSet<>();
-        if (dateSortDirection != null) {
-            sortCriteria.add(" create_date " + (dateSortDirection ? "ASC" : "DESC"));
+        if (dateSort != null) {
+            sortCriteria.add(" create_date " + dateSort);
         }
-        if (nameSortDirection != null) {
-            sortCriteria.add(" name " + (nameSortDirection ? "ASC" : "DESC"));
+        if (nameSort != null) {
+            sortCriteria.add(" name " + nameSort);
         }
         String sort = "";
         if (!sortCriteria.isEmpty()) {

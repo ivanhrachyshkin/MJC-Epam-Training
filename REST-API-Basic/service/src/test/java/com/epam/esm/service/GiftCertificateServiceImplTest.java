@@ -9,6 +9,7 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
+import com.epam.esm.service.validator.SortValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +38,8 @@ class GiftCertificateServiceImplTest {
     private TagDao tagDao;
     @Mock
     private GiftCertificateValidator giftCertificateValidator;
+    @Mock
+    private SortValidator sortValidator;
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
 

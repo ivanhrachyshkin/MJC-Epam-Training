@@ -8,6 +8,7 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
+import com.epam.esm.service.validator.SortValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,19 +24,22 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagDao tagDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
     private final GiftCertificateValidator giftCertificateValidator;
+    private final SortValidator sortValidator;
 
-    public GiftCertificateServiceImpl(ResourceBundle rb,
-                                      DtoMapper<GiftCertificate, GiftCertificateDto> mapper,
-                                      GiftCertificateDao giftCertificateDao,
-                                      TagDao tagDao,
-                                      GiftCertificateTagDao giftCertificateTagDao,
-                                      GiftCertificateValidator giftCertificateValidator) {
+    public GiftCertificateServiceImpl(final ResourceBundle rb,
+                                      final DtoMapper<GiftCertificate, GiftCertificateDto> mapper,
+                                      final GiftCertificateDao giftCertificateDao,
+                                      final TagDao tagDao,
+                                      final GiftCertificateTagDao giftCertificateTagDao,
+                                      final GiftCertificateValidator giftCertificateValidator,
+                                      final SortValidator sortValidator) {
         this.rb = rb;
         this.mapper = mapper;
         this.giftCertificateDao = giftCertificateDao;
         this.tagDao = tagDao;
         this.giftCertificateTagDao = giftCertificateTagDao;
         this.giftCertificateValidator = giftCertificateValidator;
+        this.sortValidator = sortValidator;
     }
 
     @Override
@@ -53,11 +57,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public List<GiftCertificateDto> readAll(final String tag,
                                             final String name,
                                             final String description,
-                                            final Boolean dateSortDirection,
-                                            final Boolean nameSortDirection) {
+                                            final String dateSort,
+                                            final String nameSort) {
         giftCertificateValidator.readAllValidate(tag, name, description);
+        sortValidator.sortValidate(dateSort);
+        sortValidator.sortValidate(nameSort);
         List<GiftCertificate> giftCertificates
-                = giftCertificateDao.readAll(tag, name, description, dateSortDirection, nameSortDirection);
+                = giftCertificateDao.readAll(tag, name, description, dateSort, nameSort);
         return mapper.modelsToDto(giftCertificates);
     }
 

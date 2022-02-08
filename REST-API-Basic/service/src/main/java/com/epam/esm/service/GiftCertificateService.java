@@ -11,8 +11,8 @@ public interface GiftCertificateService {
     List<GiftCertificateDto> readAll(String tag,
                                      String name,
                                      String description,
-                                     Boolean dateSortDirection,
-                                     Boolean nameSortDirection);
+                                     String dateSort,
+                                     String nameSort);
 
     GiftCertificateDto readOne(int id);
 

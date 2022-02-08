@@ -149,14 +149,14 @@ public class GiftCertificateDaoTest {
     void shouldReturnAllGiftCertificates_On_ReadSort_ASC() {
         Assertions.assertEquals(oldGiftCertificates,
                 giftCertificateDao
-                        .readAll(null, null, null, true, null));
+                        .readAll(null, null, null, "ASC", null));
     }
 
     @Test
     void shouldReturnAllGiftCertificates_On_ReadSort_DESC() {
         Assertions.assertNotEquals(oldGiftCertificates,
                 giftCertificateDao
-                        .readAll(null, null, null, false, null));
+                        .readAll(null, null, null, "DESC", null));
     }
 
     @Test
@@ -238,7 +238,7 @@ public class GiftCertificateDaoTest {
     @Test
     void shouldReturnAllGiftCertificates_On_ReadNameAndDescription_Negative() {
         Assertions.assertEquals(Collections.emptyList(),
-                giftCertificateDao.readAll(null, "1", "2", true, null));
+                giftCertificateDao.readAll(null, "1", "2", "ASC", null));
     }
 
     @Test
@@ -284,7 +284,6 @@ public class GiftCertificateDaoTest {
         //When
         final GiftCertificate giftCertificate = giftCertificateDao.create(oldGiftCertificate3);
         //Then
-        System.out.println(giftCertificate);
         Assertions.assertEquals(oldGiftCertificate3.getName(), giftCertificate.getName());
         Assertions.assertEquals(oldGiftCertificate3.getDescription(), giftCertificate.getDescription());
         Assertions.assertEquals(oldGiftCertificate3.getPrice(), giftCertificate.getPrice());

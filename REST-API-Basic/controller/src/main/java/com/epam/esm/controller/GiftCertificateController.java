@@ -40,8 +40,8 @@ public class GiftCertificateController {
      * @param tag the request param representation of the tag's name.
      * @param name the request param representation of the gift certificate's name.
      * @param description the request param representation of the gift certificate's description.
-     * @param dateSortDirection the request param representation of sort direction by date.
-     * @param nameSortDirection the request param representation of sort direction by name.
+     * @param dateSort the request param representation of sort direction by date.
+     * @param nameSort the request param representation of sort direction by name.
      * @return the response body representation of the gift certificates.
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,9 +49,9 @@ public class GiftCertificateController {
     public List<GiftCertificateDto> readAll(@RequestParam(required = false) final String tag,
                                             @RequestParam(required = false) final String name,
                                             @RequestParam(required = false) final String description,
-                                            @RequestParam(required = false) final Boolean dateSortDirection,
-                                            @RequestParam(required = false) final Boolean nameSortDirection) {
-        return giftCertificateService.readAll(tag, name, description, dateSortDirection, nameSortDirection);
+                                            @RequestParam(required = false) final String dateSort,
+                                            @RequestParam(required = false) final String nameSort) {
+        return giftCertificateService.readAll(tag, name, description, dateSort, nameSort);
     }
 
     /**

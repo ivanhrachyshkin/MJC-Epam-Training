@@ -12,8 +12,8 @@ public interface GiftCertificateDao {
     List<GiftCertificate> readAll(String tag,
                                   String name,
                                   String description,
-                                  Boolean dateSortDirection,
-                                  Boolean nameSortDirection);
+                                  String dateSort,
+                                  String nameSort);
 
     Optional<GiftCertificate> readOne(int id);
 

@@ -50,5 +50,9 @@ jar {
     }
 }
 
+war {
+    archiveFileName.set("rest-api-basic.war")
+}
+
 
 
