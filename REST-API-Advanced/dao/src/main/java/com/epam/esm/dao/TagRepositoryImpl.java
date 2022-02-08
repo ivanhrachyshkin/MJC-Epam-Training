@@ -23,7 +23,6 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public Tag create(final Tag tag) {
         entityManager.persist(tag);
-        entityManager.flush();
         return tag;
     }
 
@@ -53,7 +52,6 @@ public class TagRepositoryImpl implements TagRepository {
     public void deleteById(final int id) {
         final Tag tag = entityManager.find(Tag.class, id);
         entityManager.remove(tag);
-        entityManager.flush();
     }
 
     private void paginateQuery(final TypedQuery<Tag> typedQuery, final int pageNumber) {

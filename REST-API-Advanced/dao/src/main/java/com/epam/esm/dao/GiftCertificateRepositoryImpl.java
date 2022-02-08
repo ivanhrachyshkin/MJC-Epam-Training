@@ -43,10 +43,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         giftCertificate.setId(null);
         giftCertificate.setCreateDate(LocalDateTime.now(clock));
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
-        entityManager.persist(giftCertificate);
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
-        entityManager.merge(giftCertificate);
+        entityManager.persist(giftCertificate);
         entityManager.flush();
         return giftCertificate;
     }
@@ -129,7 +128,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
         entityManager.merge(giftCertificate);
-        entityManager.flush();
         return giftCertificate;
     }
 

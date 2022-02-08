@@ -14,6 +14,4 @@ public interface OrderRepository {
     Optional<Order> readOne(int id);
 
     Optional<Order> readOneByIds( int userId,  int giftCertificateId);
-
-    void deleteById(int id);
 }

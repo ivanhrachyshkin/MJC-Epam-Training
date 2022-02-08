@@ -31,7 +31,6 @@ public class OrderRepositoryImpl implements OrderRepository {
         order.setId(null);
         order.setDate(LocalDateTime.now(clock));
         entityManager.persist(order);
-        entityManager.flush();
         return order;
     }
 
@@ -70,14 +69,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 : Optional.of(giftCertificates.get(0));
     }
 
-    @Override
-    public void deleteById(final int id) {
-        final Order order = entityManager.find(Order.class, id);
-        entityManager.remove(order);
-        entityManager.flush();
-    }
-
-    private void paginateQuery(final TypedQuery<Order> typedQuery, final int pageNumber) {
+    private void paginateQuery(final TypedQuery<Order> typedQuery, final int pageNumber) { // todo flexible pagination
         typedQuery.setFirstResult(pageNumber - 1);
         typedQuery.setMaxResults(10);
     }

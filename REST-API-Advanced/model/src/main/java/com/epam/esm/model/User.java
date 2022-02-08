@@ -10,9 +10,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "public")
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class User {
 
     @Id
@@ -21,7 +21,7 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")//
     private Set<Order> orders = new HashSet<>();
 
     public User(final Integer id) {

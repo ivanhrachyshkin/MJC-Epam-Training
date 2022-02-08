@@ -32,8 +32,9 @@ public class DaoConfig {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource,
-                                                                       final DataSourceProperties dataSourceProperties) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            final DataSource dataSource,
+            final DataSourceProperties dataSourceProperties) {
 
         final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean
                 = new LocalContainerEntityManagerFactoryBean();
@@ -50,8 +51,9 @@ public class DaoConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(final LocalContainerEntityManagerFactoryBean entityManagerFactory,
-                                                         final DataSource dataSource) {
+    public PlatformTransactionManager transactionManager(
+            final LocalContainerEntityManagerFactoryBean entityManagerFactory,
+            final DataSource dataSource) {
         final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
         transactionManager.setDataSource(dataSource);
