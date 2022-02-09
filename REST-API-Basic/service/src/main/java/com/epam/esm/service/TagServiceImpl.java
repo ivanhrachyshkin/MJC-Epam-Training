@@ -15,22 +15,24 @@ import java.util.ResourceBundle;
 @Service
 public class TagServiceImpl implements TagService {
 
-    private final ResourceBundle rb;
+    private ResourceBundle rb;
     private final TagDao tagDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
     private final TagValidator tagValidator;
     private final DtoMapper<Tag, TagDto> mapper;
 
-    public TagServiceImpl(final ResourceBundle rb,
-                          final TagDao tagDao,
+    public TagServiceImpl(final TagDao tagDao,
                           final GiftCertificateTagDao giftCertificateTagDao,
                           final TagValidator tagValidator,
                           final DtoMapper<Tag, TagDto> mapper) {
-        this.rb = rb;
         this.tagDao = tagDao;
         this.giftCertificateTagDao = giftCertificateTagDao;
         this.tagValidator = tagValidator;
         this.mapper = mapper;
+    }
+
+    public void setRb(ResourceBundle rb) {
+        this.rb = rb;
     }
 
     @Override

@@ -10,12 +10,15 @@ import java.util.ResourceBundle;
 @Component
 public class GiftCertificateValidator {
 
-    private final ResourceBundle rb;
+    private  ResourceBundle rb;
     private final TagValidator tagValidator;
 
-    public GiftCertificateValidator(final ResourceBundle rb, final TagValidator tagValidator) {
-        this.rb = rb;
+    public GiftCertificateValidator(final TagValidator tagValidator) {
         this.tagValidator = tagValidator;
+    }
+
+    public void setRb(ResourceBundle rb) {
+        this.rb = rb;
     }
 
     public void updateValidate(final GiftCertificateDto giftCertificateDto) {

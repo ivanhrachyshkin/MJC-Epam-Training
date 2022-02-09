@@ -14,12 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TagValidatorTest {
 
     private final DummyRb dummyRb = new DummyRb();
-    private final TagValidator tagValidator = new TagValidator(dummyRb);
+    private final TagValidator tagValidator = new TagValidator();
 
     @Test
     void shouldThrowException_On_CreateTagValidator_ForEmptyName() {
         //When
         dummyRb.setMessage("validator.tag.name.required", "Tag name is required");
+        tagValidator.setRb(dummyRb);
         final TagDto tagDto = new TagDto();
         final ValidationException validationException
                 = assertThrows(ValidationException.class, () -> tagValidator.createValidate(tagDto));

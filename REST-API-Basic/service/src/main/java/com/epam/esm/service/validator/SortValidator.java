@@ -7,9 +7,8 @@ import java.util.ResourceBundle;
 @Component
 public class SortValidator {
 
-    private final ResourceBundle rb;
-
-    public SortValidator(final ResourceBundle rb) {
+    private  ResourceBundle rb;
+    public void setRb(ResourceBundle rb) {
         this.rb = rb;
     }
 

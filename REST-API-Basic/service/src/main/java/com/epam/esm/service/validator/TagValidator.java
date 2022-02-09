@@ -10,9 +10,8 @@ import java.util.ResourceBundle;
 @Component
 public class TagValidator {
 
-    private final ResourceBundle rb;
-
-    public TagValidator(final ResourceBundle rb) {
+    private ResourceBundle rb;
+    public void setRb(ResourceBundle rb) {
         this.rb = rb;
     }
 

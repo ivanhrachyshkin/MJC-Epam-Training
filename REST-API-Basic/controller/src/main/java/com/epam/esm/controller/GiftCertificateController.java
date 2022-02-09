@@ -3,11 +3,13 @@ package com.epam.esm.controller;
 
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDto;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * The intention of controller - handling of the /gift resource.
@@ -37,11 +39,11 @@ public class GiftCertificateController {
     /**
      * The intention of mapping - handling of the read operation.
      *
-     * @param tag the request param representation of the tag's name.
-     * @param name the request param representation of the gift certificate's name.
+     * @param tag         the request param representation of the tag's name.
+     * @param name        the request param representation of the gift certificate's name.
      * @param description the request param representation of the gift certificate's description.
-     * @param dateSort the request param representation of sort direction by date.
-     * @param nameSort the request param representation of sort direction by name.
+     * @param dateSort    the request param representation of sort direction by date.
+     * @param nameSort    the request param representation of sort direction by name.
      * @return the response body representation of the gift certificates.
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +71,7 @@ public class GiftCertificateController {
     /**
      * The intention of mapping - handling of the update operation.
      *
-     * @param id the request path variable representation of the gift certificate's id.
+     * @param id                 the request path variable representation of the gift certificate's id.
      * @param giftCertificateDto the request body representation of the gift certificate.
      * @return the response body representation of the gift certificate.
      */
@@ -84,6 +86,7 @@ public class GiftCertificateController {
 
     /**
      * The intention of mapping - handling of the update operation.
+     *
      * @param id the request path variable representation of the gift certificate's id.
      */
     @DeleteMapping(value = "/{id}")
