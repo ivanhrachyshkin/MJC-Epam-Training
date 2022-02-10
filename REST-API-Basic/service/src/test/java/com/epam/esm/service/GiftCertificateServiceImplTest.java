@@ -105,8 +105,10 @@ class GiftCertificateServiceImplTest {
     @Test
     void shouldThrowException_On_Create_WithTags() {
         //Given
-        dummyRb.setMessage("giftCertificate.alreadyExists.name","Gift certificate with name = %s is already exist");
-        final String message = String.format("Gift certificate with name = %s is already exist", giftCertificate1.getName());
+        dummyRb.setMessage("giftCertificate.alreadyExists.name",
+                "Gift certificate with name = %s is already exist");
+        final String message
+                = String.format("Gift certificate with name = %s is already exist",giftCertificate1.getName());
         when(giftCertificateDao.readOneByName(giftCertificate1.getName())).thenReturn(Optional.of(giftCertificate1));
         when(mapper.dtoToModel(giftCertificateDto1)).thenReturn(giftCertificate1);
         //When
@@ -195,6 +197,7 @@ class GiftCertificateServiceImplTest {
         //Given
         when(giftCertificateDao.readOne(giftCertificate1.getId())).thenReturn(Optional.of(giftCertificate1));
         when(giftCertificateDao.readOneByName(giftCertificate1.getName())).thenReturn(Optional.empty());
+        when(giftCertificateDao.update(giftCertificate1)).thenReturn(giftCertificate1);
         when(tagDao.readOneByName(tag1.getName())).thenReturn(Optional.empty());
         when(tagDao.readOneByName(tag2.getName())).thenReturn(Optional.of(tag2));
         when(tagDao.create(tag1)).thenReturn(tag1);

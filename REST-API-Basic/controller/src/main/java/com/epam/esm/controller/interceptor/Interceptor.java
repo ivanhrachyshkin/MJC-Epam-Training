@@ -1,5 +1,6 @@
 package com.epam.esm.controller.interceptor;
 
+import com.epam.esm.controller.exceptionhandler.RestExceptionHandler;
 import com.epam.esm.service.GiftCertificateServiceImpl;
 import com.epam.esm.service.TagServiceImpl;
 import com.epam.esm.service.validator.GiftCertificateValidator;
@@ -21,20 +22,25 @@ public class Interceptor implements HandlerInterceptor {
     private final GiftCertificateValidator giftCertificateValidator;
     private final SortValidator sortValidator;
     private final TagValidator tagValidator;
+    private final RestExceptionHandler restExceptionHandler;
 
     public Interceptor(final GiftCertificateServiceImpl giftCertificateService,
                        final TagServiceImpl tagService,
                        final GiftCertificateValidator giftCertificateValidator,
-                       final SortValidator sortValidator, TagValidator tagValidator) {
+                       final SortValidator sortValidator, TagValidator tagValidator,
+                       final RestExceptionHandler restExceptionHandler) {
         this.giftCertificateService = giftCertificateService;
         this.tagService = tagService;
         this.giftCertificateValidator = giftCertificateValidator;
         this.sortValidator = sortValidator;
         this.tagValidator = tagValidator;
+        this.restExceptionHandler = restExceptionHandler;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(final HttpServletRequest request,
+                             final HttpServletResponse response,
+                             final Object handler) throws Exception {
         final String lang = getLang(request);
         final ResourceBundle resourceBundle = ResourceBundle.getBundle("message", LocaleUtils.toLocale(lang));
         giftCertificateService.setRb(resourceBundle);
@@ -42,6 +48,7 @@ public class Interceptor implements HandlerInterceptor {
         giftCertificateValidator.setRb(resourceBundle);
         sortValidator.setRb(resourceBundle);
         tagValidator.setRb(resourceBundle);
+        restExceptionHandler.setRb(resourceBundle);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

@@ -9,7 +9,7 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
 import com.epam.esm.service.validator.SortValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,9 +83,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
         checkExist(giftCertificate.getId());
         checkExistByName(giftCertificate.getName());
-        giftCertificateDao.update(giftCertificate);
-        createOrAssignTags(giftCertificate);
-        return mapper.modelToDto(giftCertificate);
+        final GiftCertificate updatedGiftCertificate = giftCertificateDao.update(giftCertificate);
+        createOrAssignTags(updatedGiftCertificate);
+        return mapper.modelToDto(updatedGiftCertificate);
     }
 
     @Override
@@ -99,7 +99,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private GiftCertificate checkExist(final int id) {
         return giftCertificateDao
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException(rb.getString("giftCertificate.notFound.id"), id));
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, id));
 
     }
 
@@ -107,7 +108,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao
                 .readOneByName(name)
                 .ifPresent(giftCertificate -> {
-                    throw new ServiceException(rb.getString("giftCertificate.alreadyExists.name"), name);
+                    throw new ServiceException(
+                            rb.getString("giftCertificate.alreadyExists.name"), HttpStatus.CONFLICT, name);
                 });
     }
 

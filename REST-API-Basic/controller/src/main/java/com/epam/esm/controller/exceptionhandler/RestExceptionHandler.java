@@ -11,20 +11,29 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ResourceBundle;
+
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private ResourceBundle rb;
+
+    public void setRb(ResourceBundle rb) {
+        this.rb = rb;
+    }
 
     @ExceptionHandler(ServiceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleValidationException(final Exception e) {
-        return new ApiError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+    public ResponseEntity<ApiError> handleValidationException(final ServiceException e) {
+        final HttpStatus status = e.getStatus();
+        final ApiError apiError = new ApiError(status.value(), e.getMessage());
+        return new ResponseEntity<>(apiError, status);
     }
 
     @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError handleNotFoundException(final Exception e) {
-        return new ApiError(HttpStatus.NOT_FOUND.value(), e.getMessage());
+    public ResponseEntity<ApiError> handleNotFoundException(final ValidationException e) {
+        final HttpStatus status = e.getStatus();
+        final ApiError apiError = new ApiError(status.value(), e.getMessage());
+        return new ResponseEntity<>(apiError, status);
     }
 
     @Override
@@ -34,7 +43,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                              final HttpHeaders headers,
                                                              final HttpStatus status,
                                                              final WebRequest request) {
-        final ApiError error = new ApiError(status.value(), e.getMessage());
+        final ApiError error = new ApiError(status.value(), rb.getString("invalid.value"));
         return super.handleExceptionInternal(e, error, headers, status, request);
     }
 }

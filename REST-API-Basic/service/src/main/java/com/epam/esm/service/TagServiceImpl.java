@@ -6,6 +6,7 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.TagValidator;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,14 +69,14 @@ public class TagServiceImpl implements TagService {
     private Tag checkExist(final int id) {
         return tagDao
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException(rb.getString("tag.notFound.id"), id));
+                .orElseThrow(() -> new ServiceException(rb.getString("tag.notFound.id"), HttpStatus.NOT_FOUND, id));
     }
 
     private void checkExistByName(final String name) {
         tagDao
                 .readOneByName(name)
                 .ifPresent(tag -> {
-                    throw new ServiceException(rb.getString("tag.alreadyExists.name"), name);
+                    throw new ServiceException(rb.getString("tag.alreadyExists.name"), HttpStatus.CONFLICT, name);
                 });
     }
 }

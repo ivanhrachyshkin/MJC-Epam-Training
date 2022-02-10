@@ -23,10 +23,10 @@ CREATE TABLE tag
 
 CREATE TABLE gift_certificate_tag
 (
-    tag_id              INTEGER NOT NULL,
     gift_certificate_id INTEGER NOT NULL,
+    tag_id              INTEGER NOT NULL,
 
-    FOREIGN KEY (tag_id) REFERENCES tag(id),
     FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificate(id),
+    FOREIGN KEY (tag_id) REFERENCES tag(id),
     UNIQUE (gift_certificate_id, tag_id)
 );

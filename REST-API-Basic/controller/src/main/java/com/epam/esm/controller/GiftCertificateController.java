@@ -78,7 +78,7 @@ public class GiftCertificateController {
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto update(@PathVariable final int id, @RequestBody final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.setId(id);
         return giftCertificateService.update(giftCertificateDto);

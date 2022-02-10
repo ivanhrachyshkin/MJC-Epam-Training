@@ -167,9 +167,10 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public void update(final GiftCertificate giftCertificate) {
+    public GiftCertificate update(final GiftCertificate giftCertificate) {
         final Map<String, Object> columnToPlaceholder = new HashMap<>();
         final Map<String, Object> columnToValue = new HashMap<>();
+        final LocalDateTime lastUpdateDate = LocalDateTime.now(clock);
 
         columnToValue.put("id", giftCertificate.getId());
 
@@ -194,7 +195,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         }
 
         columnToPlaceholder.put("last_update_date", ":last_update_date");
-        columnToValue.put("last_update_date", Timestamp.valueOf(LocalDateTime.now(clock)));
+        columnToValue.put("last_update_date",Timestamp.valueOf(LocalDateTime.now(clock)));
 
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource(columnToValue);
         final String query = String.format(UPDATE_QUERY, columnToPlaceholder
@@ -204,6 +205,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                 .collect(Collectors.joining(", ")));
 
         namedParameterJdbcTemplate.update(query, namedParameters);
+        giftCertificate.setLastUpdateDate(lastUpdateDate);
+        return giftCertificate;
     }
 
     @Override
