@@ -1,4 +1,4 @@
-package com.epam.esm.controller;
+package com.epam.esm.controller.interceptor;
 
 import com.epam.esm.service.GiftCertificateServiceImpl;
 import com.epam.esm.service.TagServiceImpl;
@@ -11,11 +11,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 @Component
-public class MyInterceptor implements HandlerInterceptor {
+public class Interceptor implements HandlerInterceptor {
 
     private final GiftCertificateServiceImpl giftCertificateService;
     private final TagServiceImpl tagService;
@@ -23,10 +22,10 @@ public class MyInterceptor implements HandlerInterceptor {
     private final SortValidator sortValidator;
     private final TagValidator tagValidator;
 
-    public MyInterceptor(GiftCertificateServiceImpl giftCertificateService,
-                         TagServiceImpl tagService,
-                         GiftCertificateValidator giftCertificateValidator,
-                         SortValidator sortValidator, TagValidator tagValidator) {
+    public Interceptor(final GiftCertificateServiceImpl giftCertificateService,
+                       final TagServiceImpl tagService,
+                       final GiftCertificateValidator giftCertificateValidator,
+                       final SortValidator sortValidator, TagValidator tagValidator) {
         this.giftCertificateService = giftCertificateService;
         this.tagService = tagService;
         this.giftCertificateValidator = giftCertificateValidator;
@@ -36,10 +35,8 @@ public class MyInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        final String lang = request.getHeader("Lang");
+        final String lang = getLang(request);
         final ResourceBundle resourceBundle = ResourceBundle.getBundle("message", LocaleUtils.toLocale(lang));
-        System.out.println(lang);
         giftCertificateService.setRb(resourceBundle);
         tagService.setRb(resourceBundle);
         giftCertificateValidator.setRb(resourceBundle);
@@ -47,5 +44,14 @@ public class MyInterceptor implements HandlerInterceptor {
         tagValidator.setRb(resourceBundle);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
+    }
+
+    private String getLang(final HttpServletRequest request) {
+        String lang = "en_US";
+        final String langHeaderValue = request.getHeader("Lang");
+        if (langHeaderValue != null) {
+            lang = langHeaderValue.equals("ru_RU") ? "ru_RU" : "en_US";
+        }
+        return lang;
     }
 }

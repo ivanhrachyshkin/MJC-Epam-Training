@@ -132,10 +132,10 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
         final Set<String> sortCriteria = new HashSet<>();
         if (dateSort != null) {
-            sortCriteria.add(" create_date " + dateSort);
+            sortCriteria.add(" create_date " + dateSort.toUpperCase());
         }
         if (nameSort != null) {
-            sortCriteria.add(" name " + nameSort);
+            sortCriteria.add(" name " + nameSort.toUpperCase());
         }
         String sort = "";
         if (!sortCriteria.isEmpty()) {

@@ -18,7 +18,7 @@ public class SortValidator {
             throw new ValidationException(rb.getString("sort.empty"));
         }
 
-        if (sort != null && !sort.equals("ASC") && !sort.equals("DESC")) {
+        if (sort != null && !sort.equalsIgnoreCase("ASC") && !sort.equalsIgnoreCase("DESC")) {
             throw new ValidationException(rb.getString("sort.invalid"));
         }
     }

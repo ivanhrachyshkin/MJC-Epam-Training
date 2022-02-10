@@ -42,6 +42,7 @@ dependencies {
     implementation project(':dao')
     implementation project(':service')
     implementation project(':controller')
+    implementation project(':view')
 }
 
 jar {
