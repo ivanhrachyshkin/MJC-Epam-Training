@@ -3,21 +3,23 @@ package com.epam.esm.controller;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 /**
  * The intention of controller - handling of the /tag resource.
  */
 @RestController
-@RequestMapping(value = "/tag")
+@RequestMapping(value = "/tags")
 @RequiredArgsConstructor
 public class TagController {
 
@@ -54,9 +56,19 @@ public class TagController {
      * @param id the request path variable representation of the tags's id.
      * @return
      */
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<TagDto> readOne(@PathVariable final int id) {
-        final TagDto tagDto = tagService.readOne(id);
+    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_FORMS_JSON_VALUE)
+    public ResponseEntity<EntityModel<TagDto>> readOne(@PathVariable final int id) {
+        TagDto tagDto = tagService.readOne(id);
+        EntityModel<TagDto> of = EntityModel.of(tagDto,
+                linkTo(methodOn(TagController.class).readOne(tagDto.getId())).withSelfRel()
+                        .andAffordance(afford(methodOn(TagController.class).create(null)))
+                        .andAffordance(afford(methodOn(TagController.class).deleteById(tagDto.getId()))));
+        return new ResponseEntity<>(of, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/mostUsed", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<TagDto> readOneMostUsed() {
+        final TagDto tagDto = tagService.readOneMostUsed();
         linkTagDto(tagDto);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
@@ -66,17 +78,20 @@ public class TagController {
      *
      * @param id the request path variable representation of the tag's id.
      */
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable final int id) {
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<TagDto> deleteById(@PathVariable final int id) {
         tagService.deleteById(id);
+        TagDto tagDto = new TagDto(1, "deleted");
+        return new ResponseEntity<>(tagDto, HttpStatus.NO_CONTENT);
     }
 
     private void linkTagDto(final TagDto tagDto) {
         tagDto
                 .add(linkTo(methodOn(TagController.class)
-                        .readAll())
-                        .slash(tagDto.getId())
-                        .withSelfRel());
+                        .readOne(tagDto.getId()))
+                        .withSelfRel()
+                        .andAffordance(afford((methodOn(TagController.class)
+                                .deleteById(tagDto.getId())
+                        ))));
     }
 }

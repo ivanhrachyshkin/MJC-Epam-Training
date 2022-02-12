@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,19 @@ public class TagRepositoryImpl implements TagRepository {
 
     private static final String READ_QUERY = "SELECT e FROM Tag e";
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM Tag e WHERE e.name = ?1";
+    private static final String READ_ONE_MOST_USED =
+            "SELECT tags.id, tags.name, COUNT(*) as count" +
+            " FROM (SELECT user_id, SUM(price) as amount" +
+            "    from orders" +
+            "    GROUP BY user_id" +
+            "    ORDER BY amount DESC" +
+            "    LIMIT 1) as maxcost" +
+            " JOIN orders on orders.user_id = maxcost.user_id" +
+            " JOIN gift_certificate_tags on gift_certificate_tags.gift_certificate_id = orders.gift_certificate_id" +
+            " JOIN tags on tags.id = gift_certificate_tags.tag_id" +
+            " GROUP BY tags.id, tags.name" +
+            " ORDER BY count DESC" +
+            " LIMIT 1";
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -43,6 +57,16 @@ public class TagRepositoryImpl implements TagRepository {
         final TypedQuery<Tag> query
                 = entityManager.createQuery(READ_ONE_BY_NAME_QUERY, Tag.class);
         final List<Tag> tags = query.setParameter(1, name).getResultList();
+        return tags.isEmpty()
+                ? Optional.empty()
+                : Optional.of(tags.get(0));
+    }
+
+    @Override
+    public Optional<Tag> readOneMostUsed() {
+        final Query query
+                = entityManager.createNativeQuery(READ_ONE_MOST_USED, Tag.class);
+        final List<Tag> tags = query.getResultList();
         return tags.isEmpty()
                 ? Optional.empty()
                 : Optional.of(tags.get(0));

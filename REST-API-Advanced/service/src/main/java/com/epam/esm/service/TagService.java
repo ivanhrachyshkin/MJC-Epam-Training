@@ -4,6 +4,7 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TagService {
 
@@ -12,6 +13,8 @@ public interface TagService {
     List<TagDto> readAll();
 
     TagDto readOne(int id);
+
+    TagDto readOneMostUsed();
 
     void deleteById(int id);
 }

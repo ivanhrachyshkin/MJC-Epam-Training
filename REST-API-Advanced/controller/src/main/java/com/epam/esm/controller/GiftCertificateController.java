@@ -15,7 +15,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
-@RequestMapping(value = "/gift")
+@RequestMapping(value = "/gifts")
 @RequiredArgsConstructor
 public class GiftCertificateController {
 
@@ -66,9 +66,13 @@ public class GiftCertificateController {
     }
 
     private void linkGiftCertificateDto(final GiftCertificateDto giftCertificateDto) {
-        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
+        giftCertificateDto
+                .add(linkTo(methodOn(GiftCertificateController.class)
                 .readOne(giftCertificateDto.getId()))
-                .withSelfRel());
+                .withSelfRel())
+                .add(linkTo(methodOn(GiftCertificateController.class)
+                        .readAll(null, null, null, null, null))
+                        .withSelfRel());
 
         giftCertificateDto
                 .getDtoTags()
@@ -78,8 +82,7 @@ public class GiftCertificateController {
     private void linkTagDto(final TagDto tagDto) {
         tagDto
                 .add(linkTo(methodOn(TagController.class)
-                        .readAll())
-                        .slash(tagDto.getId())
+                        .readOne(tagDto.getId()))
                         .withSelfRel());
     }
 }

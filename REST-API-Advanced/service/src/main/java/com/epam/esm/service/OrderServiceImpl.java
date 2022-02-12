@@ -11,6 +11,7 @@ import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.OrderValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +39,11 @@ public class OrderServiceImpl implements OrderService {
         final Integer giftCertificateId = order.getGiftCertificate().getId();
         final User user = userRepository
                 .readOne(userId)
-                .orElseThrow(() -> new ServiceException(rb.getString("user.notFound.id"), userId));
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, userId));
         final GiftCertificate giftCertificate = giftCertificateRepository.readOne(giftCertificateId)
-                .orElseThrow(() -> new ServiceException(rb.getString("giftCertificate.notFound.id"), giftCertificateId));
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, giftCertificateId));
         order.setPrice(giftCertificate.getPrice());
         order.setUser(user);
         order.setGiftCertificate(giftCertificate);
@@ -66,14 +69,16 @@ public class OrderServiceImpl implements OrderService {
     private Order checkExist(final int id) {
         return orderRepository
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException(rb.getString("order.notFound.id"), id));
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("order.notFound.id"), HttpStatus.CONFLICT, id));
     }
 
     private void checkExistByIds(final Order order) {
         orderRepository
                 .readOneByIds(order.getUser().getId(), order.getGiftCertificate().getId())
                 .ifPresent(order1 -> {
-                    throw new ServiceException(rb.getString("order.alreadyExists"));
+                    throw new ServiceException(
+                            rb.getString("order.alreadyExists"), HttpStatus.CONFLICT);
                 });
     }
 }

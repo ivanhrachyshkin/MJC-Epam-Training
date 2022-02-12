@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

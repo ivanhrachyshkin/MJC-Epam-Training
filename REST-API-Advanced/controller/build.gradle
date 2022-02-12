@@ -4,4 +4,5 @@ dependencies {
     implementation libs.spring.boot.starter.hateoas
     implementation libs.modelmapper
     implementation project(':service')
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 }

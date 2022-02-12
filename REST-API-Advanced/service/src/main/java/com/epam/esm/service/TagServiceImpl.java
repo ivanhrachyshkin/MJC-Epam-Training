@@ -6,6 +6,7 @@ import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,14 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
+    public TagDto readOneMostUsed() {
+        final Tag tag = tagRepository.readOneMostUsed()
+                .orElseThrow(() -> new ServiceException(rb.getString("tag.no"), HttpStatus.NOT_FOUND));
+        return mapper.modelToDto(tag);
+    }
+
+    @Override
+    @Transactional
     public void deleteById(final int id) {
         checkExist(id);
         tagRepository.deleteById(id);
@@ -55,14 +64,16 @@ public class TagServiceImpl implements TagService {
     private Tag checkExist(final int id) {
         return tagRepository
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException(rb.getString("tag.notFound.id"), id));
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("tag.notFound.id"), HttpStatus.NOT_FOUND, id));
     }
 
     private void checkExistByName(final String name) {
         tagRepository
                 .readOneByName(name)
                 .ifPresent(tag -> {
-                    throw new ServiceException(rb.getString("tag.alreadyExists.name"), name);
+                    throw new ServiceException(
+                            rb.getString("tag.alreadyExists.name"), HttpStatus.NOT_FOUND, name);
                 });
     }
 }

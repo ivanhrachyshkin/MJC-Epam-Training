@@ -6,6 +6,8 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,15 +74,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private GiftCertificate checkExist(final int id) {
         return giftCertificateRepository
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException(rb.getString("giftCertificate.notFound.id"), id));
-
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, id));
     }
 
     private void checkExistByName(final String name) {
         giftCertificateRepository
                 .readOneByName(name)
                 .ifPresent(giftCertificate -> {
-                    throw new ServiceException(rb.getString("giftCertificate.alreadyExists.name"), name);
+                    throw new ServiceException(
+                            rb.getString("giftCertificate.alreadyExists.name"),HttpStatus.CONFLICT, name);
                 });
     }
 }

@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "gift_certificate", schema = "public")
+@Table(name = "gift_certificates", schema = "public")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -22,19 +22,19 @@ public class GiftCertificate {
     private Integer id;
     @Column(unique = true)
     private String name;
-    @Column
+    @Column(nullable = false)
     private String description;
-    @Column
+    @Column(nullable = false)
     private Float price;
-    @Column
+    @Column(nullable = false)
     private Integer duration;
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
-    @Column(name = "last_update_date")
+    @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
 
     @ManyToMany
-    @JoinTable(name = "gift_certificate_tag",
+    @JoinTable(name = "gift_certificate_tags",
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();

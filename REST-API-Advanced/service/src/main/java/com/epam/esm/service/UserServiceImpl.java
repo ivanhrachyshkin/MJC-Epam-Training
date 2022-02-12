@@ -5,6 +5,7 @@ import com.epam.esm.model.User;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private User checkExist(final int id) {
         return userRepository
                 .readOne(id)
-                .orElseThrow(() -> new ServiceException(rb.getString("user.notFound.id"), id));
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, id));
     }
 }

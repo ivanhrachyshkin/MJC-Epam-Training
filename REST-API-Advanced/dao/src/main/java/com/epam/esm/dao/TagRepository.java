@@ -13,7 +13,9 @@ public interface TagRepository {
 
     Optional<Tag> readOne(int id);
 
-    Optional<Tag>  readOneByName(final String name);
+    Optional<Tag> readOneByName(final String name);
+
+    Optional<Tag> readOneMostUsed();
 
     void deleteById(int id);
 }

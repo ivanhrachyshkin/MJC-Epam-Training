@@ -4,5 +4,6 @@ dependencies {
     implementation libs.c3p0
     implementation libs.postgresql
     implementation libs.spring.data.jpa
+    implementation libs.javafaker
     implementation project(':model')
 }

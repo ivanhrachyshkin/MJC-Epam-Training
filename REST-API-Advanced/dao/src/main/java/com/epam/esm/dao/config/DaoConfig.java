@@ -1,5 +1,6 @@
 package com.epam.esm.dao.config;
 
+import com.github.javafaker.Faker;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -63,5 +64,10 @@ public class DaoConfig {
     @Bean
     public Clock clock() {
         return Clock.systemUTC();
+    }
+
+    @Bean
+    public Faker faker() {
+        return new Faker();
     }
 }

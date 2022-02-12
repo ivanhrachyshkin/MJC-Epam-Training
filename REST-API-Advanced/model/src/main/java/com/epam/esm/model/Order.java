@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "order", schema = "public")
+@Table(name = "orders", schema = "public")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -19,14 +19,14 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gift_certificate_id")
+    @JoinColumn(name = "gift_certificate_id", unique = true)
     private GiftCertificate giftCertificate;
-    @Column
+    @Column(nullable = false)
     private Float price;
-    @Column
+    @Column(nullable = false)
     private LocalDateTime date;
 
     public Order(final Integer id) {

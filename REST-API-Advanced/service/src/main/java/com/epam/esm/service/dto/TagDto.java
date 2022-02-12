@@ -6,6 +6,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TagDto extends RepresentationModel<TagDto> {

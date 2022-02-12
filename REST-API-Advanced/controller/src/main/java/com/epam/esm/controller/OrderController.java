@@ -21,7 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  * The intention of controller - handling of the /gift resource.
  */
 @RestController
-@RequestMapping(value = "/order")
+@RequestMapping(value = "/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
