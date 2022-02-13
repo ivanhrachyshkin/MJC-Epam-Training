@@ -14,6 +14,8 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class GiftCertificateValidator {
 
+    private static final String POSTFIX = "01";
+
     @Setter
     private ResourceBundle rb;
     private final TagValidator tagValidator;
@@ -22,22 +24,22 @@ public class GiftCertificateValidator {
 
         if (giftCertificateDto.getName() != null && giftCertificateDto.getName().isEmpty()) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.name.empty"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.name.empty"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (giftCertificateDto.getDescription() != null && giftCertificateDto.getDescription().isEmpty()) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.description.empty"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.description.empty"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (giftCertificateDto.getPrice() != null && giftCertificateDto.getPrice() <= 0) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.price.negative"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.price.negative"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (giftCertificateDto.getDuration() != null && giftCertificateDto.getDuration() <= 0) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.duration.negative"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.duration.negative"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
     }
 
@@ -49,19 +51,19 @@ public class GiftCertificateValidator {
             tags.forEach(tag -> {
                 if (tag == null || tag.isEmpty()) {
                     throw new ValidationException(
-                            rb.getString("validator.tag.name.empty"), HttpStatus.BAD_REQUEST);
+                            rb.getString("validator.tag.name.empty"), HttpStatus.BAD_REQUEST, POSTFIX);
                 }
             });
         }
 
         if (name != null && name.isEmpty()) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.name.empty"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.name.empty"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (description != null && description.isEmpty()) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.description.empty"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.description.empty"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
     }
 
@@ -69,32 +71,32 @@ public class GiftCertificateValidator {
 
         if (StringUtils.isEmpty(giftCertificateDto.getName())) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.name.required"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.name.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (StringUtils.isEmpty(giftCertificateDto.getDescription())) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.description.required"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.description.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (giftCertificateDto.getPrice() == null) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.price.required"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.price.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (giftCertificateDto.getPrice() <= 0) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.price.negative"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.price.negative"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (giftCertificateDto.getDuration() == null) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.duration.required"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.duration.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (giftCertificateDto.getDuration() <= 0) {
             throw new ValidationException(
-                    rb.getString("validator.giftCertificate.duration.negative"), HttpStatus.BAD_REQUEST);
+                    rb.getString("validator.giftCertificate.duration.negative"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (giftCertificateDto.getDtoTags() != null) {

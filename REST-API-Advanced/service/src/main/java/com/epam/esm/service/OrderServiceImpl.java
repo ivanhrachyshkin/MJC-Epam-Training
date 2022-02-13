@@ -9,8 +9,6 @@ import com.epam.esm.model.User;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.OrderValidator;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -23,6 +21,8 @@ import java.util.ResourceBundle;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+
+    private static final String POSTFIX = "04";
 
     @Setter
     private ResourceBundle rb;
@@ -42,10 +42,10 @@ public class OrderServiceImpl implements OrderService {
         final User user = userRepository
                 .readOne(userId)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, userId));
+                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, userId));
         final GiftCertificate giftCertificate = giftCertificateRepository.readOne(giftCertificateId)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, giftCertificateId));
+                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, giftCertificateId));
         order.setPrice(giftCertificate.getPrice());
         order.setUser(user);
         order.setGiftCertificate(giftCertificate);
@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("order.notFound.id"), HttpStatus.CONFLICT, id));
+                        rb.getString("order.notFound.id"), HttpStatus.CONFLICT, POSTFIX, id));
     }
 
     private void checkExistByIds(final Order order) {
@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
                 .readOneByIds(order.getUser().getId(), order.getGiftCertificate().getId())
                 .ifPresent(order1 -> {
                     throw new ServiceException(
-                            rb.getString("order.alreadyExists"), HttpStatus.CONFLICT);
+                            rb.getString("order.alreadyExists"), HttpStatus.CONFLICT, POSTFIX);
                 });
     }
 }

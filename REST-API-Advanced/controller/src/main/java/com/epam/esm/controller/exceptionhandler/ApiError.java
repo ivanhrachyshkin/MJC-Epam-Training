@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ApiError {
 
-    private final int code;
+    private final String code;
     private final String message;
 }

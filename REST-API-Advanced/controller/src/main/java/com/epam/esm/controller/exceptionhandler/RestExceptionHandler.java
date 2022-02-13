@@ -23,14 +23,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ApiError> handleValidationException(final ServiceException e) {
         final HttpStatus status = e.getStatus();
-        final ApiError apiError = new ApiError(status.value(), e.getMessage());
+        final ApiError apiError = new ApiError(customizeCode(status, e.getPostfix()), e.getMessage());
         return new ResponseEntity<>(apiError, status);
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiError> handleNotFoundException(final ValidationException e) {
         final HttpStatus status = e.getStatus();
-        final ApiError apiError = new ApiError(status.value(), e.getMessage());
+        final ApiError apiError = new ApiError(customizeCode(status, e.getPostfix()), e.getMessage());
         return new ResponseEntity<>(apiError, status);
     }
 
@@ -41,7 +41,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                              final HttpHeaders headers,
                                                              final HttpStatus status,
                                                              final WebRequest request) {
-        final ApiError error = new ApiError(status.value(), rb.getString("invalid.value"));
+        final ApiError error = new ApiError(customizeCode(status, null), rb.getString("invalid.value"));
         return super.handleExceptionInternal(e, error, headers, status, request);
+    }
+
+    private String customizeCode(final HttpStatus status, final String postfix) {
+        return String.valueOf(status.value()).concat(postfix);
     }
 }

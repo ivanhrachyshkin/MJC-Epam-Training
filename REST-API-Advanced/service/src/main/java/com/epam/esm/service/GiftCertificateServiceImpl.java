@@ -6,11 +6,8 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
 import com.epam.esm.service.validator.SortValidator;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +18,8 @@ import java.util.ResourceBundle;
 @Service
 @RequiredArgsConstructor
 public class GiftCertificateServiceImpl implements GiftCertificateService {
+
+    private static final String POSTFIX = "01";
 
     @Setter
     private ResourceBundle rb;
@@ -82,7 +81,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, id));
+                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
     }
 
     private void checkExistByName(final String name) {
@@ -90,7 +89,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .readOneByName(name)
                 .ifPresent(giftCertificate -> {
                     throw new ServiceException(
-                            rb.getString("giftCertificate.alreadyExists.name"), HttpStatus.CONFLICT, name);
+                            rb.getString("giftCertificate.alreadyExists.name"), HttpStatus.CONFLICT, POSTFIX, name);
                 });
     }
 }

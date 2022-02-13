@@ -5,8 +5,6 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.TagValidator;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,8 @@ import java.util.ResourceBundle;
 @Service
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
+
+    private static final String POSTFIX = "02";
 
     @Setter
     private ResourceBundle rb;
@@ -54,7 +54,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public TagDto readOneMostUsed() {
         final Tag tag = tagRepository.readOneMostUsed()
-                .orElseThrow(() -> new ServiceException(rb.getString("tag.no"), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ServiceException(rb.getString("tag.no"), HttpStatus.NOT_FOUND, POSTFIX));
         return mapper.modelToDto(tag);
     }
 
@@ -70,7 +70,7 @@ public class TagServiceImpl implements TagService {
         return tagRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("tag.notFound.id"), HttpStatus.NOT_FOUND, id));
+                        rb.getString("tag.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
     }
 
     private void checkExistByName(final String name) {
@@ -78,7 +78,7 @@ public class TagServiceImpl implements TagService {
                 .readOneByName(name)
                 .ifPresent(tag -> {
                     throw new ServiceException(
-                            rb.getString("tag.alreadyExists.name"), HttpStatus.NOT_FOUND, name);
+                            rb.getString("tag.alreadyExists.name"), HttpStatus.NOT_FOUND, POSTFIX, name);
                 });
     }
 }

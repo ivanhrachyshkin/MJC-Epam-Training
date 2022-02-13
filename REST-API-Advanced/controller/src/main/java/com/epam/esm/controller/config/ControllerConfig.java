@@ -20,18 +20,13 @@ import static org.springframework.hateoas.config.EnableHypermediaSupport.Hyperme
 import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL_FORMS;
 
 @Configuration
-@ComponentScan("com.epam.esm")
+@ComponentScan("com.epam.esm.controller")
 @EnableWebMvc
 @EnableHypermediaSupport(type = {HAL, HAL_FORMS})
 public class ControllerConfig implements WebMvcConfigurer {
 
     @Autowired
     Interceptor myInterceptor;
-
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
