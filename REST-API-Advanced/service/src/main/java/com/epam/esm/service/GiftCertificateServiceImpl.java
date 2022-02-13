@@ -44,11 +44,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public List<GiftCertificateDto> readAll(final List<String> tags,
                                             final String name,
                                             final String description,
-                                            final Boolean dateSortDirection,
-                                            final Boolean nameSortDirection) {
+                                            final String dateSort,
+                                            final String nameSort) {
         giftCertificateValidator.readAllValidate(tags, name, description);
         List<GiftCertificate> giftCertificates
-                = giftCertificateRepository.readAll(tags, name, description, dateSortDirection, nameSortDirection);
+                = giftCertificateRepository.readAll(tags, name, description, dateSort, nameSort);
         return mapper.modelsToDto(giftCertificates);
     }
 

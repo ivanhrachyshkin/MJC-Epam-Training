@@ -4,7 +4,6 @@ import com.epam.esm.controller.interceptor.Interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +33,11 @@ public class ControllerConfig implements WebMvcConfigurer {
         return new ModelMapper();
     }
 
+    @Override
+    public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(myInterceptor);
+    }
+
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -44,10 +48,5 @@ public class ControllerConfig implements WebMvcConfigurer {
                 new Jackson2HalModule.HalHandlerInstantiator(
                         new AnnotationLinkRelationProvider(), CurieProvider.NONE, MessageResolver.DEFAULTS_ONLY));
         return objectMapper;
-    }
-
-    @Override
-    public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(myInterceptor);
     }
 }

@@ -7,7 +7,9 @@ import com.epam.esm.service.validator.OrderValidator;
 import com.epam.esm.service.validator.SortValidator;
 import com.epam.esm.service.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.LocaleUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

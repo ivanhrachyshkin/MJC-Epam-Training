@@ -38,8 +38,8 @@ public class GiftCertificateController {
             @RequestParam(required = false) final List<String> tags,
             @RequestParam(required = false) final String name,
             @RequestParam(required = false) final String description,
-            @RequestParam(required = false) final Boolean dateSort,
-            @RequestParam(required = false) final Boolean nameSort) {
+            @RequestParam(required = false) final String dateSort,
+            @RequestParam(required = false) final String nameSort) {
         final List<GiftCertificateDto> dtoGiftCertificates
                 = giftCertificateService.readAll(tags, name, description, dateSort, nameSort);
         dtoGiftCertificates.forEach(this::linkGiftCertificateDto);

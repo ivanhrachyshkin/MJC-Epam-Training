@@ -12,8 +12,8 @@ public interface GiftCertificateRepository {
     List<GiftCertificate> readAll(List<String> tags,
                                   String name,
                                   String description,
-                                  Boolean dateSortDirection,
-                                  Boolean nameSortDirection);
+                                  String dateSort,
+                                  String nameSort);
 
     Optional<GiftCertificate> readOne(int id);
 

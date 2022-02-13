@@ -54,8 +54,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public List<GiftCertificate> readAll(final List<String> tags,
                                          final String name,
                                          final String description,
-                                         final Boolean dateSortDirection,
-                                         final Boolean nameSortDirection) {
+                                         final String dateSort,
+                                         final String nameSort) {
         final Set<String> whereCriteria = new LinkedHashSet<>();
         final Map<Integer, Object> values = new HashMap<>();
 
@@ -82,18 +82,16 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             where = WHERE + String.join(WHERE_DELIMITER, whereCriteria);
         }
 
-        final Set<String> sortCriteria = new LinkedHashSet<>();
-        if (dateSortDirection != null) {
-            sortCriteria.add(CREATE_DATE_QUERY + (dateSortDirection ? ASC : DESC));
+        final Set<String> sortCriteria = new HashSet<>();
+        if (dateSort != null) {
+            sortCriteria.add(" create_date " + dateSort.toUpperCase());
         }
-
-        if (nameSortDirection != null) {
-            sortCriteria.add(NAME_QUERY + (nameSortDirection ? ASC : DESC));
+        if (nameSort != null) {
+            sortCriteria.add(" name " + nameSort.toUpperCase());
         }
-
-        String sort = StringUtils.EMPTY;
+        String sort = "";
         if (!sortCriteria.isEmpty()) {
-            sort = ORDER_BY + String.join(ORDER_DELIMITER, sortCriteria);
+            sort = " ORDER BY " + String.join(", ", sortCriteria);
         }
 
         final String finalQuery = READ_QUERY + where + sort;
