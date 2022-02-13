@@ -5,7 +5,10 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.TagValidator;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +20,8 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
-    private final ResourceBundle rb;
+    @Setter
+    private ResourceBundle rb;
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
     private final DtoMapper<Tag, TagDto> mapper;
@@ -56,9 +60,10 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public void deleteById(final int id) {
+    public TagDto deleteById(final int id) {
         checkExist(id);
-        tagRepository.deleteById(id);
+        final Tag tag = tagRepository.deleteById(id);
+        return mapper.modelToDto(tag);
     }
 
     private Tag checkExist(final int id) {

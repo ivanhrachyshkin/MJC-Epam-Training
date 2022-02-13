@@ -1,20 +1,17 @@
 package com.epam.esm.service.validator;
 
-import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
-@RequiredArgsConstructor
 public class OrderValidator {
 
-    private final ResourceBundle rb;
+    @Setter
+    private ResourceBundle rb;
 
     public void createValidate(final OrderDto orderDto) {
 

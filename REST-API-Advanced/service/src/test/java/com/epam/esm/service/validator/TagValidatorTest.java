@@ -15,11 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TagValidatorTest {
 
     private final DummyRb dummyRb = new DummyRb();
-    private final TagValidator tagValidator = new TagValidator(dummyRb);
+    private final TagValidator tagValidator = new TagValidator();
 
     @Test
     void shouldThrowException_On_CreateTagValidator_ForEmptyName() {
         //When
+        tagValidator.setRb(dummyRb);
         dummyRb.setMessage("validator.tag.name.required", "Tag name is required");
         final TagDto tagDto = new TagDto();
         final ValidationException validationException
@@ -31,6 +32,7 @@ class TagValidatorTest {
     @Test
     void shouldPath_On_CreateTagValidator_ForEmptyName() {
         //Given
+        tagValidator.setRb(dummyRb);
         final TagDto tagDto = new TagDto();
         tagDto.setName("name");
         //When

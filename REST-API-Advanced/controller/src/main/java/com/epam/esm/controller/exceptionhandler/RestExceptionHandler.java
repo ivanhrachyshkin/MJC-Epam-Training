@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 @Setter
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    //private ResourceBundle rb;
+    private ResourceBundle rb;
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ApiError> handleValidationException(final ServiceException e) {
@@ -41,7 +41,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                              final HttpHeaders headers,
                                                              final HttpStatus status,
                                                              final WebRequest request) {
-        final ApiError error = new ApiError(status.value(), e.getMessage());
+        final ApiError error = new ApiError(status.value(), rb.getString("invalid.value"));
         return super.handleExceptionInternal(e, error, headers, status, request);
     }
 }

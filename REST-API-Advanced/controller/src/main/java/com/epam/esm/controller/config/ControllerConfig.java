@@ -1,7 +1,10 @@
 package com.epam.esm.controller.config;
 
+import com.epam.esm.controller.interceptor.Interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,9 +14,8 @@ import org.springframework.hateoas.mediatype.hal.CurieProvider;
 import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-import java.util.Locale;
-import java.util.ResourceBundle;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL;
 import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL_FORMS;
@@ -22,7 +24,10 @@ import static org.springframework.hateoas.config.EnableHypermediaSupport.Hyperme
 @ComponentScan("com.epam.esm")
 @EnableWebMvc
 @EnableHypermediaSupport(type = {HAL, HAL_FORMS})
-public class ControllerConfig {
+public class ControllerConfig implements WebMvcConfigurer {
+
+    @Autowired
+    Interceptor myInterceptor;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -30,18 +35,19 @@ public class ControllerConfig {
     }
 
     @Bean
-    public ResourceBundle resourceBundle() {
-        return ResourceBundle.getBundle("message", Locale.US);
-    }
-
-    @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         Jackson2HalModule module = new Jackson2HalModule();
+        objectMapper.findAndRegisterModules();
         objectMapper.registerModule(module);
         objectMapper.setHandlerInstantiator(
                 new Jackson2HalModule.HalHandlerInstantiator(
                         new AnnotationLinkRelationProvider(), CurieProvider.NONE, MessageResolver.DEFAULTS_ONLY));
         return objectMapper;
+    }
+
+    @Override
+    public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(myInterceptor);
     }
 }

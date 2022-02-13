@@ -4,7 +4,10 @@ import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.User;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +19,10 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final ResourceBundle rb;
+    @Setter
+    private ResourceBundle rb;
     private final UserRepository userRepository;
     private final DtoMapper<User, UserDto> mapper;
-
 
     @Override
     @Transactional

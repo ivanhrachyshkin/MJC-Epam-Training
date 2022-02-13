@@ -132,9 +132,10 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public void deleteById(final int id) {
+    public GiftCertificate deleteById(final int id) {
         final GiftCertificate giftCertificate = entityManager.find(GiftCertificate.class, id);
         entityManager.remove(giftCertificate);
+        return giftCertificate;
     }
 
     private void setTagId(final Set<Tag> tags) {

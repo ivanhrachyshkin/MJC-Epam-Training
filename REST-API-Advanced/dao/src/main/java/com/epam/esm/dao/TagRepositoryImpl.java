@@ -73,9 +73,10 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public void deleteById(final int id) {
+    public Tag deleteById(final int id) {
         final Tag tag = entityManager.find(Tag.class, id);
         entityManager.remove(tag);
+        return tag;
     }
 
     private void paginateQuery(final TypedQuery<Tag> typedQuery, final int pageNumber) {

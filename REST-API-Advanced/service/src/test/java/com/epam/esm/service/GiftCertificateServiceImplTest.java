@@ -156,7 +156,7 @@ class GiftCertificateServiceImplTest {
         //Given
         final GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setId(1);
-        doNothing().when(giftCertificateRepository).deleteById(giftCertificate.getId());
+        when(giftCertificateRepository.deleteById(giftCertificate.getId())).thenReturn(giftCertificate);
         when(giftCertificateRepository.readOne(giftCertificate.getId())).thenReturn(Optional.of(giftCertificate));
         //When
         giftCertificateService.deleteById(giftCertificate.getId());

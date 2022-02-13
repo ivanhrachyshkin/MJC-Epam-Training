@@ -16,5 +16,5 @@ public interface TagService {
 
     TagDto readOneMostUsed();
 
-    void deleteById(int id);
+    TagDto deleteById(int id);
 }

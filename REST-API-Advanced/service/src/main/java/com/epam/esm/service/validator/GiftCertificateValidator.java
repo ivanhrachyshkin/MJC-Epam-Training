@@ -2,6 +2,7 @@ package com.epam.esm.service.validator;
 
 import com.epam.esm.service.dto.GiftCertificateDto;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -13,7 +14,8 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class GiftCertificateValidator {
 
-    private final ResourceBundle rb;
+    @Setter
+    private ResourceBundle rb;
     private final TagValidator tagValidator;
 
     public void updateValidate(final GiftCertificateDto giftCertificateDto) {

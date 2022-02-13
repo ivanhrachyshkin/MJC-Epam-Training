@@ -17,5 +17,5 @@ public interface TagRepository {
 
     Optional<Tag> readOneMostUsed();
 
-    void deleteById(int id);
+    Tag deleteById(int id);
 }

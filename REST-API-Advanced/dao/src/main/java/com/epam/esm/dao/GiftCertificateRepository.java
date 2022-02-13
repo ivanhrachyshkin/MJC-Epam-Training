@@ -21,5 +21,5 @@ public interface GiftCertificateRepository {
 
     GiftCertificate update(GiftCertificate giftCertificate);
 
-    void deleteById(int id);
+    GiftCertificate deleteById(int id);
 }

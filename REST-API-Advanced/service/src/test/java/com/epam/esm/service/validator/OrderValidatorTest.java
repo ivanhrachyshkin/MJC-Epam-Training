@@ -32,10 +32,11 @@ class OrderValidatorTest {
     }};
 
     private final DummyRb dummyRb = new DummyRb();
-    private OrderValidator orderValidator = new OrderValidator(dummyRb);
+    private OrderValidator orderValidator = new OrderValidator();
 
     @BeforeEach
     void setUp() {
+        orderValidator.setRb(dummyRb);
         ReflectionTestUtils.setField(orderValidator, "rb", dummyRb);
         dummyRb.setMessages(messages);
     }
