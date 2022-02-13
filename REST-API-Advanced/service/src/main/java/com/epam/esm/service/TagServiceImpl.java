@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.TagRepository;
+import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Service
@@ -30,9 +32,17 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public TagDto create(final TagDto tagDto) {
         tagValidator.createValidate(tagDto);
-        final Tag tag = mapper.dtoToModel(tagDto);
-        checkExistByName(tag.getName());
-        final Tag newTag = tagRepository.create(tag);
+        final Tag rawTag = mapper.dtoToModel(tagDto);
+
+        final Optional<Tag> optionalTag = tagRepository.readOneByName(rawTag.getName());
+        Tag newTag;
+        if (optionalTag.isPresent()) {
+            final Tag oldTag = optionalTag.get();
+            oldTag.setStatus(true);
+            newTag = tagRepository.update(oldTag);
+        } else {
+            newTag = tagRepository.create(rawTag);
+        }
         return mapper.modelToDto(newTag);
     }
 
@@ -71,14 +81,5 @@ public class TagServiceImpl implements TagService {
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("tag.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
-    }
-
-    private void checkExistByName(final String name) {
-        tagRepository
-                .readOneByName(name)
-                .ifPresent(tag -> {
-                    throw new ServiceException(
-                            rb.getString("tag.alreadyExists.name"), HttpStatus.NOT_FOUND, POSTFIX, name);
-                });
     }
 }

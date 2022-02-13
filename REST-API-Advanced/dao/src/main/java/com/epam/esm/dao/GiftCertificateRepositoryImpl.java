@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     private static final String READ_QUERY = "SELECT DISTINCT am from GiftCertificate am inner join am.tags ar";
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM GiftCertificate e WHERE e.name = ?1";
+    private static final String SOFT_DELETE = "UPDATE GiftCertificate e SET e.status = false WHERE e.id = ?1";
     private static final String ASC = "ASC";
     private static final String DESC = "DESC";
     private static final String TAG_NAME_LIKE = "ar.name LIKE ?";
@@ -43,6 +45,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         giftCertificate.setId(null);
         giftCertificate.setCreateDate(LocalDateTime.now(clock));
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
+        giftCertificate.setStatus(true);
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
         entityManager.persist(giftCertificate);
@@ -84,19 +87,18 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
         final Set<String> sortCriteria = new HashSet<>();
         if (dateSort != null) {
-            sortCriteria.add(" create_date " + dateSort.toUpperCase());
+            sortCriteria.add(CREATE_DATE_QUERY + dateSort.toUpperCase());
         }
         if (nameSort != null) {
-            sortCriteria.add(" name " + nameSort.toUpperCase());
+            sortCriteria.add(NAME_QUERY + nameSort.toUpperCase());
         }
         String sort = "";
         if (!sortCriteria.isEmpty()) {
-            sort = " ORDER BY " + String.join(", ", sortCriteria);
+            sort = ORDER_BY + String.join(ORDER_DELIMITER, sortCriteria);
         }
 
         final String finalQuery = READ_QUERY + where + sort;
         final TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(finalQuery, GiftCertificate.class);
-
         if (!values.isEmpty()) {
             values.forEach((position, value) -> typedQuery.setParameter(position, "%" + value + "%"));
         }
@@ -125,14 +127,15 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
-        entityManager.merge(giftCertificate);
-        return giftCertificate;
+        return entityManager.merge(giftCertificate);
     }
 
     @Override
     public GiftCertificate deleteById(final int id) {
         final GiftCertificate giftCertificate = entityManager.find(GiftCertificate.class, id);
-        entityManager.remove(giftCertificate);
+        Query query = entityManager.createQuery(SOFT_DELETE);
+        query.setParameter(1, id).executeUpdate();
+        entityManager.flush();
         return giftCertificate;
     }
 
@@ -149,7 +152,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     private void paginateQuery(final TypedQuery<GiftCertificate> typedQuery, final int pageNumber) {
-        typedQuery.setFirstResult(pageNumber - 1);
+        typedQuery.setFirstResult((pageNumber - 1) * 10);
         typedQuery.setMaxResults(10);
     }
 }

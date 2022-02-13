@@ -41,7 +41,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                              final HttpHeaders headers,
                                                              final HttpStatus status,
                                                              final WebRequest request) {
-        final ApiError error = new ApiError(customizeCode(status, null), rb.getString("invalid.value"));
+        final ApiError error = new ApiError(customizeCode(status, ""), e.getMessage());
         return super.handleExceptionInternal(e, error, headers, status, request);
     }
 

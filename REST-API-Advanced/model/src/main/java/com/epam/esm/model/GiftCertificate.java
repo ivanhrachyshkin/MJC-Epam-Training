@@ -32,6 +32,8 @@ public class GiftCertificate {
     private LocalDateTime createDate;
     @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
+    @Column
+    private boolean status;
 
     @ManyToMany
     @JoinTable(name = "gift_certificate_tags",

@@ -69,6 +69,26 @@ class TagServiceImplTest {
     }
 
     @Test
+    void shouldUpdateStatusTag_On_Create() {
+        //Given
+        when(tagRepository.readOneByName(tag1.getName())).thenReturn(Optional.of(tag1));
+        when(tagRepository.update(tag1)).thenReturn(tag1);
+        when(mapper.dtoToModel(tagDto1)).thenReturn(tag1);
+        when(mapper.modelToDto(tag1)).thenReturn(tagDto1);
+        //When
+        final TagDto actualTag = tagService.create(tagDto1);
+        //Then
+        assertEquals(tagDto1, actualTag);
+        verify(tagValidator, only()).createValidate(tagDto1);
+        verify(tagRepository, times(1)).readOneByName(tag1.getName());
+        verify(tagRepository, times(1)).update(tag1);
+        verifyNoMoreInteractions(tagRepository);
+        verify(mapper, times(1)).dtoToModel(tagDto1);
+        verify(mapper, times(1)).modelToDto(tag1);
+        verifyNoMoreInteractions(mapper);
+    }
+
+    @Test
     void shouldThrowException_On_Create() {
         //Given
         dummyRb.setMessage("tag.alreadyExists.name","Tag with name = %s is already exist");

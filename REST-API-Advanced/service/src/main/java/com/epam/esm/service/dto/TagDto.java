@@ -12,6 +12,7 @@ import org.springframework.hateoas.RepresentationModel;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TagDto extends RepresentationModel<TagDto> {
 
+
     private Integer id;
     private String name;
 

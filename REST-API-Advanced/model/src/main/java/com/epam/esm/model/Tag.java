@@ -21,6 +21,8 @@ public class Tag {
     private Integer id;
     @Column(unique = true)
     private String name;
+    @Column
+    private boolean status;
     @ManyToMany(mappedBy = "tags")
     private Set<GiftCertificate> giftCertificates = new HashSet<>();
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Service
@@ -32,9 +33,20 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto create(final GiftCertificateDto giftCertificateDto) {
         giftCertificateValidator.createValidate(giftCertificateDto);
-        final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
-        checkExistByName(giftCertificate.getName());
-        final GiftCertificate newGiftCertificate = giftCertificateRepository.create(giftCertificate);
+        final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
+
+        final Optional<GiftCertificate> optionalGiftCertificate
+                = giftCertificateRepository.readOneByName(rawGiftCertificate.getName());
+        GiftCertificate newGiftCertificate;
+        if (optionalGiftCertificate.isPresent()) {
+            final GiftCertificate oldGiftCertificate = optionalGiftCertificate.get();
+            rawGiftCertificate.setId(oldGiftCertificate.getId());
+            rawGiftCertificate.setCreateDate(oldGiftCertificate.getCreateDate());
+            rawGiftCertificate.setStatus(true);
+            newGiftCertificate = giftCertificateRepository.update(rawGiftCertificate);
+        } else {
+            newGiftCertificate = giftCertificateRepository.create(rawGiftCertificate);
+        }
         return mapper.modelToDto(newGiftCertificate);
     }
 
@@ -46,6 +58,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                             final String dateSort,
                                             final String nameSort) {
         giftCertificateValidator.readAllValidate(tags, name, description);
+        sortValidator.sortValidate(dateSort);
+        sortValidator.sortValidate(nameSort);
         List<GiftCertificate> giftCertificates
                 = giftCertificateRepository.readAll(tags, name, description, dateSort, nameSort);
         return mapper.modelsToDto(giftCertificates);
