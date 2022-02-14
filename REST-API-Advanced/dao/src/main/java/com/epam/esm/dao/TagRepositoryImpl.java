@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -9,16 +8,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
 public class TagRepositoryImpl implements TagRepository {
 
-    private static final String READ_QUERY = "SELECT e FROM Tag e WHERE e.status = true";
+    private static final String READ_QUERY = "SELECT e FROM Tag e";
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM Tag e WHERE e.name = ?1";
     private static final String READ_ONE_MOST_USED =
             "SELECT tags.id, tags.name, COUNT(*) as count" +
@@ -27,13 +24,14 @@ public class TagRepositoryImpl implements TagRepository {
                     "    GROUP BY user_id" +
                     "    ORDER BY amount DESC" +
                     "    LIMIT 1) as maxcost" +
-                    " JOIN orders on orders.user_id = maxcost.user_id" +
-                    " JOIN gift_certificate_tags on gift_certificate_tags.gift_certificate_id = orders.gift_certificate_id" +
-                    " JOIN tags on tags.id = gift_certificate_tags.tag_id" +
+                    " JOIN orders ON orders.user_id = maxcost.user_id" +
+                    " JOIN gift_certificate_tags" +
+                    " ON gift_certificate_tags.gift_certificate_id = orders.gift_certificate_id" +
+                    " JOIN tags ON tags.id = gift_certificate_tags.tag_id" +
                     " GROUP BY tags.id, tags.name" +
                     " ORDER BY count DESC" +
                     " LIMIT 1";
-    private static final String SOFT_DELETE = "UPDATE Tag e SET e.status = false WHERE e.id = ?1";
+    private static final String SOFT_DELETE = "UPDATE Tag e SET e.active = false WHERE e.id = ?1";
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -41,7 +39,7 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public Tag create(final Tag tag) {
         tag.setId(null);
-        tag.setStatus(true);
+        tag.setActive(true);
         entityManager.persist(tag);
         return tag;
     }

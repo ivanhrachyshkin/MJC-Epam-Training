@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Service
@@ -37,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto create(final OrderDto orderDto) {
         orderValidator.createValidate(orderDto);
         final Order order = mapper.dtoToModel(orderDto);
+        checkExistByIds(order);
         final Integer userId = order.getUser().getId();
         final Integer giftCertificateId = order.getGiftCertificate().getId();
         final User user = userRepository
@@ -49,15 +51,21 @@ public class OrderServiceImpl implements OrderService {
         order.setPrice(giftCertificate.getPrice());
         order.setUser(user);
         order.setGiftCertificate(giftCertificate);
-        checkExistByIds(order);
         final Order newOrder = orderRepository.create(order);
         return mapper.modelToDto(newOrder);
     }
 
     @Override
     @Transactional
-    public List<OrderDto> readAll(final Integer userId) {
-        final List<Order> orders = orderRepository.readAll(userId);
+    public List<OrderDto> readAll() {
+        final List<Order> orders = orderRepository.readAll();
+        return mapper.modelsToDto(orders);
+    }
+
+    @Override
+    @Transactional
+    public List<OrderDto> readAllByUserId(final int userId) {
+        final List<Order> orders = orderRepository.readAllByUserId(userId);
         return mapper.modelsToDto(orders);
     }
 
@@ -68,16 +76,26 @@ public class OrderServiceImpl implements OrderService {
         return mapper.modelToDto(order);
     }
 
+    @Override
+    public OrderDto readOneByUserIdAndOrderId(final int userId, final int orderId) {
+        final Order order =
+                orderRepository.
+                readOneByUserIdAndOrderId(userId, orderId)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("order.notFound.user.order"), HttpStatus.NOT_FOUND, POSTFIX, userId, orderId));
+        return mapper.modelToDto(order);
+    }
+
     private Order checkExist(final int id) {
         return orderRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("order.notFound.id"), HttpStatus.CONFLICT, POSTFIX, id));
+                        rb.getString("order.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
     }
 
     private void checkExistByIds(final Order order) {
         orderRepository
-                .readOneByIds(order.getUser().getId(), order.getGiftCertificate().getId())
+                .readOneByUserIdAndGiftCertificateId(order.getUser().getId(), order.getGiftCertificate().getId())
                 .ifPresent(order1 -> {
                     throw new ServiceException(
                             rb.getString("order.alreadyExists"), HttpStatus.CONFLICT, POSTFIX);

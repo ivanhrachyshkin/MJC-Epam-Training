@@ -5,6 +5,8 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +22,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
 
-    private static final String READ_QUERY = "SELECT DISTINCT am from GiftCertificate am inner join am.tags ar";
+    private static final String READ_QUERY = "SELECT DISTINCT am FROM GiftCertificate am JOIN am.tags ar ";
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM GiftCertificate e WHERE e.name = ?1";
-    private static final String SOFT_DELETE = "UPDATE GiftCertificate e SET e.status = false WHERE e.id = ?1";
-    private static final String ASC = "ASC";
-    private static final String DESC = "DESC";
+    private static final String WHERE = "WHERE ";
     private static final String TAG_NAME_LIKE = "ar.name LIKE ?";
     private static final String NAME_LIKE = "am.name LIKE ?2";
     private static final String DESCRIPTION_LIKE = "am.description LIKE ?3";
@@ -32,7 +32,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String NAME_QUERY = "am.name ";
     private static final String WHERE_DELIMITER = " AND ";
     private static final String ORDER_DELIMITER = ", ";
-    private static final String WHERE = " WHERE ";
     private static final String ORDER_BY = " ORDER BY ";
 
     @PersistenceContext
@@ -45,11 +44,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         giftCertificate.setId(null);
         giftCertificate.setCreateDate(LocalDateTime.now(clock));
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
-        giftCertificate.setStatus(true);
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
         entityManager.persist(giftCertificate);
-        entityManager.flush();
         return giftCertificate;
     }
 
@@ -133,8 +130,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     @Override
     public GiftCertificate deleteById(final int id) {
         final GiftCertificate giftCertificate = entityManager.find(GiftCertificate.class, id);
-        Query query = entityManager.createQuery(SOFT_DELETE);
-        query.setParameter(1, id).executeUpdate();
+        entityManager.remove(giftCertificate);
         entityManager.flush();
         return giftCertificate;
     }
@@ -144,8 +140,11 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             final Optional<Tag> optionalTag = tagRepository.readOneByName(tag.getName());
             if (optionalTag.isPresent()) {
                 tag.setId(optionalTag.get().getId());
+                tag.setActive(optionalTag.get().getActive());//todo check
+                entityManager.merge(tag);
             } else {
                 tag.setId(null);
+                tag.setActive(true);
                 entityManager.persist(tag);
             }
         });

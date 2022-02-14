@@ -1,7 +1,6 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.TagRepository;
-import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
@@ -33,16 +32,7 @@ public class TagServiceImpl implements TagService {
     public TagDto create(final TagDto tagDto) {
         tagValidator.createValidate(tagDto);
         final Tag rawTag = mapper.dtoToModel(tagDto);
-
-        final Optional<Tag> optionalTag = tagRepository.readOneByName(rawTag.getName());
-        Tag newTag;
-        if (optionalTag.isPresent()) {
-            final Tag oldTag = optionalTag.get();
-            oldTag.setStatus(true);
-            newTag = tagRepository.update(oldTag);
-        } else {
-            newTag = tagRepository.create(rawTag);
-        }
+        final Tag newTag = createOrUpdateOld(rawTag);
         return mapper.modelToDto(newTag);
     }
 
@@ -81,5 +71,24 @@ public class TagServiceImpl implements TagService {
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("tag.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
+    }
+
+    private Tag createOrUpdateOld(final Tag rawTag) {
+        final Optional<Tag> optionalTag = tagRepository.readOneByName(rawTag.getName());
+        Tag newTag;
+        if (optionalTag.isPresent()) {
+            if (!optionalTag.get().getActive()) {
+                rawTag.setId(optionalTag.get().getId());
+                rawTag.setActive(true);
+                newTag = tagRepository.update(rawTag);
+            } else {
+                throw new ServiceException(
+                        rb.getString("tag.alreadyExists.name"),
+                        HttpStatus.CONFLICT, POSTFIX, optionalTag.get().getName());
+            }
+        } else {
+            newTag = tagRepository.create(rawTag);
+        }
+        return newTag;
     }
 }

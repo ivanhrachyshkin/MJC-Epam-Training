@@ -33,20 +33,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto create(final GiftCertificateDto giftCertificateDto) {
         giftCertificateValidator.createValidate(giftCertificateDto);
-        final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
-
-        final Optional<GiftCertificate> optionalGiftCertificate
-                = giftCertificateRepository.readOneByName(rawGiftCertificate.getName());
-        GiftCertificate newGiftCertificate;
-        if (optionalGiftCertificate.isPresent()) {
-            final GiftCertificate oldGiftCertificate = optionalGiftCertificate.get();
-            rawGiftCertificate.setId(oldGiftCertificate.getId());
-            rawGiftCertificate.setCreateDate(oldGiftCertificate.getCreateDate());
-            rawGiftCertificate.setStatus(true);
-            newGiftCertificate = giftCertificateRepository.update(rawGiftCertificate);
-        } else {
-            newGiftCertificate = giftCertificateRepository.create(rawGiftCertificate);
-        }
+        checkExistByName(giftCertificateDto.getName());
+        GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
+        final GiftCertificate newGiftCertificate = giftCertificateRepository.create(rawGiftCertificate);
         return mapper.modelToDto(newGiftCertificate);
     }
 
@@ -106,4 +95,5 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                             rb.getString("giftCertificate.alreadyExists.name"), HttpStatus.CONFLICT, POSTFIX, name);
                 });
     }
+
 }

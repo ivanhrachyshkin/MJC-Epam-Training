@@ -9,9 +9,14 @@ public interface OrderRepository {
 
     Order create(Order order);
 
-    List<Order> readAll(Integer userId);
+    List<Order> readAll();
+
+    List<Order> readAllByUserId(final int userId);
 
     Optional<Order> readOne(int id);
 
-    Optional<Order> readOneByIds( int userId,  int giftCertificateId);
+    Optional<Order> readOneByUserIdAndOrderId(int userId, int orderId);
+
+    Optional<Order> readOneByUserIdAndGiftCertificateId(int userId, int giftCertificateId);
+
 }

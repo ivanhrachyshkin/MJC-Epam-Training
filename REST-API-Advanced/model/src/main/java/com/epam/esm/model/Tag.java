@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Where;
+import org.hibernate.annotations.WhereJoinTable;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -21,8 +23,8 @@ public class Tag {
     private Integer id;
     @Column(unique = true)
     private String name;
-    @Column
-    private boolean status;
+    @Column (nullable = false)
+    private Boolean active;
     @ManyToMany(mappedBy = "tags")
     private Set<GiftCertificate> giftCertificates = new HashSet<>();
 

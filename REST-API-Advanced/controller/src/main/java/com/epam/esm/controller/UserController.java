@@ -1,9 +1,9 @@
 package com.epam.esm.controller;
 
 
+import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.OrderDto;
-import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
@@ -19,55 +19,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.afford;
-
 @RestController
 @RequestMapping(value = "/users")
 @RequiredArgsConstructor
 public class UserController {
 
+    private final HateoasCreator hateoasCreator;
     private final UserService userService;
+    private final OrderService orderService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<List<UserDto>> readAll() {
         final List<UserDto> dtoUsers
                 = userService.readAll();
 
-        dtoUsers.forEach(this::linkUserDto);
+        dtoUsers.forEach(hateoasCreator::linkUserDtoWithOrders);
         return new ResponseEntity<>(dtoUsers, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{userId}/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<List<OrderDto>> readAllByUserId(@PathVariable int userId) {
+        final List<OrderDto> dtoOrders
+                = orderService.readAllByUserId(userId);
+        dtoOrders.forEach(hateoasCreator::linkOrderDto);
+        return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{userId}/orders/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<OrderDto> readAllByUserIdAndOrderId(@PathVariable int userId,
+                                                          @PathVariable int orderId) {
+        final OrderDto orderDto
+                = orderService.readOneByUserIdAndOrderId(userId, orderId);
+        hateoasCreator.linkOrderDto(orderDto);
+        return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_FORMS_JSON_VALUE)
     public ResponseEntity<EntityModel<UserDto>> readOne(@PathVariable final int id) {
         final UserDto userDto = userService.readOne(id);
-        final EntityModel<UserDto> userDtoEntityModel = linkUserDtoHal(userDto);
+        final EntityModel<UserDto> userDtoEntityModel = hateoasCreator.linkUserDtoHal(userDto);
         return new ResponseEntity<>(userDtoEntityModel, HttpStatus.OK);
-    }
-
-    private EntityModel<UserDto> linkUserDtoHal(final UserDto userDto) {
-        userDto
-                .getDtoOrders()
-                .forEach(this::linkOrderDto);
-
-        return EntityModel.of(userDto,
-                linkTo(methodOn(UserController.class).readOne(userDto.getId())).withSelfRel());
-    }
-
-    private void linkUserDto(final UserDto userDto) {
-        userDto.add(linkTo(methodOn(UserController.class)
-                .readOne(userDto.getId()))
-                .withSelfRel());
-
-        userDto
-                .getDtoOrders()
-                .forEach(this::linkOrderDto);
-    }
-
-    private void linkOrderDto(final OrderDto orderDto) {
-        orderDto
-                .add(linkTo(methodOn(OrderController.class)
-                        .readOne(orderDto.getId()))
-                        .withSelfRel());
     }
 }

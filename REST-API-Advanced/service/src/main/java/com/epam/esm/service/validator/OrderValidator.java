@@ -18,19 +18,23 @@ public class OrderValidator {
     public void createValidate(final OrderDto orderDto) {
 
         if (orderDto.getUserDto().getId() == null) {
-            throw new ValidationException(rb.getString("validator.order.userId.required"), HttpStatus.BAD_REQUEST, POSTFIX);
+            throw new ValidationException(
+                    rb.getString("validator.order.userId.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (orderDto.getUserDto().getId() <= 0) {
-            throw new ValidationException(rb.getString("validator.order.userId.negative"), HttpStatus.BAD_REQUEST, POSTFIX);
+            throw new ValidationException(
+                    rb.getString("validator.order.userId.negative"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (orderDto.getGiftCertificateDto().getId() == null) {
-            throw new ValidationException(rb.getString("validator.order.giftId.required"), HttpStatus.BAD_REQUEST, POSTFIX);
+            throw new ValidationException(
+                    rb.getString("validator.order.giftId.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
         if (orderDto.getGiftCertificateDto().getId() <= 0) {
-            throw new ValidationException(rb.getString("validator.order.giftId.negative"), HttpStatus.BAD_REQUEST, POSTFIX);
+            throw new ValidationException(
+                    rb.getString("validator.order.giftId.negative"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
     }
 }

@@ -16,10 +16,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepository {
 
-    private static final String READ_QUERY = "SELECT DISTINCT am from Order am inner join am.user ar";
+    private static final String READ_ALL_QUERY = "SELECT DISTINCT am from Order am left join am.user ar";
     @SuppressWarnings("JpaQlInspection")
-    private static final String READ_ONE_BY_IDS = "SELECT DISTINCT am from Order am " +
+    private static final String READ_ONE_BY_GIFT_ID_AND_USER_ID_QUERY = "SELECT DISTINCT am from Order am " +
             "inner join am.user au inner join am.giftCertificate ag WHERE au.id = ?1 AND ag.id = ?2";
+    private static final String READ_ALL_BY_USER_ID_QUERY
+            = "SELECT DISTINCT am from Order am left join am.user ar WHERE ar.id = ?1";
+    private static final String READ_ONE_BY_USER_ID_AND_ORDER_ID_QUERY
+            = "SELECT DISTINCT am from Order am left join am.user ar WHERE ar.id = ?1 AND am.id = ?2";
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -35,18 +39,16 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @SuppressWarnings("JpaQlInspection")
     @Override
-    public List<Order> readAll(final Integer userId) {
+    public List<Order> readAll() {
+        final TypedQuery<Order> typedQuery = entityManager.createQuery(READ_ALL_QUERY, Order.class);
+        paginateQuery(typedQuery, 1);
+        return typedQuery.getResultList();
+    }
 
-        String query = READ_QUERY;
-        TypedQuery<Order> typedQuery;
-        if (userId != null) {
-            query = query + " WHERE ar.id = ?1";
-            typedQuery = entityManager.createQuery(query, Order.class);
-            typedQuery.setParameter(1, userId);
-        } else {
-            typedQuery = entityManager.createQuery(query, Order.class);
-        }
-
+    @Override
+    public List<Order> readAllByUserId(final int userId) {
+        final TypedQuery<Order> typedQuery = entityManager.createQuery(READ_ALL_BY_USER_ID_QUERY, Order.class);
+        typedQuery.setParameter(1, userId);
         paginateQuery(typedQuery, 1);
         return typedQuery.getResultList();
     }
@@ -57,9 +59,23 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<Order> readOneByIds(final int userId, final int giftCertificateId) {
+    public Optional<Order> readOneByUserIdAndOrderId(final int userId, final int orderId) {
         final TypedQuery<Order> query
-                = entityManager.createQuery(READ_ONE_BY_IDS, Order.class);
+                = entityManager.createQuery(READ_ONE_BY_USER_ID_AND_ORDER_ID_QUERY, Order.class);
+        query.setParameter(1, userId);
+        query.setParameter(2, orderId);
+        final List<Order> giftCertificates = query.getResultList();
+        return giftCertificates.isEmpty()
+                ? Optional.empty()
+                : Optional.of(giftCertificates.get(0));
+    }
+
+
+
+    @Override
+    public Optional<Order> readOneByUserIdAndGiftCertificateId(final int userId, final int giftCertificateId) {
+        final TypedQuery<Order> query
+                = entityManager.createQuery(READ_ONE_BY_GIFT_ID_AND_USER_ID_QUERY, Order.class);
         query.setParameter(1, userId);
         query.setParameter(2, giftCertificateId);
         final List<Order> giftCertificates = query.getResultList();

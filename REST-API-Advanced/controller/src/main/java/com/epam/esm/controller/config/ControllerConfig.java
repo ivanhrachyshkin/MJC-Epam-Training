@@ -2,7 +2,6 @@ package com.epam.esm.controller.config;
 
 import com.epam.esm.controller.interceptor.Interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

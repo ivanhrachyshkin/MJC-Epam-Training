@@ -4,8 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,8 +36,6 @@ public class GiftCertificate {
     private LocalDateTime createDate;
     @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
-    @Column
-    private boolean status;
 
     @ManyToMany
     @JoinTable(name = "gift_certificate_tags",

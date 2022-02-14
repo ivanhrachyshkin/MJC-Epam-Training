@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -81,7 +80,7 @@ class OrderServiceImplTest {
 
         when(userRepository.readOne(user.getId())).thenReturn(Optional.of(user));
         when(giftCertificateRepository.readOne(giftCertificate.getId())).thenReturn(Optional.of(giftCertificate));
-        when(orderRepository.readOneByIds(user.getId(), giftCertificate.getId())).thenReturn(Optional.empty());
+        when(orderRepository.readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId())).thenReturn(Optional.empty());
         when(orderRepository.create(order)).thenReturn(order);
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         when(mapper.modelToDto(order)).thenReturn(orderDto);
@@ -96,7 +95,7 @@ class OrderServiceImplTest {
         verify(giftCertificateRepository, only()).readOne(giftCertificate.getId());
         verify(userRepository, only()).readOne(user.getId());
         verify(orderRepository, times(1)).create(order);
-        verify(orderRepository, times(1)).readOneByIds(user.getId(), giftCertificate.getId());
+        verify(orderRepository, times(1)).readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId());
         verifyNoMoreInteractions(orderRepository);
         verify(mapper, times(1)).dtoToModel(orderDto);
         verify(mapper, times(1)).modelToDto(order);
@@ -153,7 +152,7 @@ class OrderServiceImplTest {
         final GiftCertificate giftCertificate = order.getGiftCertificate();
         when(userRepository.readOne(user.getId())).thenReturn(Optional.of(user));
         when(giftCertificateRepository.readOne(giftCertificate.getId())).thenReturn(Optional.of(giftCertificate));
-        when(orderRepository.readOneByIds(user.getId(), giftCertificate.getId())).thenReturn(Optional.of(order));
+        when(orderRepository.readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId())).thenReturn(Optional.of(order));
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         dummyRb.setMessage("order.alreadyExists", "Order already exists");
         final String message = "Order already exists";
@@ -168,7 +167,7 @@ class OrderServiceImplTest {
         verify(orderValidator, only()).createValidate(orderDto);
         verify(giftCertificateRepository, only()).readOne(giftCertificate.getId());
         verify(userRepository, only()).readOne(user.getId());
-        verify(orderRepository, only()).readOneByIds(user.getId(), giftCertificate.getId());
+        verify(orderRepository, only()).readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId());
         verify(mapper, only()).dtoToModel(orderDto);
     }
 
@@ -178,14 +177,14 @@ class OrderServiceImplTest {
         final List<Order> orders = Collections.singletonList(order);
         final List<OrderDto> expectedOrders = Collections.singletonList(orderDto);
         //When
-        when(orderRepository.readAll(null)).thenReturn(orders);
+        when(orderRepository.readAll()).thenReturn(orders);
         when(mapper.modelsToDto(orders)).thenReturn(expectedOrders);
 
         final List<OrderDto> actualOrders
-                = orderService.readAll(null);
+                = orderService.readAll();
         //Then
         assertEquals(expectedOrders, actualOrders);
-        verify(orderRepository, only()).readAll(null);
+        verify(orderRepository, only()).readAll();
         verify(mapper, only()).modelsToDto(orders);
     }
 

@@ -36,8 +36,8 @@ public class TagDtoMapper implements DtoMapper<Tag, TagDto> {
     }
 
     @Override
-    public List<Tag> dtoToModels(List<TagDto> tagDtos) {
-        return tagDtos
+    public List<Tag> dtoToModels(List<TagDto> dtoTags) {
+        return dtoTags
                 .stream()
                 .map(tagDto -> modelMapper.map(tagDto, Tag.class))
                 .collect(Collectors.toList());

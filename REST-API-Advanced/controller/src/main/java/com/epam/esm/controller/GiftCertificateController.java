@@ -4,7 +4,6 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpEntity;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -23,13 +21,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RequiredArgsConstructor
 public class GiftCertificateController {
 
+    private final HateoasCreator hateoasCreator;
     private final GiftCertificateService giftCertificateService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaTypes.HAL_FORMS_JSON_VALUE)
     public ResponseEntity<EntityModel<GiftCertificateDto>> create(@RequestBody GiftCertificateDto giftCertificateDto) {
         final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
         final EntityModel<GiftCertificateDto> giftCertificateDtoEntityModel
-                = linkGiftCertificateDtoHal(createdGiftCertificateDto);
+                = hateoasCreator.linkGiftCertificateDtoWithTagsHal(createdGiftCertificateDto);
         return new ResponseEntity<>(giftCertificateDtoEntityModel, HttpStatus.CREATED);
     }
 
@@ -42,7 +41,7 @@ public class GiftCertificateController {
             @RequestParam(required = false) final String nameSort) {
         final List<GiftCertificateDto> dtoGiftCertificates
                 = giftCertificateService.readAll(tags, name, description, dateSort, nameSort);
-        dtoGiftCertificates.forEach(this::linkGiftCertificateDto);
+        dtoGiftCertificates.forEach(hateoasCreator::linkGiftCertificateDtoWithTags);
         return new ResponseEntity<>(dtoGiftCertificates, HttpStatus.OK);
     }
 
@@ -50,7 +49,7 @@ public class GiftCertificateController {
     public ResponseEntity<EntityModel<GiftCertificateDto>> readOne(@PathVariable final int id) {
         final GiftCertificateDto giftCertificateDto = giftCertificateService.readOne(id);
         final EntityModel<GiftCertificateDto> giftCertificateDtoEntityModel
-                = linkGiftCertificateDtoHal(giftCertificateDto);
+                = hateoasCreator.linkGiftCertificateDtoWithTagsHal(giftCertificateDto);
         return new ResponseEntity<>(giftCertificateDtoEntityModel, HttpStatus.OK);
     }
 
@@ -63,7 +62,7 @@ public class GiftCertificateController {
         giftCertificateDto.setId(id);
         final GiftCertificateDto updatedGiftCertificateDto = giftCertificateService.update(giftCertificateDto);
         final EntityModel<GiftCertificateDto> giftCertificateDtoEntityModel
-                = linkGiftCertificateDtoHal(updatedGiftCertificateDto);
+                = hateoasCreator.linkGiftCertificateDtoWithTagsHal(updatedGiftCertificateDto);
         return new ResponseEntity<>(giftCertificateDtoEntityModel, HttpStatus.NO_CONTENT);
     }
 
@@ -71,39 +70,9 @@ public class GiftCertificateController {
     public ResponseEntity<EntityModel<GiftCertificateDto>> deleteById(@PathVariable int id) {
         final GiftCertificateDto giftCertificateDto = giftCertificateService.deleteById(id);
         final EntityModel<GiftCertificateDto> giftCertificateDtoEntityModel
-                = linkGiftCertificateDtoHal(giftCertificateDto);
+                = hateoasCreator.linkGiftCertificateDtoWithTagsHal(giftCertificateDto);
         return new ResponseEntity<>(giftCertificateDtoEntityModel, HttpStatus.OK);
     }
 
-    private EntityModel<GiftCertificateDto> linkGiftCertificateDtoHal(final GiftCertificateDto giftCertificateDto) {
-        giftCertificateDto
-                .getDtoTags()
-                .forEach(this::linkTagDto);
 
-        return EntityModel.of(giftCertificateDto,
-                linkTo(methodOn(GiftCertificateController.class).readOne(giftCertificateDto.getId())).withSelfRel()
-                        .andAffordance(afford(methodOn(GiftCertificateController.class)
-                                .create(null)))
-                        .andAffordance(afford(methodOn(GiftCertificateController.class)
-                                .update(null, null)))
-                        .andAffordance(afford(methodOn(GiftCertificateController.class)
-                                .deleteById(giftCertificateDto.getId()))));
-    }
-
-    private void linkGiftCertificateDto(final GiftCertificateDto giftCertificateDto) {
-        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
-                .readOne(giftCertificateDto.getId()))
-                .withSelfRel());
-
-        giftCertificateDto
-                .getDtoTags()
-                .forEach(this::linkTagDto);
-    }
-
-    private void linkTagDto(final TagDto tagDto) {
-        tagDto
-                .add(linkTo(methodOn(TagController.class)
-                        .readOne(tagDto.getId()))
-                        .withSelfRel());
-    }
 }
