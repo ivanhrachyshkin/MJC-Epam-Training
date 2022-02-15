@@ -2,6 +2,8 @@ package com.epam.esm.dao;
 
 import com.epam.esm.model.Tag;
 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,11 +11,11 @@ public interface TagRepository {
 
     Tag create(Tag tag);
 
-    List<Tag> readAll();
+    List<Tag> readAll(Boolean active);
 
-    Optional<Tag> readOne(int id);
+    Optional<Tag> readOne(int id, Boolean active);
 
-    Optional<Tag> readOneByName(final String name);
+    Optional<Tag> readOneByName(String name);
 
     Optional<Tag> readOneMostUsed();
 

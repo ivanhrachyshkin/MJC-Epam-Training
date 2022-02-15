@@ -15,10 +15,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TagRepositoryImpl implements TagRepository {
 
-    private static final String READ_QUERY = "SELECT e FROM Tag e";
-    private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM Tag e WHERE e.name = ?1";
+    private static final String READ_QUERY = "SELECT e FROM Tag e WHERE e.active = ?2";
+    private static final String READ_ONE_BY_ID_QUERY = "SELECT e FROM Tag e WHERE e.id = ?1 AND e.active = ?2";
+    private static final String READ_ONE_BY_NAME_QUERY =
+            "SELECT e FROM Tag e WHERE e.name = ?1 ";
     private static final String READ_ONE_MOST_USED =
-            "SELECT tags.id, tags.name, COUNT(*) as count" +
+            "SELECT tags.id, tags.name, tags.active, COUNT(*) as count" +
                     " FROM (SELECT user_id, SUM(price) as amount" +
                     "    from orders" +
                     "    GROUP BY user_id" +
@@ -31,7 +33,7 @@ public class TagRepositoryImpl implements TagRepository {
                     " GROUP BY tags.id, tags.name" +
                     " ORDER BY count DESC" +
                     " LIMIT 1";
-    private static final String SOFT_DELETE = "UPDATE Tag e SET e.active = false WHERE e.id = ?1";
+    private static final String SOFT_DELETE = "UPDATE Tag e SET e.active = false WHERE e.id = ?1 AND e.active = true";
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -45,22 +47,29 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public List<Tag> readAll() {
-        final TypedQuery<Tag> query = entityManager.createQuery(READ_QUERY, Tag.class);
-        paginateQuery(query, 1);
-        return query.getResultList();
+    public List<Tag> readAll(final Boolean active) {
+        final TypedQuery<Tag> typedQuery = entityManager.createQuery(READ_QUERY, Tag.class);
+        setActiveParameter(typedQuery, active);
+        paginateQuery(typedQuery, 1);
+        return typedQuery.getResultList();
     }
 
     @Override
-    public Optional<Tag> readOne(final int id) {
-        return Optional.ofNullable(entityManager.find(Tag.class, id));
+    public Optional<Tag> readOne(final int id, final Boolean active) {
+        final TypedQuery<Tag> typedQuery
+                = entityManager.createQuery(READ_ONE_BY_ID_QUERY, Tag.class);
+        setActiveParameter(typedQuery, active);
+        final List<Tag> tags = typedQuery.setParameter(1, id).getResultList();
+        return tags.isEmpty()
+                ? Optional.empty()
+                : Optional.of(tags.get(0));
     }
 
     @Override
     public Optional<Tag> readOneByName(final String name) {
-        final TypedQuery<Tag> query
+        final TypedQuery<Tag> typedQuery
                 = entityManager.createQuery(READ_ONE_BY_NAME_QUERY, Tag.class);
-        final List<Tag> tags = query.setParameter(1, name).getResultList();
+        final List<Tag> tags = typedQuery.setParameter(1, name).getResultList();
         return tags.isEmpty()
                 ? Optional.empty()
                 : Optional.of(tags.get(0));
@@ -88,6 +97,14 @@ public class TagRepositoryImpl implements TagRepository {
         query.setParameter(1, id).executeUpdate();
         entityManager.flush();
         return tag;
+    }
+
+    private void setActiveParameter(final TypedQuery<Tag> typedQuery, final Boolean active) {
+        if (active != null && !active) {
+            typedQuery.setParameter(2, false);
+        } else {
+            typedQuery.setParameter(2, true);
+        }
     }
 
     private void paginateQuery(final TypedQuery<Tag> typedQuery, final int pageNumber) {

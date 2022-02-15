@@ -5,6 +5,7 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.TagValidator;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -38,15 +39,15 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public List<TagDto> readAll() {
-        final List<Tag> tags = tagRepository.readAll();
+    public List<TagDto> readAll(final Boolean active) {
+        final List<Tag> tags = tagRepository.readAll(active);
         return mapper.modelsToDto(tags);
     }
 
     @Override
     @Transactional
-    public TagDto readOne(final int id) {
-        Tag tag = checkExist(id);
+    public TagDto readOne(final int id, final Boolean active) {
+        Tag tag = checkExist(id, active);
         return mapper.modelToDto(tag);
     }
 
@@ -61,14 +62,14 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto deleteById(final int id) {
-        checkExist(id);
+        checkExist(id, true);
         final Tag tag = tagRepository.deleteById(id);
         return mapper.modelToDto(tag);
     }
 
-    private Tag checkExist(final int id) {
+    private Tag checkExist(final int id, final Boolean active) {
         return tagRepository
-                .readOne(id)
+                .readOne(id, active)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("tag.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
     }
@@ -87,6 +88,7 @@ public class TagServiceImpl implements TagService {
                         HttpStatus.CONFLICT, POSTFIX, optionalTag.get().getName());
             }
         } else {
+            rawTag.setId(null);
             newTag = tagRepository.create(rawTag);
         }
         return newTag;

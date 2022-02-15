@@ -140,7 +140,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             final Optional<Tag> optionalTag = tagRepository.readOneByName(tag.getName());
             if (optionalTag.isPresent()) {
                 tag.setId(optionalTag.get().getId());
-                tag.setActive(optionalTag.get().getActive());//todo check
+                tag.setActive(true);
                 entityManager.merge(tag);
             } else {
                 tag.setId(null);

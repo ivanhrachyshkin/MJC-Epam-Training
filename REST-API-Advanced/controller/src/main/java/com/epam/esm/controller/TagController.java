@@ -3,60 +3,66 @@ package com.epam.esm.controller;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.mediatype.Affordances;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/tags")
 @RequiredArgsConstructor
 public class TagController {
 
-    private final HateoasCreator hateoasCreator;
     private final TagService tagService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaTypes.HAL_FORMS_JSON_VALUE)
-    public ResponseEntity<EntityModel<TagDto>> create(@RequestBody final TagDto tagDto) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<TagDto> create(@RequestBody final TagDto tagDto) {
         final TagDto createdTag = tagService.create(tagDto);
-        final EntityModel<TagDto> tagDtoEntityModel = hateoasCreator.linkTagDtoHal(createdTag);
-        return new ResponseEntity<>(tagDtoEntityModel, HttpStatus.CREATED);
+        linkTagDto(createdTag);
+        return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<List<TagDto>> readAll() {
-        final List<TagDto> dtoTags = tagService.readAll();
-        dtoTags.forEach(hateoasCreator::linkTagDto);
+    public HttpEntity<List<TagDto>> readAll(@RequestParam(required = false) final Boolean active) {
+        final List<TagDto> dtoTags = tagService.readAll(active);
+        dtoTags.forEach(this::linkTagDto);
         return new ResponseEntity<>(dtoTags, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_FORMS_JSON_VALUE)
-    public ResponseEntity<EntityModel<TagDto>> readOne(@PathVariable final int id) {
-        TagDto tagDto = tagService.readOne(id);
-        final EntityModel<TagDto> tagDtoEntityModel = hateoasCreator.linkTagDtoHal(tagDto);
-        return new ResponseEntity<>(tagDtoEntityModel, HttpStatus.OK);
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TagDto> readOne(@PathVariable final int id,
+                                       @RequestParam(required = false) final Boolean active) {
+        final TagDto tagDto = tagService.readOne(id, active);
+        linkTagDto(tagDto);
+        return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/mostUsed", produces = MediaTypes.HAL_FORMS_JSON_VALUE)
-    public ResponseEntity<EntityModel<TagDto>> readOneMostUsed() {
+    @GetMapping(value = "/mostUsed", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<TagDto> readOneMostUsed() {
         final TagDto tagDto = tagService.readOneMostUsed();
-        final EntityModel<TagDto> tagDtoEntityModel = hateoasCreator.linkTagDtoHal(tagDto);
-        return new ResponseEntity<>(tagDtoEntityModel, HttpStatus.OK);
+        linkTagDto(tagDto);
+        return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_FORMS_JSON_VALUE)
-    public ResponseEntity<EntityModel<TagDto>> deleteById(@PathVariable final int id) {
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<TagDto> deleteById(@PathVariable final int id) {
         final TagDto tagDto = tagService.deleteById(id);
-        final EntityModel<TagDto> tagDtoEntityModel = hateoasCreator.linkTagDtoHal(tagDto);
-        return new ResponseEntity<>(tagDtoEntityModel, HttpStatus.OK);
+        linkTagDto(tagDto);
+        return new ResponseEntity<>(tagDto, HttpStatus.OK);
+    }
+
+    private void linkTagDto(final TagDto tagDto) {
+        tagDto
+                .add(linkTo(methodOn(TagController.class)
+                        .readOne(tagDto.getId(), null))
+                        .withSelfRel().expand());
     }
 }

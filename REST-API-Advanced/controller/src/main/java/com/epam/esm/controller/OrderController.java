@@ -27,30 +27,48 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.afford;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final HateoasCreator hateoasCreator;
     private final OrderService orderService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaTypes.HAL_FORMS_JSON_VALUE)
-    public ResponseEntity<EntityModel<OrderDto>> create(@RequestBody OrderDto orderDto) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<OrderDto> create(@RequestBody OrderDto orderDto) {
         final OrderDto createdOrderDto = orderService.create(orderDto);
-        final EntityModel<OrderDto> orderDtoEntityModel =
-                hateoasCreator.linkOrderDtoWithUserAndGiftCertificateHal(createdOrderDto);
-        return new ResponseEntity<>(orderDtoEntityModel, HttpStatus.CREATED);
+        linkOrderDto(createdOrderDto);
+        return new ResponseEntity<>(createdOrderDto, HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<List<OrderDto>> readAll() {
         final List<OrderDto> dtoOrders = orderService.readAll();
-        dtoOrders.forEach(hateoasCreator::linkOrderDtoWithUserAndGiftCertificate);
+        dtoOrders.forEach(this::linkOrderDto);
         return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_FORMS_JSON_VALUE)
-    public ResponseEntity<EntityModel<OrderDto>> readOne(@PathVariable final int id) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<OrderDto> readOne(@PathVariable final int id) {
         final OrderDto orderDto = orderService.readOne(id);
-        final EntityModel<OrderDto> orderDtoEntityModel =
-                hateoasCreator.linkOrderDtoWithUserAndGiftCertificateHal(orderDto);
-        return new ResponseEntity<>(orderDtoEntityModel, HttpStatus.OK);
+        linkOrderDto(orderDto);
+        return new ResponseEntity<>(orderDto, HttpStatus.OK);
+    }
+
+    private void linkOrderDto(final OrderDto orderDto) {
+        orderDto.add(linkTo(methodOn(OrderController.class)
+                .readOne(orderDto.getId()))
+                .withSelfRel());
+
+        linkUserDto(orderDto.getUserDto());
+        linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+    }
+
+    private void linkGiftCertificateDto(final GiftCertificateDto giftCertificateDto) {
+        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
+                .readOne(giftCertificateDto.getId()))
+                .withSelfRel());
+    }
+
+    private void linkUserDto(final UserDto userDto) {
+        userDto.add(linkTo(methodOn(UserController.class)
+                .readOne(userDto.getId()))
+                .withSelfRel());
     }
 
 }

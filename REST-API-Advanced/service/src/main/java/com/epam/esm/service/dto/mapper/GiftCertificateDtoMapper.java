@@ -36,8 +36,8 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     public GiftCertificate dtoToModel(final GiftCertificateDto giftCertificateDto) {
         final GiftCertificate giftCertificate = modelMapper.map(giftCertificateDto, GiftCertificate.class);
         emptyTagsIfNull(giftCertificate);
-        final Set<Tag> tags = giftCertificate
-                .getTags()
+        final Set<Tag> tags = giftCertificateDto
+                .getDtoTags()
                 .stream()
                 .map(tagDto -> modelMapper.map(tagDto, Tag.class))
                 .collect(Collectors.toSet());

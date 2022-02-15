@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Service
@@ -65,10 +64,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto update(final GiftCertificateDto giftCertificateDto) {
         giftCertificateValidator.updateValidate(giftCertificateDto);
-        final GiftCertificate giftCertificate = mapper.dtoToModel(giftCertificateDto);
-        checkExist(giftCertificate.getId());
-        checkExistByName(giftCertificate.getName());
-        final GiftCertificate updatedGiftCertificate = giftCertificateRepository.update(giftCertificate);
+        final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
+        GiftCertificate oldGiftCertificate = checkExist(rawGiftCertificate.getId());
+        rawGiftCertificate.setCreateDate(oldGiftCertificate.getCreateDate());
+        checkExistByName(rawGiftCertificate.getName());
+        final GiftCertificate updatedGiftCertificate = giftCertificateRepository.update(rawGiftCertificate);
         return mapper.modelToDto(updatedGiftCertificate);
     }
 
