@@ -6,8 +6,6 @@ import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,21 +29,23 @@ public class UserController {
     private final OrderService orderService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<List<UserDto>> readAll() {
-        final List<UserDto> dtoUsers = userService.readAll();
+    public HttpEntity<List<UserDto>> readAll(final Integer page, final Integer size) {
+        final List<UserDto> dtoUsers = userService.readAll(page, size);
         dtoUsers.forEach(this::linkUserDto);
         return new ResponseEntity<>(dtoUsers, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/orders", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<List<OrderDto>> readAllByUserId(@PathVariable int userId) {
-        final List<OrderDto> dtoOrders = orderService.readAllByUserId(userId);
+    public HttpEntity<List<OrderDto>> readAllByUserId(@PathVariable final int userId,
+                                                      final Integer page,
+                                                      final Integer size) {
+        final List<OrderDto> dtoOrders = orderService.readAllByUserId(userId, page, size);
         return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/orders/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<OrderDto> readAllByUserIdAndOrderId(@PathVariable int userId,
-                                                          @PathVariable int orderId) {
+    public HttpEntity<OrderDto> readOneByUserIdAndOrderId(@PathVariable final int userId,
+                                                          @PathVariable final int orderId) {
         final OrderDto orderDto = orderService.readOneByUserIdAndOrderId(userId, orderId);
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }

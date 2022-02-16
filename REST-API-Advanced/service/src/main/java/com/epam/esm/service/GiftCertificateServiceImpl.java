@@ -5,6 +5,7 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
+import com.epam.esm.service.validator.PaginationValidator;
 import com.epam.esm.service.validator.SortValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository giftCertificateRepository;
     private final GiftCertificateValidator giftCertificateValidator;
     private final SortValidator sortValidator;
+    private final PaginationValidator paginationValidator;
 
     @Override
     @Transactional
@@ -44,12 +46,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                             final String name,
                                             final String description,
                                             final String dateSort,
-                                            final String nameSort) {
+                                            final String nameSort,
+                                            final Integer page,
+                                            final Integer size) {
         giftCertificateValidator.readAllValidate(tags, name, description);
+        paginationValidator.paginationValidate(page, size);
         sortValidator.sortValidate(dateSort);
         sortValidator.sortValidate(nameSort);
         List<GiftCertificate> giftCertificates
-                = giftCertificateRepository.readAll(tags, name, description, dateSort, nameSort);
+                = giftCertificateRepository.readAll(tags, name, description, dateSort, nameSort, page, size);
         return mapper.modelsToDto(giftCertificates);
     }
 

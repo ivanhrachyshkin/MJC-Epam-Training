@@ -5,14 +5,10 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Filter;
-import org.hibernate.Session;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -55,52 +51,21 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                                          final String name,
                                          final String description,
                                          final String dateSort,
-                                         final String nameSort) {
-        final Set<String> whereCriteria = new LinkedHashSet<>();
+                                         final String nameSort,
+                                         final Integer page,
+                                         final Integer size) {
         final Map<Integer, Object> values = new HashMap<>();
 
-        if (tags != null && !tags.isEmpty()) {
-            int n = 1;
-            tags.forEach(tag -> {
-                whereCriteria.add(TAG_NAME_LIKE + n);
-                values.put(n, tag);
-            });
-        }
+        final String wherePostfix = getWherePostfix(values, tags, name, description);
+        final String sortPostfix = getSortPostfix(dateSort, nameSort);
 
-        if (name != null) {
-            whereCriteria.add(NAME_LIKE);
-            values.put(2, name);
-        }
-
-        if (description != null) {
-            whereCriteria.add(DESCRIPTION_LIKE);
-            values.put(3, description);
-        }
-
-        String where = StringUtils.EMPTY;
-        if (!whereCriteria.isEmpty()) {
-            where = WHERE + String.join(WHERE_DELIMITER, whereCriteria);
-        }
-
-        final Set<String> sortCriteria = new HashSet<>();
-        if (dateSort != null) {
-            sortCriteria.add(CREATE_DATE_QUERY + dateSort.toUpperCase());
-        }
-        if (nameSort != null) {
-            sortCriteria.add(NAME_QUERY + nameSort.toUpperCase());
-        }
-        String sort = "";
-        if (!sortCriteria.isEmpty()) {
-            sort = ORDER_BY + String.join(ORDER_DELIMITER, sortCriteria);
-        }
-
-        final String finalQuery = READ_QUERY + where + sort;
+        final String finalQuery = READ_QUERY + wherePostfix + sortPostfix;
         final TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(finalQuery, GiftCertificate.class);
         if (!values.isEmpty()) {
             values.forEach((position, value) -> typedQuery.setParameter(position, "%" + value + "%"));
         }
 
-        paginateQuery(typedQuery, 1);
+        paginateQuery(typedQuery, page, size);
         return typedQuery.getResultList();
     }
 
@@ -137,7 +102,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     private void setTagId(final Set<Tag> tags) {
         tags.forEach(tag -> {
-            final Optional<Tag> optionalTag = tagRepository.readOneByName(tag.getName());
+            final Optional<Tag> optionalTag
+                    = tagRepository.readOneByName(tag.getName());
+
             if (optionalTag.isPresent()) {
                 tag.setId(optionalTag.get().getId());
                 tag.setActive(true);
@@ -150,8 +117,55 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         });
     }
 
-    private void paginateQuery(final TypedQuery<GiftCertificate> typedQuery, final int pageNumber) {
-        typedQuery.setFirstResult((pageNumber - 1) * 10);
-        typedQuery.setMaxResults(10);
+    private void paginateQuery(final TypedQuery<GiftCertificate> typedQuery, final Integer page, final Integer size) {
+        if(page != null && size != null) {
+            typedQuery.setFirstResult((page - 1) * size);
+            typedQuery.setMaxResults(size);
+        }
+    }
+
+    private String getSortPostfix(final String dateSort, final String nameSort) {
+        final Set<String> sortCriteria = new HashSet<>();
+        if (dateSort != null) {
+            sortCriteria.add(CREATE_DATE_QUERY + dateSort.toUpperCase());
+        }
+        if (nameSort != null) {
+            sortCriteria.add(NAME_QUERY + nameSort.toUpperCase());
+        }
+        String sort = StringUtils.EMPTY;
+        if (!sortCriteria.isEmpty()) {
+            sort = ORDER_BY + String.join(ORDER_DELIMITER, sortCriteria);
+        }
+        return sort;
+    }
+
+    private String getWherePostfix(final Map<Integer, Object> values,
+                                   final List<String> tags,
+                                   final String name,
+                                   final String description) {
+        final Set<String> whereCriteria = new LinkedHashSet<>();
+        if (tags != null && !tags.isEmpty()) {
+            int n = 1;
+            tags.forEach(tag -> {
+                whereCriteria.add(TAG_NAME_LIKE + n);
+                values.put(n, tag);
+            });
+        }
+
+        if (name != null) {
+            whereCriteria.add(NAME_LIKE);
+            values.put(2, name);
+        }
+
+        if (description != null) {
+            whereCriteria.add(DESCRIPTION_LIKE);
+            values.put(3, description);
+        }
+
+        String where = StringUtils.EMPTY;
+        if (!whereCriteria.isEmpty()) {
+            where = WHERE + String.join(WHERE_DELIMITER, whereCriteria);
+        }
+        return where;
     }
 }

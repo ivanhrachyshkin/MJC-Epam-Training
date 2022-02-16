@@ -11,7 +11,7 @@ public interface TagRepository {
 
     Tag create(Tag tag);
 
-    List<Tag> readAll(Boolean active);
+    List<Tag> readAll(Boolean active, Integer page, Integer size);
 
     Optional<Tag> readOne(int id, Boolean active);
 

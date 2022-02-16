@@ -12,7 +12,9 @@ public interface GiftCertificateService {
                                      String name,
                                      String description,
                                      String dateSort,
-                                     String nameSort);
+                                     String nameSort,
+                                     Integer page,
+                                     Integer size);
 
     GiftCertificateDto readOne(int id);
 

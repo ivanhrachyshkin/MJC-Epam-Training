@@ -9,6 +9,7 @@ import com.epam.esm.model.User;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.OrderValidator;
+import com.epam.esm.service.validator.PaginationValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -27,11 +28,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Setter
     private ResourceBundle rb;
+    private final DtoMapper<Order, OrderDto> mapper;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final GiftCertificateRepository giftCertificateRepository;
     private final OrderValidator orderValidator;
-    private final DtoMapper<Order, OrderDto> mapper;
+    private final PaginationValidator paginationValidator;
 
     @Override
     @Transactional
@@ -57,15 +59,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public List<OrderDto> readAll() {
-        final List<Order> orders = orderRepository.readAll();
+    public List<OrderDto> readAll(final Integer page, final Integer size) {
+        paginationValidator.paginationValidate(page, size);
+        final List<Order> orders = orderRepository.readAll(page, size);
         return mapper.modelsToDto(orders);
     }
 
     @Override
     @Transactional
-    public List<OrderDto> readAllByUserId(final int userId) {
-        final List<Order> orders = orderRepository.readAllByUserId(userId);
+    public List<OrderDto> readAllByUserId(final int userId, final Integer page, final Integer size) {
+        paginationValidator.paginationValidate(page, size);
+        final List<Order> orders = orderRepository.readAllByUserId(userId, page, size);
         return mapper.modelsToDto(orders);
     }
 

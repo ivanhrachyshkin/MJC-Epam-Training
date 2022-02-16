@@ -2,10 +2,7 @@ package com.epam.esm.controller.interceptor;
 
 import com.epam.esm.controller.exceptionhandler.RestExceptionHandler;
 import com.epam.esm.service.*;
-import com.epam.esm.service.validator.GiftCertificateValidator;
-import com.epam.esm.service.validator.OrderValidator;
-import com.epam.esm.service.validator.SortValidator;
-import com.epam.esm.service.validator.TagValidator;
+import com.epam.esm.service.validator.*;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.LocaleUtils;
@@ -29,6 +26,7 @@ public class Interceptor implements HandlerInterceptor {
     private final OrderValidator orderValidator;
     private final SortValidator sortValidator;
     private final TagValidator tagValidator;
+    private final PaginationValidator paginationValidator;
     private final RestExceptionHandler restExceptionHandler;
 
     @Override
@@ -45,6 +43,7 @@ public class Interceptor implements HandlerInterceptor {
         orderValidator.setRb(resourceBundle);
         sortValidator.setRb(resourceBundle);
         tagValidator.setRb(resourceBundle);
+        paginationValidator.setRb(resourceBundle);
         restExceptionHandler.setRb(resourceBundle);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);

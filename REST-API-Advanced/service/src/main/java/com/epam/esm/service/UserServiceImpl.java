@@ -4,6 +4,7 @@ import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.User;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
+import com.epam.esm.service.validator.PaginationValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -21,13 +22,15 @@ public class UserServiceImpl implements UserService {
 
     @Setter
     private ResourceBundle rb;
-    private final UserRepository userRepository;
     private final DtoMapper<User, UserDto> mapper;
+    private final UserRepository userRepository;
+    private final PaginationValidator paginationValidator;
 
     @Override
     @Transactional
-    public List<UserDto> readAll() {
-        final List<User> users = userRepository.readAll();
+    public List<UserDto> readAll(final Integer page, final Integer size) {
+        paginationValidator.paginationValidate(page, size);
+        final List<User> users = userRepository.readAll(page, size);
         return mapper.modelsToDto(users);
     }
 

@@ -39,17 +39,17 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @SuppressWarnings("JpaQlInspection")
     @Override
-    public List<Order> readAll() {
+    public List<Order> readAll(final Integer page, final Integer size) {
         final TypedQuery<Order> typedQuery = entityManager.createQuery(READ_ALL_QUERY, Order.class);
-        paginateQuery(typedQuery, 1);
+        paginateQuery(typedQuery, page, size);
         return typedQuery.getResultList();
     }
 
     @Override
-    public List<Order> readAllByUserId(final int userId) {
+    public List<Order> readAllByUserId(final int userId, final Integer page, final Integer size) {
         final TypedQuery<Order> typedQuery = entityManager.createQuery(READ_ALL_BY_USER_ID_QUERY, Order.class);
         typedQuery.setParameter(1, userId);
-        paginateQuery(typedQuery, 1);
+        paginateQuery(typedQuery, page, size);
         return typedQuery.getResultList();
     }
 
@@ -84,8 +84,10 @@ public class OrderRepositoryImpl implements OrderRepository {
                 : Optional.of(giftCertificates.get(0));
     }
 
-    private void paginateQuery(final TypedQuery<Order> typedQuery, final int pageNumber) { // todo flexible pagination
-        typedQuery.setFirstResult(pageNumber - 1);
-        typedQuery.setMaxResults(10);
+    private void paginateQuery(final TypedQuery<Order> typedQuery, final Integer page, final Integer size) {
+        if(page != null && size != null) {
+            typedQuery.setFirstResult((page - 1) * size);
+            typedQuery.setMaxResults(size);
+        }
     }
 }

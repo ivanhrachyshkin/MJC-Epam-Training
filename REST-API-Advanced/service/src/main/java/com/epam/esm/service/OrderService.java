@@ -10,9 +10,9 @@ public interface OrderService {
 
     OrderDto create(OrderDto orderDto);
 
-    List<OrderDto> readAll();
+    List<OrderDto> readAll(Integer page, Integer size);
 
-    List<OrderDto> readAllByUserId(final int userId);
+    List<OrderDto> readAllByUserId(int userId, Integer page, Integer size);
 
     OrderDto readOne(int id);
 

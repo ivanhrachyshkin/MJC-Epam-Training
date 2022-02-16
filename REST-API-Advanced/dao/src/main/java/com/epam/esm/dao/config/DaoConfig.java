@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 import java.time.Clock;
 import java.util.Properties;
+import java.util.Random;
 
 @Configuration
 @EnableAutoConfiguration
@@ -69,5 +70,10 @@ public class DaoConfig {
     @Bean
     public Faker faker() {
         return new Faker();
+    }
+
+    @Bean
+    public Random random() {
+        return new Random();
     }
 }

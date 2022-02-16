@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -47,10 +48,10 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public List<Tag> readAll(final Boolean active) {
+    public List<Tag> readAll(final Boolean active, final Integer page, final Integer size) {
         final TypedQuery<Tag> typedQuery = entityManager.createQuery(READ_QUERY, Tag.class);
         setActiveParameter(typedQuery, active);
-        paginateQuery(typedQuery, 1);
+        paginateQuery(typedQuery, page, size);
         return typedQuery.getResultList();
     }
 
@@ -107,8 +108,10 @@ public class TagRepositoryImpl implements TagRepository {
         }
     }
 
-    private void paginateQuery(final TypedQuery<Tag> typedQuery, final int pageNumber) {
-        typedQuery.setFirstResult(pageNumber - 1);
-        typedQuery.setMaxResults(10);
+    private void paginateQuery(final TypedQuery<Tag> typedQuery, final Integer page, final Integer size) {
+        if(page != null && size != null) {
+            typedQuery.setFirstResult((page - 1) * size);
+            typedQuery.setMaxResults(size);
+        }
     }
 }

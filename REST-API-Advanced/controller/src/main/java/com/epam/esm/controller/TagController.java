@@ -31,8 +31,10 @@ public class TagController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<List<TagDto>> readAll(@RequestParam(required = false) final Boolean active) {
-        final List<TagDto> dtoTags = tagService.readAll(active);
+    public HttpEntity<List<TagDto>> readAll(@RequestParam(required = false) final Boolean active,
+                                            final Integer page,
+                                            final Integer size) {
+        final List<TagDto> dtoTags = tagService.readAll(active, page, size);
         dtoTags.forEach(this::linkTagDto);
         return new ResponseEntity<>(dtoTags, HttpStatus.OK);
     }

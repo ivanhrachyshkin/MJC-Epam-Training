@@ -7,10 +7,7 @@ import java.util.Optional;
 
 public interface UserRepository {
 
-    List<User> readAll();
+    List<User> readAll(Integer page, Integer size);
 
     Optional<User> readOne(int id);
-
-    Optional<User> readOneByEmail(final String email);
-
 }

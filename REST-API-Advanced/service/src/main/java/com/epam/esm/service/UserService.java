@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserDto> readAll();
+    List<UserDto> readAll(Integer page, Integer size);
 
     UserDto readOne(int id);
 }

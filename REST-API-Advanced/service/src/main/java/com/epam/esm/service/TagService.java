@@ -6,13 +6,15 @@ import java.util.List;
 
 public interface TagService {
 
-    public TagDto create(final TagDto tagDto);
+    TagDto create(final TagDto tagDto);
 
-    public List<TagDto> readAll(Boolean active);
+    List<TagDto> readAll(Boolean active,
+                         Integer page,
+                         Integer size);
 
-    public TagDto readOne(int id, Boolean active);
+    TagDto readOne(int id, Boolean active);
 
-    public TagDto readOneMostUsed();
+    TagDto readOneMostUsed();
 
-    public TagDto deleteById(int id);
+    TagDto deleteById(int id);
 }

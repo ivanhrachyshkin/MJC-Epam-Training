@@ -36,9 +36,11 @@ public class GiftCertificateController {
             @RequestParam(required = false) final String name,
             @RequestParam(required = false) final String description,
             @RequestParam(required = false) final String dateSort,
-            @RequestParam(required = false) final String nameSort) {
+            @RequestParam(required = false) final String nameSort,
+            final Integer page,
+            final Integer size) {
         final List<GiftCertificateDto> dtoGiftCertificates
-                = giftCertificateService.readAll(tags, name, description, dateSort, nameSort);
+                = giftCertificateService.readAll(tags, name, description, dateSort, nameSort, page, size);
         dtoGiftCertificates.forEach(this::linkGiftCertificateDto);
         return new ResponseEntity<>(dtoGiftCertificates, HttpStatus.OK);
     }
@@ -53,7 +55,7 @@ public class GiftCertificateController {
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<GiftCertificateDto> update(@PathVariable final Integer id,
-            @RequestBody final GiftCertificateDto giftCertificateDto) {
+                                                 @RequestBody final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.setId(id);
         final GiftCertificateDto updatedGiftCertificateDto = giftCertificateService.update(giftCertificateDto);
         linkGiftCertificateDto(giftCertificateDto);

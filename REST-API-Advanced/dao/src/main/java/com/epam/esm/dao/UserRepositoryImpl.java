@@ -21,9 +21,9 @@ public class UserRepositoryImpl implements UserRepository {
     private final EntityManager entityManager;
 
     @Override
-    public List<User> readAll() {
+    public List<User> readAll( final Integer page, final Integer size) {
         final TypedQuery<User> query = entityManager.createQuery(READ_QUERY, User.class);
-        paginateQuery(query, 1);
+        paginateQuery(query, page, size);
         return query.getResultList();
     }
 
@@ -32,18 +32,11 @@ public class UserRepositoryImpl implements UserRepository {
         return Optional.ofNullable(entityManager.find(User.class, id));
     }
 
-    @Override
-    public Optional<User> readOneByEmail(final String name) {
-        final TypedQuery<User> query
-                = entityManager.createQuery(READ_ONE_BY_NAME_QUERY, User.class);
-        final List<User> users = query.setParameter(1, name).getResultList();
-        return users.isEmpty()
-                ? Optional.empty()
-                : Optional.of(users.get(0));
-    }
 
-    private void paginateQuery(final TypedQuery<User> typedQuery, final int pageNumber) {
-        typedQuery.setFirstResult(pageNumber - 1);
-        typedQuery.setMaxResults(10);
+    private void paginateQuery(final TypedQuery<User> typedQuery, final Integer page, final Integer size) {
+        if(page != null && size != null) {
+            typedQuery.setFirstResult((page - 1) * size);
+            typedQuery.setMaxResults(size);
+        }
     }
 }

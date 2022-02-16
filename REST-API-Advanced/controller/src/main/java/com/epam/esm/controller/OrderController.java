@@ -37,8 +37,8 @@ public class OrderController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<List<OrderDto>> readAll() {
-        final List<OrderDto> dtoOrders = orderService.readAll();
+    public HttpEntity<List<OrderDto>> readAll(final Integer page, final Integer size) {
+        final List<OrderDto> dtoOrders = orderService.readAll(page, size);
         dtoOrders.forEach(this::linkOrderDto);
         return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
     }

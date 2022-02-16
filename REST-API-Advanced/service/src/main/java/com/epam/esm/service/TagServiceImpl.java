@@ -4,6 +4,7 @@ import com.epam.esm.dao.TagRepository;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
+import com.epam.esm.service.validator.PaginationValidator;
 import com.epam.esm.service.validator.TagValidator;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,10 @@ public class TagServiceImpl implements TagService {
 
     @Setter
     private ResourceBundle rb;
+    private final DtoMapper<Tag, TagDto> mapper;
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
-    private final DtoMapper<Tag, TagDto> mapper;
+    private final PaginationValidator paginationValidator;
 
     @Override
     @Transactional
@@ -39,8 +41,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public List<TagDto> readAll(final Boolean active) {
-        final List<Tag> tags = tagRepository.readAll(active);
+    public List<TagDto> readAll(final Boolean active, final Integer page, final Integer size) {
+        paginationValidator.paginationValidate(page,size);
+        final List<Tag> tags = tagRepository.readAll(active, page, size);
         return mapper.modelsToDto(tags);
     }
 

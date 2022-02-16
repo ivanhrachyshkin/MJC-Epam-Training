@@ -19,46 +19,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GeneratorRepositoryImpl implements GeneratorRepository {
 
-    private final GiftCertificateRepository giftCertificateRepository;
-    private final Clock clock;
-    private final Faker generator;
     @PersistenceContext
-    EntityManager entityManager;
+    private final EntityManager entityManager;
+    private final GiftCertificateRepository giftCertificateRepository;
+    private final Faker generator;
+    private final Clock clock;
+    private final Random random;
 
     public void generate() {
 
-        final Set<String> tagNames = new HashSet<>();
-        do {
-            final String tagName1 = generator.address().city();
-            tagNames.add(tagName1);
-        } while (tagNames.size() < 10);
+        final Set<String> tagNames = generateTagNames();
+        final List<Tag> tags = createTags(tagNames);
 
-        final List<Tag> tags = tagNames
-                .stream()
-                .map(s -> {
-                    final Tag tag = new Tag();
-                    tag.setName(s);
-                    return tag;
-                }).collect(Collectors.toList());
-
-        final Set<String> giftCertificateNames = new HashSet<>();
-        do {
-            final String giftCertificateName = generator.company().name();
-            giftCertificateNames.add(giftCertificateName);
-        } while (giftCertificateNames.size() < 100);
-
-        final List<GiftCertificate> giftCertificates = giftCertificateNames
-                .stream()
-                .map(s -> {
-                    final GiftCertificate newGiftCertificate = new GiftCertificate();
-                    newGiftCertificate.setName(s);
-                    newGiftCertificate.setDescription(generator.company().industry());
-                    newGiftCertificate.setPrice(new Random().nextFloat());
-                    newGiftCertificate.setDuration(new Random().nextInt());
-                    newGiftCertificate.setCreateDate(LocalDateTime.now(clock));
-                    newGiftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
-                    return newGiftCertificate;
-                }).collect(Collectors.toList());
+        final Set<String> giftCertificateNames = generateGiftCertificatesNames();
+        final List<GiftCertificate> giftCertificates = createGiftCertificates(giftCertificateNames);
 
         for (int i = 0; i < giftCertificates.size(); i++) {
             final GiftCertificate giftCertificate = giftCertificates.get(i);
@@ -66,21 +40,8 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
             giftCertificateRepository.create(giftCertificate);
         }
 
-        final Set<String> userEmails = new HashSet<>();
-        String userEmail;
-        do {
-            userEmail = generator.name().username().concat("@mail.com");
-            userEmails.add(userEmail);
-        } while (userEmails.size() < 10);
-
-        final List<User> users = userEmails
-                .stream()
-                .map(s -> {
-                    final User user = new User();
-                    user.setEmail(s);
-                    entityManager.persist(user);
-                    return user;
-                }).collect(Collectors.toList());
+        final Set<String> userEmails = generateUsersEmails();
+        final List<User> users = createUsers(userEmails);
 
         for (int i = 0; i < giftCertificates.size(); i++) {
             Order order = new Order();
@@ -91,4 +52,68 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
             entityManager.persist(order);
         }
     }
+
+    private Set<String> generateTagNames() {
+        final Set<String> tagNames = new HashSet<>();
+        do {
+            final String tagName1 = generator.address().city();
+            tagNames.add(tagName1);
+        } while (tagNames.size() < 10);
+        return tagNames;
+    }
+
+    private List<Tag> createTags(final Set<String> tagNames) {
+        return tagNames
+                .stream()
+                .map(name -> {
+                    final Tag tag = new Tag();
+                    tag.setName(name);
+                    return tag;
+                }).collect(Collectors.toList());
+    }
+
+    private Set<String> generateGiftCertificatesNames() {
+        final Set<String> giftCertificateNames = new HashSet<>();
+        do {
+            final String giftCertificateName = generator.company().name();
+            giftCertificateNames.add(giftCertificateName);
+        } while (giftCertificateNames.size() < 100);
+        return giftCertificateNames;
+    }
+
+    private List<GiftCertificate> createGiftCertificates(final Set<String> giftCertificateNames) {
+        return giftCertificateNames
+                .stream()
+                .map(s -> {
+                    final GiftCertificate newGiftCertificate = new GiftCertificate();
+                    newGiftCertificate.setName(s);
+                    newGiftCertificate.setDescription(generator.company().industry());
+                    newGiftCertificate.setPrice(random.nextFloat());
+                    newGiftCertificate.setDuration(random.nextInt());
+                    newGiftCertificate.setCreateDate(LocalDateTime.now(clock));
+                    newGiftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
+                    return newGiftCertificate;
+                }).collect(Collectors.toList());
+    }
+
+    private Set<String> generateUsersEmails() {
+        final Set<String> usersEmails = new HashSet<>();
+        do {
+            final String userEmail = generator.name().username().concat("@mail.com");
+            usersEmails.add(userEmail);
+        } while (usersEmails.size() < 10);
+        return usersEmails;
+    }
+
+    private List<User> createUsers(final Set<String> usersEmails) {
+        return usersEmails
+                .stream()
+                .map(s -> {
+                    final User user = new User();
+                    user.setEmail(s);
+                    entityManager.persist(user);
+                    return user;
+                }).collect(Collectors.toList());
+    }
+
 }

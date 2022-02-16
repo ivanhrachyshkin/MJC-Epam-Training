@@ -9,9 +9,9 @@ public interface OrderRepository {
 
     Order create(Order order);
 
-    List<Order> readAll();
+    List<Order> readAll(Integer page, Integer size);
 
-    List<Order> readAllByUserId(final int userId);
+    List<Order> readAllByUserId(int userId, Integer page, Integer size);
 
     Optional<Order> readOne(int id);
 

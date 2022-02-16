@@ -21,7 +21,6 @@ import static org.springframework.hateoas.config.EnableHypermediaSupport.Hyperme
 @Configuration
 @ComponentScan("com.epam.esm.controller")
 @EnableWebMvc
-@EnableHypermediaSupport(type = {HAL, HAL_FORMS})
 public class ControllerConfig implements WebMvcConfigurer {
 
     @Autowired
@@ -30,17 +29,5 @@ public class ControllerConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(myInterceptor);
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Jackson2HalModule module = new Jackson2HalModule();
-        objectMapper.findAndRegisterModules();
-        objectMapper.registerModule(module);
-        objectMapper.setHandlerInstantiator(
-                new Jackson2HalModule.HalHandlerInstantiator(
-                        new AnnotationLinkRelationProvider(), CurieProvider.NONE, MessageResolver.DEFAULTS_ONLY));
-        return objectMapper;
     }
 }
