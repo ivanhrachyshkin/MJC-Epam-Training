@@ -22,18 +22,19 @@ public class TagRepositoryImpl implements TagRepository {
             "SELECT e FROM Tag e WHERE e.name = ?1 ";
     private static final String READ_ONE_MOST_USED =
             "SELECT tags.id, tags.name, tags.active, COUNT(*) as count" +
-                    " FROM (SELECT user_id, SUM(price) as amount" +
-                    "    from orders" +
-                    "    GROUP BY user_id" +
-                    "    ORDER BY amount DESC" +
-                    "    LIMIT 1) as maxcost" +
-                    " JOIN orders ON orders.user_id = maxcost.user_id" +
-                    " JOIN gift_certificate_tags" +
+                    " FROM (select user_id, sum(price)" +
+                    " from orders " +
+                    " group by user_id" +
+                    " having sum(price) >=ALL(select sum(price) from orders group by user_id)" +
+                    "     ) as maxcost " +
+                    " JOIN orders ON orders.user_id = maxcost.user_id " +
+                    " JOIN gift_certificate_tags " +
                     " ON gift_certificate_tags.gift_certificate_id = orders.gift_certificate_id" +
                     " JOIN tags ON tags.id = gift_certificate_tags.tag_id" +
                     " GROUP BY tags.id, tags.name" +
-                    " ORDER BY count DESC" +
+                    " ORDER by count desc" +
                     " LIMIT 1";
+
     private static final String SOFT_DELETE = "UPDATE Tag e SET e.active = false WHERE e.id = ?1 AND e.active = true";
 
     @PersistenceContext
