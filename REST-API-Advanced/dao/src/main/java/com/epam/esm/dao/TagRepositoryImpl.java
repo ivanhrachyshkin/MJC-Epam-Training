@@ -45,10 +45,8 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public Tag create(final Tag tag) {
-        tag.setId(null);
         tag.setActive(true);
-        entityManager.persist(tag);
-        return tag;
+        return entityManager.merge(tag);
     }
 
     @Override
@@ -84,13 +82,9 @@ public class TagRepositoryImpl implements TagRepository {
     public List<Tag> readMostUsed() {
         final Query query
                 = entityManager.createNativeQuery(READ_ONE_MOST_USED, Tag.class);
-        return query.getResultList();
+        return query.getResultList();//todo
     }
 
-    @Override
-    public Tag update(final Tag tag) {
-        return entityManager.merge(tag);
-    }
 
     @Override
     public Tag deleteById(final int id) {
@@ -110,7 +104,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     private void paginateQuery(final TypedQuery<Tag> typedQuery, final Integer page, final Integer size) {
-        if(page != null && size != null) {
+        if (page != null && size != null) {
             typedQuery.setFirstResult((page - 1) * size);
             typedQuery.setMaxResults(size);
         }

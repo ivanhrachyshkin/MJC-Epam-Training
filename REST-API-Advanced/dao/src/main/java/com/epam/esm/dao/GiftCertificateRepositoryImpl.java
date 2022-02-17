@@ -96,7 +96,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public GiftCertificate deleteById(final int id) {
         final GiftCertificate giftCertificate = entityManager.find(GiftCertificate.class, id);
         entityManager.remove(giftCertificate);
-        entityManager.flush();
         return giftCertificate;
     }
 
@@ -104,7 +103,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         tags.forEach(tag -> {
             final Optional<Tag> optionalTag
                     = tagRepository.readOneByName(tag.getName());
-
             tag.setId(null);
             tag.setActive(true);
             optionalTag.ifPresent(oldTag -> tag.setId(oldTag.getId()));

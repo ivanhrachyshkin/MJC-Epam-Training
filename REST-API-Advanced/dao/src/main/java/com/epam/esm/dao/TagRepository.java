@@ -17,7 +17,5 @@ public interface TagRepository {
 
     List<Tag> readMostUsed();
 
-    Tag update(Tag tag);
-
     Tag deleteById(int id);
 }

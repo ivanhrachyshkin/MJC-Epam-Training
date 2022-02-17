@@ -41,7 +41,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public List<TagDto> readAll(final Boolean active, final Integer page, final Integer size) {
-        paginationValidator.paginationValidate(page,size);
+        paginationValidator.paginationValidate(page, size);
         final List<Tag> tags = tagRepository.readAll(active, page, size);
         return mapper.modelsToDto(tags);
     }
@@ -77,21 +77,13 @@ public class TagServiceImpl implements TagService {
 
     private Tag createOrUpdateOld(final Tag rawTag) {
         final Optional<Tag> optionalTag = tagRepository.readOneByName(rawTag.getName());
-        Tag newTag;
-        if (optionalTag.isPresent()) {
-            if (!optionalTag.get().getActive()) {
-                rawTag.setId(optionalTag.get().getId());
-                rawTag.setActive(true);
-                newTag = tagRepository.update(rawTag);
-            } else {
-                throw new ServiceException(
-                        rb.getString("tag.alreadyExists.name"),
-                        HttpStatus.CONFLICT, POSTFIX, optionalTag.get().getName());
-            }
-        } else {
-            rawTag.setId(null);
-            newTag = tagRepository.create(rawTag);
+        if (optionalTag.isPresent() && optionalTag.get().getActive()) {
+            throw new ServiceException(
+                    rb.getString("tag.alreadyExists.name"),
+                    HttpStatus.CONFLICT, POSTFIX, optionalTag.get().getName());
         }
-        return newTag;
+        rawTag.setId(null);
+        optionalTag.ifPresent(oldTag -> rawTag.setId(oldTag.getId()));
+        return tagRepository.create(rawTag);
     }
 }
