@@ -37,7 +37,7 @@ public class GiftCertificate {
     @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "gift_certificate_tags",
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))

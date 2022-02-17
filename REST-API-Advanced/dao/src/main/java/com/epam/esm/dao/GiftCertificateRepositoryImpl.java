@@ -13,6 +13,7 @@ import javax.persistence.TypedQuery;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -42,8 +43,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
         final Set<Tag> tags = giftCertificate.getTags();
         setTagId(tags);
-        entityManager.persist(giftCertificate);
-        return giftCertificate;
+        return entityManager.merge(giftCertificate);
     }
 
     @Override
@@ -105,20 +105,14 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             final Optional<Tag> optionalTag
                     = tagRepository.readOneByName(tag.getName());
 
-            if (optionalTag.isPresent()) {
-                tag.setId(optionalTag.get().getId());
-                tag.setActive(true);
-                entityManager.merge(tag);
-            } else {
-                tag.setId(null);
-                tag.setActive(true);
-                entityManager.persist(tag);
-            }
+            tag.setId(null);
+            tag.setActive(true);
+            optionalTag.ifPresent(oldTag -> tag.setId(oldTag.getId()));
         });
     }
 
     private void paginateQuery(final TypedQuery<GiftCertificate> typedQuery, final Integer page, final Integer size) {
-        if(page != null && size != null) {
+        if (page != null && size != null) {
             typedQuery.setFirstResult((page - 1) * size);
             typedQuery.setMaxResults(size);
         }

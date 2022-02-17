@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
@@ -21,12 +22,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RequiredArgsConstructor
 public class GiftCertificateController {
 
+    private final HateoasCreator hateoasCreator;
     private final GiftCertificateService giftCertificateService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
         final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
-        linkGiftCertificateDto(createdGiftCertificateDto);
+        hateoasCreator.linkGiftCertificateDto(createdGiftCertificateDto);
+        createdGiftCertificateDto
+                .getDtoTags()
+                .forEach(hateoasCreator::linkTagDto);
         return new ResponseEntity<>(createdGiftCertificateDto, HttpStatus.CREATED);
     }
 
@@ -41,14 +46,15 @@ public class GiftCertificateController {
             final Integer size) {
         final List<GiftCertificateDto> dtoGiftCertificates
                 = giftCertificateService.readAll(tags, name, description, dateSort, nameSort, page, size);
-        dtoGiftCertificates.forEach(this::linkGiftCertificateDto);
+        dtoGiftCertificates.forEach(hateoasCreator::linkGiftCertificateDto);
         return new ResponseEntity<>(dtoGiftCertificates, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<GiftCertificateDto> readOne(@PathVariable final int id) {
         final GiftCertificateDto giftCertificateDto = giftCertificateService.readOne(id);
-        linkGiftCertificateDto(giftCertificateDto);
+        hateoasCreator.linkGiftCertificateDto(giftCertificateDto);
+        giftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
         return new ResponseEntity<>(giftCertificateDto, HttpStatus.OK);
     }
 
@@ -58,32 +64,14 @@ public class GiftCertificateController {
                                                  @RequestBody final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.setId(id);
         final GiftCertificateDto updatedGiftCertificateDto = giftCertificateService.update(giftCertificateDto);
-        linkGiftCertificateDto(giftCertificateDto);
+        hateoasCreator.linkGiftCertificateDto(giftCertificateDto);
         return new ResponseEntity<>(updatedGiftCertificateDto, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<GiftCertificateDto> deleteById(@PathVariable int id) {
         final GiftCertificateDto giftCertificateDto = giftCertificateService.deleteById(id);
-        linkGiftCertificateDto(giftCertificateDto);
+        hateoasCreator.linkGiftCertificateDto(giftCertificateDto);
         return new ResponseEntity<>(giftCertificateDto, HttpStatus.OK);
-    }
-
-    private void linkGiftCertificateDto(final GiftCertificateDto giftCertificateDto) {
-        giftCertificateDto
-                .add(linkTo(methodOn(GiftCertificateController.class)
-                        .readOne(giftCertificateDto.getId()))
-                        .withSelfRel());
-
-        giftCertificateDto
-                .getDtoTags()
-                .forEach(this::linkTagDto);
-    }
-
-    private void linkTagDto(final TagDto tagDto) {
-        tagDto
-                .add(linkTo(methodOn(TagController.class)
-                        .readOne(tagDto.getId(), null))
-                        .withSelfRel().expand());
     }
 }

@@ -14,7 +14,7 @@ public interface TagService {
 
     TagDto readOne(int id, Boolean active);
 
-    TagDto readOneMostUsed();
+    List<TagDto> readMostUsed();
 
     TagDto deleteById(int id);
 }

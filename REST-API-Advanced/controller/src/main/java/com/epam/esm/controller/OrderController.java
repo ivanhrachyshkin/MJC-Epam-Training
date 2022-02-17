@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 
+import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
@@ -27,48 +28,33 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.afford;
 @RequiredArgsConstructor
 public class OrderController {
 
+    private final HateoasCreator hateoasCreator;
     private final OrderService orderService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<OrderDto> create(@RequestBody OrderDto orderDto) {
         final OrderDto createdOrderDto = orderService.create(orderDto);
-        linkOrderDto(createdOrderDto);
+        hateoasCreator.linkOrderDto(createdOrderDto);
+        hateoasCreator.linkUserDto(createdOrderDto.getUserDto());
+        hateoasCreator.linkGiftCertificateDto(createdOrderDto.getGiftCertificateDto());
         return new ResponseEntity<>(createdOrderDto, HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<List<OrderDto>> readAll(final Integer page, final Integer size) {
         final List<OrderDto> dtoOrders = orderService.readAll(page, size);
-        dtoOrders.forEach(this::linkOrderDto);
+        dtoOrders.forEach(hateoasCreator::linkOrderDto);
         return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<OrderDto> readOne(@PathVariable final int id) {
         final OrderDto orderDto = orderService.readOne(id);
-        linkOrderDto(orderDto);
+        hateoasCreator.linkOrderDto(orderDto);
+        hateoasCreator.linkUserDto(orderDto.getUserDto());
+        hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
-    private void linkOrderDto(final OrderDto orderDto) {
-        orderDto.add(linkTo(methodOn(OrderController.class)
-                .readOne(orderDto.getId()))
-                .withSelfRel());
-
-        linkUserDto(orderDto.getUserDto());
-        linkGiftCertificateDto(orderDto.getGiftCertificateDto());
-    }
-
-    private void linkGiftCertificateDto(final GiftCertificateDto giftCertificateDto) {
-        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
-                .readOne(giftCertificateDto.getId()))
-                .withSelfRel());
-    }
-
-    private void linkUserDto(final UserDto userDto) {
-        userDto.add(linkTo(methodOn(UserController.class)
-                .readOne(userDto.getId()))
-                .withSelfRel());
-    }
 
 }

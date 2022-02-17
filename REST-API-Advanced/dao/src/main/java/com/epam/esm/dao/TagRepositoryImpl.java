@@ -81,13 +81,10 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Optional<Tag> readOneMostUsed() {
+    public List<Tag> readMostUsed() {
         final Query query
                 = entityManager.createNativeQuery(READ_ONE_MOST_USED, Tag.class);
-        final List<Tag> tags = query.getResultList();
-        return tags.isEmpty()
-                ? Optional.empty()
-                : Optional.of(tags.get(0));
+        return query.getResultList();
     }
 
     @Override

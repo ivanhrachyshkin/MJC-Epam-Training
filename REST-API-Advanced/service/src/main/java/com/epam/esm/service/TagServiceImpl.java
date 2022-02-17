@@ -6,7 +6,6 @@ import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.PaginationValidator;
 import com.epam.esm.service.validator.TagValidator;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -56,10 +55,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public TagDto readOneMostUsed() {
-        final Tag tag = tagRepository.readOneMostUsed()
-                .orElseThrow(() -> new ServiceException(rb.getString("tag.no"), HttpStatus.NOT_FOUND, POSTFIX));
-        return mapper.modelToDto(tag);
+    public List<TagDto> readMostUsed() {
+        final List<Tag> tag = tagRepository.readMostUsed();
+        return mapper.modelsToDto(tag);
     }
 
     @Override
