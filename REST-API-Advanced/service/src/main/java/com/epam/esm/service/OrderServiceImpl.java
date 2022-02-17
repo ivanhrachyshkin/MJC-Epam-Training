@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
         checkExistByIds(order);
         final Integer userId = order.getUser().getId();
         final Integer giftCertificateId = order.getGiftCertificate().getId();
-        final User user = userRepository
+        userRepository
                 .readOne(userId)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, userId));
@@ -51,8 +51,6 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, giftCertificateId));
         order.setPrice(giftCertificate.getPrice());
-        order.setUser(user);
-        order.setGiftCertificate(giftCertificate);
         final Order newOrder = orderRepository.create(order);
         return mapper.modelToDto(newOrder);
     }
@@ -84,9 +82,9 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto readOneByUserIdAndOrderId(final int userId, final int orderId) {
         final Order order =
                 orderRepository.
-                readOneByUserIdAndOrderId(userId, orderId)
-                .orElseThrow(() -> new ServiceException(
-                        rb.getString("order.notFound.user.order"), HttpStatus.NOT_FOUND, POSTFIX, userId, orderId));
+                        readOneByUserIdAndOrderId(userId, orderId)
+                        .orElseThrow(() -> new ServiceException(
+                                rb.getString("order.notFound.user.order"), HttpStatus.NOT_FOUND, POSTFIX, userId, orderId));
         return mapper.modelToDto(order);
     }
 

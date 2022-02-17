@@ -21,7 +21,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "user")//
+    @OneToMany(mappedBy = "user")
     private Set<Order> orders = new HashSet<>();
 
     public User(final Integer id) {

@@ -33,8 +33,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Order create(final Order order) {
         order.setId(null);
         order.setDate(LocalDateTime.now(clock));
-        entityManager.persist(order);
-        return order;
+        return entityManager.merge(order);
     }
 
     @SuppressWarnings("JpaQlInspection")
