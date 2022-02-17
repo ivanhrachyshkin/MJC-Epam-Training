@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -59,30 +58,23 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public Optional<Tag> readOne(final int id, final Boolean active) {
-        final TypedQuery<Tag> typedQuery
-                = entityManager.createQuery(READ_ONE_BY_ID_QUERY, Tag.class);
+        final TypedQuery<Tag> typedQuery = entityManager.createQuery(READ_ONE_BY_ID_QUERY, Tag.class);
         setActiveParameter(typedQuery, active);
-        final List<Tag> tags = typedQuery.setParameter(1, id).getResultList();
-        return tags.isEmpty()
-                ? Optional.empty()
-                : Optional.of(tags.get(0));
+        typedQuery.setParameter(1, id);
+        return typedQuery.getResultList().stream().findFirst();
     }
 
     @Override
     public Optional<Tag> readOneByName(final String name) {
-        final TypedQuery<Tag> typedQuery
-                = entityManager.createQuery(READ_ONE_BY_NAME_QUERY, Tag.class);
-        final List<Tag> tags = typedQuery.setParameter(1, name).getResultList();
-        return tags.isEmpty()
-                ? Optional.empty()
-                : Optional.of(tags.get(0));
+        final TypedQuery<Tag> typedQuery = entityManager.createQuery(READ_ONE_BY_NAME_QUERY, Tag.class);
+        typedQuery.setParameter(1, name);
+        return typedQuery.getResultList().stream().findFirst();
     }
 
     @Override
     public List<Tag> readMostUsed() {
-        final Query query
-                = entityManager.createNativeQuery(READ_ONE_MOST_USED, Tag.class);
-        return query.getResultList();//todo
+        final Query query = entityManager.createNativeQuery(READ_ONE_MOST_USED, Tag.class);
+        return query.getResultList();
     }
 
 
@@ -96,7 +88,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     private void setActiveParameter(final TypedQuery<Tag> typedQuery, final Boolean active) {
-        if (active != null && !active) {
+        if (active != null && !active) { // todo refactor
             typedQuery.setParameter(2, false);
         } else {
             typedQuery.setParameter(2, true);
@@ -104,9 +96,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     private void paginateQuery(final TypedQuery<Tag> typedQuery, final Integer page, final Integer size) {
-        if (page != null && size != null) {
-            typedQuery.setFirstResult((page - 1) * size);
-            typedQuery.setMaxResults(size);
-        }
+        typedQuery.setFirstResult((page - 1) * size);
+        typedQuery.setMaxResults(size);
     }
 }

@@ -32,7 +32,11 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<List<UserDto>> readAll(final Integer page, final Integer size) {
         final List<UserDto> dtoUsers = userService.readAll(page, size);
-        dtoUsers.forEach(hateoasCreator::linkUserDto);
+        dtoUsers.forEach( userDto -> {
+            hateoasCreator.linkUserDtoOne(userDto);
+            userDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto);
+        });
+
         return new ResponseEntity<>(dtoUsers, HttpStatus.OK);
     }
 
@@ -41,7 +45,11 @@ public class UserController {
                                                          final Integer page,
                                                          final Integer size) {
         final List<OrderDto> dtoOrders = orderService.readAllByUserId(userId, page, size);
-        dtoOrders.forEach(hateoasCreator::linkOrderDto);
+        dtoOrders.forEach(orderDto -> {
+            hateoasCreator.linkOrderDtoOne(orderDto);
+            hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+            hateoasCreator.linkUserDto(orderDto.getUserDto());
+        });
         return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
     }
 
@@ -49,15 +57,16 @@ public class UserController {
     public HttpEntity<OrderDto> readOneOrderByUserIdAndOrderId(@PathVariable final int userId,
                                                                @PathVariable final int orderId) {
         final OrderDto orderDto = orderService.readOneByUserIdAndOrderId(userId, orderId);
-        hateoasCreator.linkOrderDto(orderDto);
+        hateoasCreator.linkOrderDtoOne(orderDto);
         hateoasCreator.linkUserDto(orderDto.getUserDto());
+        hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<UserDto> readOne(@PathVariable final int id) {
         final UserDto userDto = userService.readOne(id);
-        hateoasCreator.linkUserDto(userDto);
+        hateoasCreator.linkUserDtoOne(userDto);
         userDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }

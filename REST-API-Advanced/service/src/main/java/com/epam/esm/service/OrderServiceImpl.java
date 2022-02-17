@@ -46,12 +46,17 @@ public class OrderServiceImpl implements OrderService {
         userRepository
                 .readOne(userId)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, userId));
-        final GiftCertificate giftCertificate = giftCertificateRepository.readOne(giftCertificateId)
+                        rb.getString("user.notFound.id"),
+                        HttpStatus.NOT_FOUND, POSTFIX, userId));
+        final GiftCertificate giftCertificate = giftCertificateRepository
+                .readOne(giftCertificateId)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, giftCertificateId));
+                        rb.getString("giftCertificate.notFound.id"),
+                        HttpStatus.NOT_FOUND, POSTFIX, giftCertificateId));
         order.setPrice(giftCertificate.getPrice());
         final Order newOrder = orderRepository.create(order);
+        System.out.println(newOrder.getGiftCertificate().getName());
+        System.out.println(newOrder.getUser().getEmail());
         return mapper.modelToDto(newOrder);
     }
 
@@ -80,11 +85,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto readOneByUserIdAndOrderId(final int userId, final int orderId) {
-        final Order order =
-                orderRepository.
-                        readOneByUserIdAndOrderId(userId, orderId)
-                        .orElseThrow(() -> new ServiceException(
-                                rb.getString("order.notFound.user.order"), HttpStatus.NOT_FOUND, POSTFIX, userId, orderId));
+        final Order order = orderRepository.
+                readOneByUserIdAndOrderId(userId, orderId)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("order.notFound.user.order"),
+                        HttpStatus.NOT_FOUND, POSTFIX, userId, orderId));
         return mapper.modelToDto(order);
     }
 

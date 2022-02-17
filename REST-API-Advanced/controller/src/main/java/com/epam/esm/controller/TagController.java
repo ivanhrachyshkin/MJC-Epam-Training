@@ -29,7 +29,7 @@ public class TagController {
                                             final Integer page,
                                             final Integer size) {
         final List<TagDto> dtoTags = tagService.readAll(active, page, size);
-        dtoTags.forEach(hateoasCreator::linkTagDto);
+        dtoTags.forEach(hateoasCreator::linkTagDtoOne);
         return new ResponseEntity<>(dtoTags, HttpStatus.OK);
     }
 
@@ -37,21 +37,21 @@ public class TagController {
     public ResponseEntity<TagDto> readOne(@PathVariable final int id,
                                        @RequestParam(required = false) final Boolean active) {
         final TagDto tagDto = tagService.readOne(id, active);
-        hateoasCreator.linkTagDto(tagDto);
+        hateoasCreator.linkTagDtoOne(tagDto);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/mostUsed", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<List<TagDto>> readOneMostUsed() {
         final List<TagDto> dtoTags = tagService.readMostUsed();
-        dtoTags.forEach(hateoasCreator::linkTagDto);
+        dtoTags.forEach(hateoasCreator::linkTagDtoOne);
         return new ResponseEntity<>(dtoTags, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<TagDto> deleteById(@PathVariable final int id) {
         final TagDto tagDto = tagService.deleteById(id);
-        hateoasCreator.linkTagDto(tagDto);
+        hateoasCreator.linkTagDtoOne(tagDto);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 

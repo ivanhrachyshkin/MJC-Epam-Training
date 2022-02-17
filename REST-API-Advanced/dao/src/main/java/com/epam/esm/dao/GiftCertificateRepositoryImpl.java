@@ -13,7 +13,6 @@ import javax.persistence.TypedQuery;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -60,7 +59,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         final String sortPostfix = getSortPostfix(dateSort, nameSort);
 
         final String finalQuery = READ_QUERY + wherePostfix + sortPostfix;
-        final TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(finalQuery, GiftCertificate.class);
+        final TypedQuery<GiftCertificate> typedQuery
+                = entityManager.createQuery(finalQuery, GiftCertificate.class);
         if (!values.isEmpty()) {
             values.forEach((position, value) -> typedQuery.setParameter(position, "%" + value + "%"));
         }
@@ -76,12 +76,10 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public Optional<GiftCertificate> readOneByName(final String name) {
-        final TypedQuery<GiftCertificate> query
+        final TypedQuery<GiftCertificate> typedQuery
                 = entityManager.createQuery(READ_ONE_BY_NAME_QUERY, GiftCertificate.class);
-        final List<GiftCertificate> giftCertificates = query.setParameter(1, name).getResultList();
-        return giftCertificates.isEmpty()
-                ? Optional.empty()
-                : Optional.of(giftCertificates.get(0));
+        typedQuery.setParameter(1, name);
+        return typedQuery.getResultList().stream().findFirst();
     }
 
     @Override
@@ -101,8 +99,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     private void setTagId(final Set<Tag> tags) {
         tags.forEach(tag -> {
-            final Optional<Tag> optionalTag
-                    = tagRepository.readOneByName(tag.getName());
+            final Optional<Tag> optionalTag = tagRepository.readOneByName(tag.getName());
             tag.setId(null);
             tag.setActive(true);
             optionalTag.ifPresent(oldTag -> tag.setId(oldTag.getId()));
@@ -110,10 +107,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     private void paginateQuery(final TypedQuery<GiftCertificate> typedQuery, final Integer page, final Integer size) {
-        if (page != null && size != null) {
-            typedQuery.setFirstResult((page - 1) * size);
-            typedQuery.setMaxResults(size);
-        }
+        typedQuery.setFirstResult((page - 1) * size);
+        typedQuery.setMaxResults(size);
     }
 
     private String getSortPostfix(final String dateSort, final String nameSort) {

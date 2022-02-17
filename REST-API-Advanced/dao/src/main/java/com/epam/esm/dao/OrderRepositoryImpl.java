@@ -31,7 +31,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Order create(final Order order) {
-        order.setId(null);
+        order.setId(null);// todo remove for mapper or validation exception
         order.setDate(LocalDateTime.now(clock));
         return entityManager.merge(order);
     }
@@ -39,14 +39,16 @@ public class OrderRepositoryImpl implements OrderRepository {
     @SuppressWarnings("JpaQlInspection")
     @Override
     public List<Order> readAll(final Integer page, final Integer size) {
-        final TypedQuery<Order> typedQuery = entityManager.createQuery(READ_ALL_QUERY, Order.class);
+        final TypedQuery<Order> typedQuery
+                = entityManager.createQuery(READ_ALL_QUERY, Order.class);
         paginateQuery(typedQuery, page, size);
         return typedQuery.getResultList();
     }
 
     @Override
     public List<Order> readAllByUserId(final int userId, final Integer page, final Integer size) {
-        final TypedQuery<Order> typedQuery = entityManager.createQuery(READ_ALL_BY_USER_ID_QUERY, Order.class);
+        final TypedQuery<Order> typedQuery
+                = entityManager.createQuery(READ_ALL_BY_USER_ID_QUERY, Order.class);
         typedQuery.setParameter(1, userId);
         paginateQuery(typedQuery, page, size);
         return typedQuery.getResultList();
@@ -63,12 +65,8 @@ public class OrderRepositoryImpl implements OrderRepository {
                 = entityManager.createQuery(READ_ONE_BY_USER_ID_AND_ORDER_ID_QUERY, Order.class);
         query.setParameter(1, userId);
         query.setParameter(2, orderId);
-        final List<Order> giftCertificates = query.getResultList();
-        return giftCertificates.isEmpty()
-                ? Optional.empty()
-                : Optional.of(giftCertificates.get(0));
+        return query.getResultList().stream().findFirst();
     }
-
 
 
     @Override
@@ -77,16 +75,11 @@ public class OrderRepositoryImpl implements OrderRepository {
                 = entityManager.createQuery(READ_ONE_BY_GIFT_ID_AND_USER_ID_QUERY, Order.class);
         query.setParameter(1, userId);
         query.setParameter(2, giftCertificateId);
-        final List<Order> giftCertificates = query.getResultList();
-        return giftCertificates.isEmpty()
-                ? Optional.empty()
-                : Optional.of(giftCertificates.get(0));
+        return query.getResultList().stream().findFirst();
     }
 
     private void paginateQuery(final TypedQuery<Order> typedQuery, final Integer page, final Integer size) {
-        if(page != null && size != null) {
-            typedQuery.setFirstResult((page - 1) * size);
-            typedQuery.setMaxResults(size);
-        }
+        typedQuery.setFirstResult((page - 1) * size);
+        typedQuery.setMaxResults(size);
     }
 }

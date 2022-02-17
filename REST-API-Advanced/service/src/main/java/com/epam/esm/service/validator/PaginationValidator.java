@@ -18,6 +18,16 @@ public class PaginationValidator {
 
     public void paginationValidate(final Integer page, final Integer size) {
 
+        if (page != null && size == null) {
+            throw new ValidationException(
+                    rb.getString("invalid.pagination"), HttpStatus.BAD_REQUEST, POSTFIX);
+        }
+
+        if (size != null && page == null) {
+            throw new ValidationException(
+                    rb.getString("invalid.pagination"), HttpStatus.BAD_REQUEST, POSTFIX);
+        }
+
         if (page != null && page < 1) {
             throw new ValidationException(
                     rb.getString("invalid.pagination"), HttpStatus.BAD_REQUEST, POSTFIX);

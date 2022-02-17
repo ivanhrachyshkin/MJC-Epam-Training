@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    private static final String POSTFIX = "01";
+    private static final String POSTFIX = "01"; // todo properties
 
     @Setter
     private ResourceBundle rb;

@@ -15,13 +15,12 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
 
     private static final String READ_QUERY = "SELECT e FROM User e";
-    private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM User e WHERE e.email = ?1";
 
     @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
-    public List<User> readAll( final Integer page, final Integer size) {
+    public List<User> readAll(final Integer page, final Integer size) {
         final TypedQuery<User> query = entityManager.createQuery(READ_QUERY, User.class);
         paginateQuery(query, page, size);
         return query.getResultList();
@@ -34,9 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     private void paginateQuery(final TypedQuery<User> typedQuery, final Integer page, final Integer size) {
-        if(page != null && size != null) {
-            typedQuery.setFirstResult((page - 1) * size);
-            typedQuery.setMaxResults(size);
-        }
+        typedQuery.setFirstResult((page - 1) * size);
+        typedQuery.setMaxResults(size);
     }
 }
