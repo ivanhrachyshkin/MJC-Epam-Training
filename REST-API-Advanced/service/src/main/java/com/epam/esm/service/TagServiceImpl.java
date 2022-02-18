@@ -82,7 +82,6 @@ public class TagServiceImpl implements TagService {
                     rb.getString("tag.alreadyExists.name"),
                     HttpStatus.CONFLICT, POSTFIX, optionalTag.get().getName());
         }
-        rawTag.setId(null);
         optionalTag.ifPresent(oldTag -> rawTag.setId(oldTag.getId()));
         return tagRepository.create(rawTag);
     }

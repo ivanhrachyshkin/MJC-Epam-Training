@@ -37,7 +37,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public GiftCertificate create(final GiftCertificate giftCertificate) {
-        giftCertificate.setId(null);
         giftCertificate.setCreateDate(LocalDateTime.now(clock));
         giftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
         final Set<Tag> tags = giftCertificate.getTags();
@@ -99,16 +98,16 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     private void setTagId(final Set<Tag> tags) {
         tags.forEach(tag -> {
-            final Optional<Tag> optionalTag = tagRepository.readOneByName(tag.getName());
-            tag.setId(null);
             tag.setActive(true);
-            optionalTag.ifPresent(oldTag -> tag.setId(oldTag.getId()));
+            tagRepository.readOneByName(tag.getName()).ifPresent(oldTag -> tag.setId(oldTag.getId()));
         });
     }
 
     private void paginateQuery(final TypedQuery<GiftCertificate> typedQuery, final Integer page, final Integer size) {
-        typedQuery.setFirstResult((page - 1) * size);
-        typedQuery.setMaxResults(size);
+        if(page != null && size != null) {
+            typedQuery.setFirstResult((page - 1) * size);
+            typedQuery.setMaxResults(size);
+        }
     }
 
     private String getSortPostfix(final String dateSort, final String nameSort) {
@@ -134,19 +133,19 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         if (tags != null && !tags.isEmpty()) {
             int n = 1;
             tags.forEach(tag -> {
-                whereCriteria.add(TAG_NAME_LIKE + n);
+                whereCriteria.add(TAG_NAME_LIKE + n); // todo refactor
                 values.put(n, tag);
             });
         }
 
         if (name != null) {
             whereCriteria.add(NAME_LIKE);
-            values.put(2, name);
+            values.put(1, name);
         }
 
         if (description != null) {
             whereCriteria.add(DESCRIPTION_LIKE);
-            values.put(3, description);
+            values.put(2, description);
         }
 
         String where = StringUtils.EMPTY;

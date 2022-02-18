@@ -17,8 +17,15 @@ public class TagValidator {
     private ResourceBundle rb;
 
     public void createValidate(final TagDto tagDto) {
-        if (StringUtils.isEmpty(tagDto.getName())) {
-            throw new ValidationException(rb.getString("validator.tag.name.required"), HttpStatus.BAD_REQUEST, POSTFIX);
+
+        if(tagDto.getId() != null) {
+            throw new ValidationException(
+                    rb.getString("id.value.passed"), HttpStatus.BAD_REQUEST, POSTFIX);
+        }
+
+        if (tagDto.getName() == null || tagDto.getName().isEmpty()) {
+            throw new ValidationException(
+                    rb.getString("validator.tag.name.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
     }
 }

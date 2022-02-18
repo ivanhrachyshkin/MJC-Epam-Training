@@ -2,6 +2,8 @@ package com.epam.esm.dao;
 
 import com.epam.esm.model.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,10 +17,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TagRepositoryImpl implements TagRepository {
 
-    private static final String READ_QUERY = "SELECT e FROM Tag e WHERE e.active = ?2";
+    private static final String READ_QUERY = "SELECT e FROM Tag e WHERE e.active = true ";
     private static final String READ_ONE_BY_ID_QUERY = "SELECT e FROM Tag e WHERE e.id = ?1 AND e.active = ?2";
-    private static final String READ_ONE_BY_NAME_QUERY =
-            "SELECT e FROM Tag e WHERE e.name = ?1 ";
+    private static final String OR_ACTIVE_FALSE = " OR e.active = false";
+    private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM Tag e WHERE e.name = ?1 ";
     private static final String READ_ONE_MOST_USED =
             "with my_table as" +
                     " (SELECT tags.id, tags.name, tags.active, COUNT(*) as count" +
@@ -50,16 +52,16 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public List<Tag> readAll(final Boolean active, final Integer page, final Integer size) {
-        final TypedQuery<Tag> typedQuery = entityManager.createQuery(READ_QUERY, Tag.class);
-        setActiveParameter(typedQuery, active);
+        final String query = getWithActive(READ_QUERY, active);
+        final TypedQuery<Tag> typedQuery = entityManager.createQuery(query, Tag.class);
         paginateQuery(typedQuery, page, size);
         return typedQuery.getResultList();
     }
 
     @Override
     public Optional<Tag> readOne(final int id, final Boolean active) {
-        final TypedQuery<Tag> typedQuery = entityManager.createQuery(READ_ONE_BY_ID_QUERY, Tag.class);
-        setActiveParameter(typedQuery, active);
+        final String query = getWithActive(READ_ONE_BY_ID_QUERY, active);
+        final TypedQuery<Tag> typedQuery = entityManager.createQuery(query, Tag.class);
         typedQuery.setParameter(1, id);
         return typedQuery.getResultList().stream().findFirst();
     }
@@ -87,16 +89,14 @@ public class TagRepositoryImpl implements TagRepository {
         return tag;
     }
 
-    private void setActiveParameter(final TypedQuery<Tag> typedQuery, final Boolean active) {
-        if (active != null && !active) { // todo refactor
-            typedQuery.setParameter(2, false);
-        } else {
-            typedQuery.setParameter(2, true);
-        }
+    private String getWithActive(final String query, final Boolean active) {
+        return BooleanUtils.isFalse(active) ? query.concat(OR_ACTIVE_FALSE) : query;
     }
 
     private void paginateQuery(final TypedQuery<Tag> typedQuery, final Integer page, final Integer size) {
-        typedQuery.setFirstResult((page - 1) * size);
-        typedQuery.setMaxResults(size);
+        if(page != null && size != null) {
+            typedQuery.setFirstResult((page - 1) * size);
+            typedQuery.setMaxResults(size);
+        }
     }
 }

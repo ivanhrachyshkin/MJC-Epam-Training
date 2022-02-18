@@ -4,6 +4,7 @@ import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.User;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
+import com.epam.esm.service.validator.PaginationValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,8 @@ class UserServiceImplTest {
     private DtoMapper<User, UserDto> mapper;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PaginationValidator paginationValidator;
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -53,13 +56,14 @@ class UserServiceImplTest {
         final List<User> users = Collections.singletonList(user);
         final List<UserDto> expectedUsers = Collections.singletonList(userDto);
         //When
-        when(userRepository.readAll()).thenReturn(users);
+        when(userRepository.readAll(null, null)).thenReturn(users);
         when(mapper.modelsToDto(users)).thenReturn(expectedUsers);
 
-        final List<UserDto> actualOrders = userService.readAll();
+        final List<UserDto> actualOrders = userService.readAll(null, null);
         //Then
         assertEquals(expectedUsers, actualOrders);
-        verify(userRepository, only()).readAll();
+        verify(userRepository, only()).readAll(null, null);
+        verify(paginationValidator, only()).paginationValidate(null, null);
         verify(mapper, only()).modelsToDto(users);
     }
 

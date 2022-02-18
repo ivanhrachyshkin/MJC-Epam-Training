@@ -31,7 +31,6 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Order create(final Order order) {
-        order.setId(null);// todo remove for mapper or validation exception
         order.setDate(LocalDateTime.now(clock));
         return entityManager.merge(order);
     }
@@ -79,7 +78,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     private void paginateQuery(final TypedQuery<Order> typedQuery, final Integer page, final Integer size) {
-        typedQuery.setFirstResult((page - 1) * size);
-        typedQuery.setMaxResults(size);
+        if(page != null && size != null) {
+            typedQuery.setFirstResult((page - 1) * size);
+            typedQuery.setMaxResults(size);
+        }
     }
 }

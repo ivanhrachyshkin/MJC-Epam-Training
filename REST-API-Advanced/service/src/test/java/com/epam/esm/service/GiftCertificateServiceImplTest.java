@@ -7,6 +7,8 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
+import com.epam.esm.service.validator.PaginationValidator;
+import com.epam.esm.service.validator.SortValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +36,10 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateRepository giftCertificateRepository;
     @Mock
     private GiftCertificateValidator giftCertificateValidator;
+    @Mock
+    private SortValidator sortValidator;
+    @Mock
+    private PaginationValidator paginationValidator;
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
 
@@ -59,7 +65,7 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void shouldCreateGiftCertificate_On_Create_WithTags() {
+    void shouldCreateGiftCertificate_On_Create() {
         //Given
         when(giftCertificateRepository.readOneByName(giftCertificate1.getName())).thenReturn(Optional.empty());
         when(giftCertificateRepository.create(giftCertificate1)).thenReturn(giftCertificate1);
@@ -82,12 +88,11 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_On_Create_WithTags() {
+    void shouldThrowException_On_Create() {
         //Given
         dummyRb.setMessage("giftCertificate.alreadyExists.name", "Gift certificate with name = %s is already exist");
         final String message = String.format("Gift certificate with name = %s is already exist", giftCertificate1.getName());
         when(giftCertificateRepository.readOneByName(giftCertificate1.getName())).thenReturn(Optional.of(giftCertificate1));
-        when(mapper.dtoToModel(giftCertificateDto1)).thenReturn(giftCertificate1);
         //When
         final ServiceException serviceException
                 = assertThrows(ServiceException.class, () -> giftCertificateService.create(giftCertificateDto1));
@@ -95,7 +100,6 @@ class GiftCertificateServiceImplTest {
         assertEquals(message, serviceException.getMessage());
         verify(giftCertificateValidator, only()).createValidate(giftCertificateDto1);
         verify(giftCertificateRepository, only()).readOneByName(giftCertificate1.getName());
-        verify(mapper, only()).dtoToModel(giftCertificateDto1);
     }
 
     @Test
@@ -113,16 +117,40 @@ class GiftCertificateServiceImplTest {
         final List<GiftCertificateDto> expectedGiftCertificates
                 = Arrays.asList(giftCertificateDto1, giftCertificateDto2);
         //When
-        when(giftCertificateRepository.readAll(null, null, null, null, null))
+        when(giftCertificateRepository.readAll(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null))
                 .thenReturn(giftCertificates);
         when(mapper.modelsToDto(giftCertificates)).thenReturn(expectedGiftCertificates);
 
         final List<GiftCertificateDto> actualGiftCertificates
-                = giftCertificateService.readAll(null, null, null, null, null);
+                = giftCertificateService.readAll(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
         //Then
         assertEquals(expectedGiftCertificates, actualGiftCertificates);
-        verify(giftCertificateValidator, only()).readAllValidate(null, null, null);
-        verify(giftCertificateRepository, only()).readAll(null, null, null, null, null);
+        verify(giftCertificateValidator, only()).readAllValidate(
+                null,
+                null,
+                null);
+        verify(giftCertificateRepository, only()).readAll(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        verify(paginationValidator, only()).paginationValidate(null, null);
+        verify(sortValidator, times(2)).sortValidate(null);
+        verifyNoMoreInteractions(sortValidator);
     }
 
     @Test

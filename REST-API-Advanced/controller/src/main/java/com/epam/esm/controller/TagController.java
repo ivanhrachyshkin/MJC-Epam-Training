@@ -26,8 +26,8 @@ public class TagController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<List<TagDto>> readAll(@RequestParam(required = false) final Boolean active,
-                                            final Integer page,
-                                            final Integer size) {
+                                            @RequestParam(required = false) final Integer page,
+                                            @RequestParam(required = false) final Integer size) {
         final List<TagDto> dtoTags = tagService.readAll(active, page, size);
         dtoTags.forEach(hateoasCreator::linkTagDtoOne);
         return new ResponseEntity<>(dtoTags, HttpStatus.OK);
@@ -35,7 +35,7 @@ public class TagController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TagDto> readOne(@PathVariable final int id,
-                                       @RequestParam(required = false) final Boolean active) {
+                                          @RequestParam(required = false) final Boolean active) {
         final TagDto tagDto = tagService.readOne(id, active);
         hateoasCreator.linkTagDtoOne(tagDto);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
@@ -54,6 +54,4 @@ public class TagController {
         hateoasCreator.linkTagDtoOne(tagDto);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
-
-
 }

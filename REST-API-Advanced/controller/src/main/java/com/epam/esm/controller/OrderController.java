@@ -34,7 +34,8 @@ public class OrderController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<List<OrderDto>> readAll(final Integer page, final Integer size) {
+    public HttpEntity<List<OrderDto>> readAll(@RequestParam(required = false) final Integer page,
+                                              @RequestParam(required = false) final Integer size) {
         final List<OrderDto> dtoOrders = orderService.readAll(page, size);
         dtoOrders.forEach(orderDto -> {
             hateoasCreator.linkOrderDtoOne(orderDto);

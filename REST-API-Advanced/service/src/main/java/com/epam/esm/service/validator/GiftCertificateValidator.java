@@ -22,6 +22,11 @@ public class GiftCertificateValidator {
 
     public void updateValidate(final GiftCertificateDto giftCertificateDto) {
 
+        if(giftCertificateDto.getId() != null) {
+            throw new ValidationException(
+                    rb.getString("id.value.passed"), HttpStatus.BAD_REQUEST, POSTFIX);
+        }
+
         if (giftCertificateDto.getName() != null && giftCertificateDto.getName().isEmpty()) {
             throw new ValidationException(
                     rb.getString("validator.giftCertificate.name.empty"), HttpStatus.BAD_REQUEST, POSTFIX);
@@ -69,12 +74,17 @@ public class GiftCertificateValidator {
 
     public void createValidate(final GiftCertificateDto giftCertificateDto) {
 
-        if (StringUtils.isEmpty(giftCertificateDto.getName())) {
+        if(giftCertificateDto.getId() != null) {
+            throw new ValidationException(
+                    rb.getString("id.value.passed"), HttpStatus.BAD_REQUEST, POSTFIX);
+        }
+
+        if (giftCertificateDto.getName() == null || giftCertificateDto.getName().isEmpty()) {
             throw new ValidationException(
                     rb.getString("validator.giftCertificate.name.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }
 
-        if (StringUtils.isEmpty(giftCertificateDto.getDescription())) {
+        if (giftCertificateDto.getDescription()==null || giftCertificateDto.getDescription().isEmpty()) {
             throw new ValidationException(
                     rb.getString("validator.giftCertificate.description.required"), HttpStatus.BAD_REQUEST, POSTFIX);
         }

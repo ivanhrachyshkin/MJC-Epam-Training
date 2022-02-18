@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -21,9 +22,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> readAll(final Integer page, final Integer size) {
-        final TypedQuery<User> query = entityManager.createQuery(READ_QUERY, User.class);
-        paginateQuery(query, page, size);
-        return query.getResultList();
+        final TypedQuery<User> typedQuery = entityManager.createQuery(READ_QUERY, User.class);
+        paginateQuery(typedQuery, page, size);
+        return typedQuery.getResultList();
     }
 
     @Override
@@ -31,9 +32,10 @@ public class UserRepositoryImpl implements UserRepository {
         return Optional.ofNullable(entityManager.find(User.class, id));
     }
 
-
     private void paginateQuery(final TypedQuery<User> typedQuery, final Integer page, final Integer size) {
-        typedQuery.setFirstResult((page - 1) * size);
-        typedQuery.setMaxResults(size);
+        if(page != null && size != null) {
+            typedQuery.setFirstResult((page - 1) * size);
+            typedQuery.setMaxResults(size);
+        }
     }
 }

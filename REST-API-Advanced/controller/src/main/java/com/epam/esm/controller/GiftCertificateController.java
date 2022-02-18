@@ -37,14 +37,14 @@ public class GiftCertificateController {
             @RequestParam(required = false) final String description,
             @RequestParam(required = false) final String dateSort,
             @RequestParam(required = false) final String nameSort,
-            final Integer page,
-            final Integer size) {
+            @RequestParam(required = false) final Integer page,
+            @RequestParam(required = false) final Integer size) {
         final List<GiftCertificateDto> dtoGiftCertificates
                 = giftCertificateService.readAll(tags, name, description, dateSort, nameSort, page, size);
         dtoGiftCertificates.forEach(giftCertificateDto -> {
-                    hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);
-                    giftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
-                });
+            hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);
+            giftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
+        });
 
         return new ResponseEntity<>(dtoGiftCertificates, HttpStatus.OK);
     }

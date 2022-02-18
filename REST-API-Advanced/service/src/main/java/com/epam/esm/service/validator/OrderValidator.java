@@ -17,6 +17,11 @@ public class OrderValidator {
 
     public void createValidate(final OrderDto orderDto) {
 
+        if(orderDto.getId() != null) {
+            throw new ValidationException(
+                    rb.getString("id.value.passed"), HttpStatus.BAD_REQUEST, POSTFIX);
+        }
+
         if (orderDto.getUserDto().getId() == null) {
             throw new ValidationException(
                     rb.getString("validator.order.userId.required"), HttpStatus.BAD_REQUEST, POSTFIX);

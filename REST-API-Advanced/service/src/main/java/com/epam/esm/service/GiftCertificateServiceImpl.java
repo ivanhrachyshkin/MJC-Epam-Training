@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    private static final String POSTFIX = "01"; // todo properties
+    private static final String POSTFIX = "01";
 
     @Setter
     private ResourceBundle rb;
@@ -35,7 +35,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto create(final GiftCertificateDto giftCertificateDto) {
         giftCertificateValidator.createValidate(giftCertificateDto);
         checkExistByName(giftCertificateDto.getName());
-        GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
+        final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
         final GiftCertificate newGiftCertificate = giftCertificateRepository.create(rawGiftCertificate);
         return mapper.modelToDto(newGiftCertificate);
     }
@@ -69,10 +69,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto update(final GiftCertificateDto giftCertificateDto) {
         giftCertificateValidator.updateValidate(giftCertificateDto);
+        checkExistByName(giftCertificateDto.getName());
         final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
-        GiftCertificate oldGiftCertificate = checkExist(rawGiftCertificate.getId());
+        final GiftCertificate oldGiftCertificate = checkExist(rawGiftCertificate.getId());
         rawGiftCertificate.setCreateDate(oldGiftCertificate.getCreateDate());
-        checkExistByName(rawGiftCertificate.getName());
         final GiftCertificate updatedGiftCertificate = giftCertificateRepository.update(rawGiftCertificate);
         return mapper.modelToDto(updatedGiftCertificate);
     }

@@ -13,6 +13,7 @@ import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.OrderValidator;
+import com.epam.esm.service.validator.PaginationValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,8 @@ class OrderServiceImplTest {
     private OrderRepository orderRepository;
     @Mock
     private OrderValidator orderValidator;
+    @Mock
+    private PaginationValidator paginationValidator;
     @InjectMocks
     private OrderServiceImpl orderService;
 
@@ -150,9 +153,8 @@ class OrderServiceImplTest {
         //Given
         final User user = order.getUser();
         final GiftCertificate giftCertificate = order.getGiftCertificate();
-        when(userRepository.readOne(user.getId())).thenReturn(Optional.of(user));
-        when(giftCertificateRepository.readOne(giftCertificate.getId())).thenReturn(Optional.of(giftCertificate));
-        when(orderRepository.readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId())).thenReturn(Optional.of(order));
+        when(orderRepository.readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId()))
+                .thenReturn(Optional.of(order));
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         dummyRb.setMessage("order.alreadyExists", "Order already exists");
         final String message = "Order already exists";
@@ -165,8 +167,6 @@ class OrderServiceImplTest {
         assertEquals(message, serviceException.getMessage());
 
         verify(orderValidator, only()).createValidate(orderDto);
-        verify(giftCertificateRepository, only()).readOne(giftCertificate.getId());
-        verify(userRepository, only()).readOne(user.getId());
         verify(orderRepository, only()).readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId());
         verify(mapper, only()).dtoToModel(orderDto);
     }
@@ -177,15 +177,49 @@ class OrderServiceImplTest {
         final List<Order> orders = Collections.singletonList(order);
         final List<OrderDto> expectedOrders = Collections.singletonList(orderDto);
         //When
-        when(orderRepository.readAll()).thenReturn(orders);
+        when(orderRepository.readAll(null, null)).thenReturn(orders);
         when(mapper.modelsToDto(orders)).thenReturn(expectedOrders);
 
         final List<OrderDto> actualOrders
-                = orderService.readAll();
+                = orderService.readAll(null, null);
         //Then
         assertEquals(expectedOrders, actualOrders);
-        verify(orderRepository, only()).readAll();
+        verify(orderRepository, only()).readAll(null, null);
         verify(mapper, only()).modelsToDto(orders);
+        verify(paginationValidator, only()).paginationValidate(null, null);
+    }
+
+    @Test
+    void shouldReturnOrders_On_ReadAllByUserId() {
+        //Given
+        final List<Order> orders = Collections.singletonList(order);
+        final List<OrderDto> expectedOrders = Collections.singletonList(orderDto);
+        //When
+        when(orderRepository.readAllByUserId(order.getUser().getId(),null, null)).thenReturn(orders);
+        when(mapper.modelsToDto(orders)).thenReturn(expectedOrders);
+
+        final List<OrderDto> actualOrders
+                = orderService.readAllByUserId(order.getUser().getId(),null, null);
+        //Then
+        assertEquals(expectedOrders, actualOrders);
+        verify(orderRepository, only()).readAllByUserId(order.getUser().getId(),null, null);
+        verify(mapper, only()).modelsToDto(orders);
+        verify(paginationValidator, only()).paginationValidate(null, null);
+    }
+
+    @Test
+    void shouldReturnOrders_On_readOneByUserIdAndOrderId() {
+        //Given
+        //When
+        when(orderRepository.readOneByUserIdAndOrderId(order.getUser().getId(), order.getId())).thenReturn(Optional.of(order));
+        when(mapper.modelToDto(order)).thenReturn(orderDto);
+
+        final OrderDto actualOrderDto
+                = orderService.readOneByUserIdAndOrderId(order.getUser().getId(), order.getId());
+        //Then
+        assertEquals(orderDto, actualOrderDto);
+        verify(orderRepository, only()).readOneByUserIdAndOrderId(order.getUser().getId(), order.getId());
+        verify(mapper, only()).modelToDto(order);
     }
 
     @Test

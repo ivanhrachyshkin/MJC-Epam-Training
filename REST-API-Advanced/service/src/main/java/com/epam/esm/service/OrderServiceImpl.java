@@ -55,8 +55,6 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND, POSTFIX, giftCertificateId));
         order.setPrice(giftCertificate.getPrice());
         final Order newOrder = orderRepository.create(order);
-        System.out.println(newOrder.getGiftCertificate().getName());
-        System.out.println(newOrder.getUser().getEmail());
         return mapper.modelToDto(newOrder);
     }
 
