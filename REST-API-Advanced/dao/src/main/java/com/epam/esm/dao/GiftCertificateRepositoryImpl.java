@@ -22,8 +22,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM GiftCertificate e WHERE e.name = ?1";
     private static final String WHERE = "WHERE ";
     private static final String TAG_NAME_LIKE = "ar.name LIKE ?";
-    private static final String NAME_LIKE = "am.name LIKE ?2";
-    private static final String DESCRIPTION_LIKE = "am.description LIKE ?3";
+    private static final String NAME_LIKE = "am.name LIKE ?";
+    private static final String DESCRIPTION_LIKE = "am.description LIKE ?";
     private static final String CREATE_DATE_QUERY = "am.createDate ";
     private static final String NAME_QUERY = "am.name ";
     private static final String WHERE_DELIMITER = " AND ";
@@ -104,7 +104,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     private void paginateQuery(final TypedQuery<GiftCertificate> typedQuery, final Integer page, final Integer size) {
-        if(page != null && size != null) {
+        if (page != null && size != null) {
             typedQuery.setFirstResult((page - 1) * size);
             typedQuery.setMaxResults(size);
         }
@@ -130,22 +130,24 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                                    final String name,
                                    final String description) {
         final Set<String> whereCriteria = new LinkedHashSet<>();
+        int n = 0;
         if (tags != null && !tags.isEmpty()) {
-            int n = 1;
-            tags.forEach(tag -> {
-                whereCriteria.add(TAG_NAME_LIKE + n); // todo refactor
-                values.put(n, tag);
-            });
+            for (int i = 0; i < tags.size(); i++) {
+                whereCriteria.add(TAG_NAME_LIKE + i);
+                values.put(i, tags.get(i));
+                n++;
+            }
         }
 
         if (name != null) {
-            whereCriteria.add(NAME_LIKE);
-            values.put(1, name);
+            whereCriteria.add(NAME_LIKE + n);
+            values.put(n, name);
+            n++;
         }
 
         if (description != null) {
-            whereCriteria.add(DESCRIPTION_LIKE);
-            values.put(2, description);
+            whereCriteria.add(DESCRIPTION_LIKE + n);
+            values.put(n, description);
         }
 
         String where = StringUtils.EMPTY;

@@ -1,6 +1,6 @@
 rootProject.name = 'REST-API-Advanced'
 
-include 'dao','model', 'service','controller'
+include 'dao','model', 'service','controller', 'view'
 
 enableFeaturePreview('VERSION_CATALOGS')
 

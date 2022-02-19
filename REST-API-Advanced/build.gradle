@@ -34,14 +34,6 @@ allprojects {
     }
 }
 
-dependencies {
-    implementation libs.spring.boot.starter
-    implementation project(':model')
-    implementation project(':dao')
-    implementation project(':service')
-    implementation project(':controller')
-}
-
 
 
 

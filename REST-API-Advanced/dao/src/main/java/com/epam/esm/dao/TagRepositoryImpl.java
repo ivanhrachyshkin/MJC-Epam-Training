@@ -12,13 +12,14 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class TagRepositoryImpl implements TagRepository {
 
     private static final String READ_QUERY = "SELECT e FROM Tag e WHERE e.active = true ";
-    private static final String READ_ONE_BY_ID_QUERY = "SELECT e FROM Tag e WHERE e.id = ?1 AND e.active = ?2";
+    private static final String READ_ONE_BY_ID_QUERY = "SELECT e FROM Tag e WHERE e.id = ?1 AND e.active = true";
     private static final String OR_ACTIVE_FALSE = " OR e.active = false";
     private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM Tag e WHERE e.name = ?1 ";
     private static final String READ_ONE_MOST_USED =
@@ -78,7 +79,6 @@ public class TagRepositoryImpl implements TagRepository {
         final Query query = entityManager.createNativeQuery(READ_ONE_MOST_USED, Tag.class);
         return query.getResultList();
     }
-
 
     @Override
     public Tag deleteById(final int id) {

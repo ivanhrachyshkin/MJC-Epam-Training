@@ -18,7 +18,6 @@ import java.util.Properties;
 import java.util.Random;
 
 @Configuration
-@EnableAutoConfiguration
 @EnableTransactionManagement
 public class DaoConfig {
 
