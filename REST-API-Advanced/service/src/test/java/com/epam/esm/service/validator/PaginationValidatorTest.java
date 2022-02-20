@@ -1,8 +1,11 @@
 package com.epam.esm.service.validator;
 
 import com.epam.esm.service.DummyRb;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PaginationValidatorTest {
 
     private final DummyRb dummyRb = new DummyRb();
-    private final PaginationValidator paginationValidator = new PaginationValidator();
+    @Mock
+    private ExceptionStatusPostfixProperties properties;
+    @InjectMocks
+    private PaginationValidator paginationValidator;
 
     @Test
     void shouldThrowException_On_SortValidator_ForNegativePage() {

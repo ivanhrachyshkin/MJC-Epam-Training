@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.TagRepository;
 import com.epam.esm.model.Tag;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.PaginationValidator;
@@ -20,10 +21,9 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
-    private static final String POSTFIX = "02";
-
     @Setter
     private ResourceBundle rb;
+    private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<Tag, TagDto> mapper;
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
@@ -72,7 +72,8 @@ public class TagServiceImpl implements TagService {
         return tagRepository
                 .readOne(id, active)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("tag.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
+                        rb.getString("tag.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getTag(), id));
     }
 
     private Tag createOrUpdateOld(final Tag rawTag) {
@@ -80,7 +81,7 @@ public class TagServiceImpl implements TagService {
         if (optionalTag.isPresent() && optionalTag.get().getActive()) {
             throw new ServiceException(
                     rb.getString("tag.alreadyExists.name"),
-                    HttpStatus.CONFLICT, POSTFIX, optionalTag.get().getName());
+                    HttpStatus.CONFLICT, properties.getTag(), optionalTag.get().getName());
         }
         optionalTag.ifPresent(oldTag -> rawTag.setId(oldTag.getId()));
         return tagRepository.create(rawTag);

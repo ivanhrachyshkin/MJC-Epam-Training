@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "gift_certificates", schema = "public")
+@Table(name = "gift_certificates")
 @NoArgsConstructor
 @Getter
 @Setter

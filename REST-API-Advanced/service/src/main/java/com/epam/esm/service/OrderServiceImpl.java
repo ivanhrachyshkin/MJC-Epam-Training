@@ -5,7 +5,7 @@ import com.epam.esm.dao.OrderRepository;
 import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
-import com.epam.esm.model.User;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.OrderValidator;
@@ -17,17 +17,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private static final String POSTFIX = "04";
-
     @Setter
     private ResourceBundle rb;
+    private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<Order, OrderDto> mapper;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
@@ -47,12 +45,12 @@ public class OrderServiceImpl implements OrderService {
                 .readOne(userId)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("user.notFound.id"),
-                        HttpStatus.NOT_FOUND, POSTFIX, userId));
+                        HttpStatus.NOT_FOUND, properties.getUser(), userId));
         final GiftCertificate giftCertificate = giftCertificateRepository
                 .readOne(giftCertificateId)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("giftCertificate.notFound.id"),
-                        HttpStatus.NOT_FOUND, POSTFIX, giftCertificateId));
+                        HttpStatus.NOT_FOUND, properties.getGift(), giftCertificateId));
         order.setPrice(giftCertificate.getPrice());
         final Order newOrder = orderRepository.create(order);
         return mapper.modelToDto(newOrder);
@@ -87,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
                 readOneByUserIdAndOrderId(userId, orderId)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("order.notFound.user.order"),
-                        HttpStatus.NOT_FOUND, POSTFIX, userId, orderId));
+                        HttpStatus.NOT_FOUND, properties.getOrder(), userId, orderId));
         return mapper.modelToDto(order);
     }
 
@@ -95,7 +93,8 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("order.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
+                        rb.getString("order.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getOrder(), id));
     }
 
     private void checkExistByIds(final Order order) {
@@ -103,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
                 .readOneByUserIdAndGiftCertificateId(order.getUser().getId(), order.getGiftCertificate().getId())
                 .ifPresent(order1 -> {
                     throw new ServiceException(
-                            rb.getString("order.alreadyExists"), HttpStatus.CONFLICT, POSTFIX);
+                            rb.getString("order.alreadyExists"), HttpStatus.CONFLICT, properties.getOrder());
                 });
     }
 }

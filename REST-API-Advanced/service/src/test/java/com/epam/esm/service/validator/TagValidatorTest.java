@@ -1,11 +1,12 @@
 package com.epam.esm.service.validator;
 
 import com.epam.esm.service.DummyRb;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.TagDto;
-import com.epam.esm.service.validator.TagValidator;
-import com.epam.esm.service.validator.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TagValidatorTest {
 
     private final DummyRb dummyRb = new DummyRb();
-    private final TagValidator tagValidator = new TagValidator();
+    @Mock
+    private ExceptionStatusPostfixProperties properties;
+    @InjectMocks
+    private TagValidator tagValidator;
 
     @Test
     void shouldThrowException_On_CreateTagValidator_ForEmptyName() {

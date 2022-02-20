@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.User;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.PaginationValidator;
@@ -31,6 +32,8 @@ class UserServiceImplTest {
     private UserRepository userRepository;
     @Mock
     private PaginationValidator paginationValidator;
+    @Mock
+    private ExceptionStatusPostfixProperties properties;
     @InjectMocks
     private UserServiceImpl userService;
 

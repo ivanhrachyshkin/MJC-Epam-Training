@@ -1,6 +1,7 @@
 package com.epam.esm.service.validator;
 
 import com.epam.esm.service.DummyRb;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,8 @@ class GiftCertificateValidatorTest {
     private final DummyRb dummyRb = new DummyRb();
     @Mock
     private TagValidator tagValidator;
+    @Mock
+    private ExceptionStatusPostfixProperties properties;
     @InjectMocks
     private GiftCertificateValidator giftCertificateValidator;
 

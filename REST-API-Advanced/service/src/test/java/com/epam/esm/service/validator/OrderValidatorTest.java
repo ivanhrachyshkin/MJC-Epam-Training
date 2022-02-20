@@ -1,16 +1,17 @@
 package com.epam.esm.service.validator;
 
 import com.epam.esm.service.DummyRb;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -32,7 +33,10 @@ class OrderValidatorTest {
     }};
 
     private final DummyRb dummyRb = new DummyRb();
-    private OrderValidator orderValidator = new OrderValidator();
+    @Mock
+    private ExceptionStatusPostfixProperties properties;
+    @InjectMocks
+    private OrderValidator orderValidator;
 
     @BeforeEach
     void setUp() {

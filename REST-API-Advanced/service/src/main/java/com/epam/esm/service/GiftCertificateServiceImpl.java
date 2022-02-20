@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateRepository;
 import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
@@ -20,10 +21,9 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    private static final String POSTFIX = "01";
-
     @Setter
     private ResourceBundle rb;
+    private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
     private final GiftCertificateRepository giftCertificateRepository;
     private final GiftCertificateValidator giftCertificateValidator;
@@ -89,7 +89,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("giftCertificate.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
+                        rb.getString("giftCertificate.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getGift(), id));
     }
 
     private void checkExistByName(final String name) {
@@ -97,7 +98,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .readOneByName(name)
                 .ifPresent(giftCertificate -> {
                     throw new ServiceException(
-                            rb.getString("giftCertificate.alreadyExists.name"), HttpStatus.CONFLICT, POSTFIX, name);
+                            rb.getString("giftCertificate.alreadyExists.name"),
+                            HttpStatus.CONFLICT, properties.getGift(), name);
                 });
     }
 

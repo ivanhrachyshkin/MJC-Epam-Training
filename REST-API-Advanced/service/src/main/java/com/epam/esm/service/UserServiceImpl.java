@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.User;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.PaginationValidator;
@@ -18,10 +19,9 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private static final String POSTFIX = "03";
-
     @Setter
     private ResourceBundle rb;
+    private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<User, UserDto> mapper;
     private final UserRepository userRepository;
     private final PaginationValidator paginationValidator;
@@ -45,6 +45,6 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, POSTFIX, id));
+                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, properties.getUser() , id));
     }
 }

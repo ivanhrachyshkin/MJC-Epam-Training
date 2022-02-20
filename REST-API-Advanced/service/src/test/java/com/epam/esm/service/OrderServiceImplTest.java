@@ -7,6 +7,7 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.TagDto;
@@ -44,6 +45,8 @@ class OrderServiceImplTest {
     private OrderValidator orderValidator;
     @Mock
     private PaginationValidator paginationValidator;
+    @Mock
+    private ExceptionStatusPostfixProperties properties;
     @InjectMocks
     private OrderServiceImpl orderService;
 

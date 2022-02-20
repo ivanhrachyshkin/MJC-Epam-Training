@@ -1,31 +1,34 @@
 package com.epam.esm.service.validator;
 
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.TagDto;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.ResourceBundle;
 
 @Component
+@RequiredArgsConstructor
 public class TagValidator {
-
-    private static final String POSTFIX = "02";
 
     @Setter
     private ResourceBundle rb;
+    private final ExceptionStatusPostfixProperties properties;
 
     public void createValidate(final TagDto tagDto) {
 
         if(tagDto.getId() != null) {
             throw new ValidationException(
-                    rb.getString("id.value.passed"), HttpStatus.BAD_REQUEST, POSTFIX);
+                    rb.getString("id.value.passed"),
+                    HttpStatus.BAD_REQUEST, properties.getTag());
         }
 
         if (tagDto.getName() == null || tagDto.getName().isEmpty()) {
             throw new ValidationException(
-                    rb.getString("validator.tag.name.required"), HttpStatus.BAD_REQUEST, POSTFIX);
+                    rb.getString("validator.tag.name.required"),
+                    HttpStatus.BAD_REQUEST, properties.getTag());
         }
     }
 }

@@ -3,6 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dao.GiftCertificateRepository;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
@@ -40,6 +41,8 @@ class GiftCertificateServiceImplTest {
     private SortValidator sortValidator;
     @Mock
     private PaginationValidator paginationValidator;
+    @Mock
+    private ExceptionStatusPostfixProperties properties;
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
 

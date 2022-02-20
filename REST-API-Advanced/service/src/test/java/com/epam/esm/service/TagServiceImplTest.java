@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.TagRepository;
 import com.epam.esm.model.Tag;
+import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.PaginationValidator;
@@ -34,6 +35,8 @@ class TagServiceImplTest {
     private TagValidator tagValidator;
     @Mock
     private PaginationValidator paginationValidator;
+    @Mock
+    private ExceptionStatusPostfixProperties properties;
     @InjectMocks
     private TagServiceImpl tagService;
 
