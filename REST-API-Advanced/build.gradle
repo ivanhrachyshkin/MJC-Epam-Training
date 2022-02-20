@@ -30,8 +30,12 @@ allprojects {
     }
 
     bootJar {
-        mainClass.set("com.epam.esm.Application")
+        mainClass.set("com.epam.esm.view.Application")
     }
+}
+
+dependencies {
+    implementation project(':view')
 }
 
 

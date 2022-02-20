@@ -18,14 +18,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
 
-    private static final String READ_QUERY = "SELECT DISTINCT am FROM GiftCertificate am JOIN am.tags ar ";
-    private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM GiftCertificate e WHERE e.name = ?1";
+    private static final String READ_QUERY = "SELECT DISTINCT g FROM GiftCertificate g LEFT JOIN g.tags t ";
+    private static final String READ_ONE_BY_NAME_QUERY = "SELECT g FROM GiftCertificate g WHERE g.name = ?1";
     private static final String WHERE = "WHERE ";
-    private static final String TAG_NAME_LIKE = "ar.name LIKE ?";
-    private static final String NAME_LIKE = "am.name LIKE ?";
-    private static final String DESCRIPTION_LIKE = "am.description LIKE ?";
-    private static final String CREATE_DATE_QUERY = "am.createDate ";
-    private static final String NAME_QUERY = "am.name ";
+    private static final String TAG_NAME_LIKE = "t.name LIKE ?";
+    private static final String NAME_LIKE = "g.name LIKE ?";
+    private static final String DESCRIPTION_LIKE = "g.description LIKE ?";
+    private static final String NAME_QUERY = "g.name ";
+    private static final String CREATE_DATE_QUERY = "g.createDate ";
     private static final String WHERE_DELIMITER = " AND ";
     private static final String ORDER_DELIMITER = ", ";
     private static final String ORDER_BY = " ORDER BY ";

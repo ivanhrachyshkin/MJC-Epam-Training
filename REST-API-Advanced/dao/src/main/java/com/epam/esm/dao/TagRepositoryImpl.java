@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TagRepositoryImpl implements TagRepository {
 
-    private static final String READ_QUERY = "SELECT e FROM Tag e WHERE e.active = true ";
-    private static final String READ_ONE_BY_ID_QUERY = "SELECT e FROM Tag e WHERE e.id = ?1 AND e.active = true";
-    private static final String OR_ACTIVE_FALSE = " OR e.active = false";
-    private static final String READ_ONE_BY_NAME_QUERY = "SELECT e FROM Tag e WHERE e.name = ?1 ";
+    private static final String READ_QUERY = "SELECT t FROM Tag t WHERE t.active = true ";
+    private static final String READ_ONE_BY_ID_QUERY = "SELECT t FROM Tag t WHERE t.id = ?1 AND t.active = true";
+    private static final String OR_ACTIVE_FALSE = " OR t.active = false";
+    private static final String READ_ONE_BY_NAME_QUERY = "SELECT t FROM Tag t WHERE t.name = ?1 ";
     private static final String READ_ONE_MOST_USED =
             "with my_table as" +
                     " (SELECT tags.id, tags.name, tags.active, COUNT(*) as count" +
@@ -40,7 +40,7 @@ public class TagRepositoryImpl implements TagRepository {
                     " from my_table" +
                     " where count >= ALL (select count from my_table)";
 
-    private static final String SOFT_DELETE = "UPDATE Tag e SET e.active = false WHERE e.id = ?1 AND e.active = true";
+    private static final String SOFT_DELETE = "UPDATE Tag t SET t.active = false WHERE t.id = ?1 AND t.active = true";
 
     @PersistenceContext
     private final EntityManager entityManager;

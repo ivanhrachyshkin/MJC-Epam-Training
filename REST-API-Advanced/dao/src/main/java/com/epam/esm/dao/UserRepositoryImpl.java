@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

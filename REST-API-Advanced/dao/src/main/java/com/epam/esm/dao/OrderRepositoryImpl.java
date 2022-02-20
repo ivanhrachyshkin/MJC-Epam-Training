@@ -16,14 +16,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepository {
 
-    private static final String READ_ALL_QUERY = "SELECT DISTINCT am from Order am left join am.user ar";
-    @SuppressWarnings("JpaQlInspection")
-    private static final String READ_ONE_BY_GIFT_ID_AND_USER_ID_QUERY = "SELECT DISTINCT am from Order am " +
-            "inner join am.user au inner join am.giftCertificate ag WHERE au.id = ?1 AND ag.id = ?2";
+    private static final String READ_ALL_QUERY
+            = "SELECT o FROM Order o JOIN FETCH o.giftCertificate g JOIN FETCH o.user u";
     private static final String READ_ALL_BY_USER_ID_QUERY
-            = "SELECT DISTINCT am from Order am left join am.user ar WHERE ar.id = ?1";
+            = " SELECT o from Order o JOIN FETCH o.user u JOIN FETCH o.giftCertificate g WHERE u.id = ?1";
+    private static final String READ_ONE_BY_USER_ID_AND_GIFT_ID_QUERY
+            = "SELECT o FROM Order o JOIN FETCH o.giftCertificate g JOIN FETCH o.user u" +
+           " WHERE u.id = ?1 AND g.id = ?2";
     private static final String READ_ONE_BY_USER_ID_AND_ORDER_ID_QUERY
-            = "SELECT DISTINCT am from Order am left join am.user ar WHERE ar.id = ?1 AND am.id = ?2";
+            = " SELECT o from Order o JOIN FETCH o.user u JOIN FETCH o.giftCertificate g WHERE u.id = ?1 AND o.id = ?2";
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -71,7 +72,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Optional<Order> readOneByUserIdAndGiftCertificateId(final int userId, final int giftCertificateId) {
         final TypedQuery<Order> query
-                = entityManager.createQuery(READ_ONE_BY_GIFT_ID_AND_USER_ID_QUERY, Order.class);
+                = entityManager.createQuery(READ_ONE_BY_USER_ID_AND_GIFT_ID_QUERY, Order.class);
         query.setParameter(1, userId);
         query.setParameter(2, giftCertificateId);
         return query.getResultList().stream().findFirst();
