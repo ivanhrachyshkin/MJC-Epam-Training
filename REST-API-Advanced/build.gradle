@@ -30,11 +30,15 @@ allprojects {
     }
 
     bootJar {
-        mainClass.set("com.epam.esm.view.Application")
+        mainClass.set("com.epam.esm.Application")
     }
 }
 
 dependencies {
+    implementation project(':model')
+    implementation project(':dao')
+    implementation project(':service')
+    implementation project(':controller')
     implementation project(':view')
 }
 
