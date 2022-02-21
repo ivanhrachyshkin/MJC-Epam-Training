@@ -18,7 +18,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class UserController {
 
@@ -26,7 +26,7 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public HttpEntity<List<UserDto>> readAll(final Integer page, final Integer size) {
         final List<UserDto> dtoUsers = userService.readAll(page, size);
         dtoUsers.forEach( userDto -> {
@@ -37,7 +37,7 @@ public class UserController {
         return new ResponseEntity<>(dtoUsers, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{userId}/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{userId}/orders")
     public HttpEntity<List<OrderDto>> readOrdersByUserId(@PathVariable final int userId,
                                                          @RequestParam(required = false) final Integer page,
                                                          @RequestParam(required = false) final Integer size) {
@@ -50,7 +50,7 @@ public class UserController {
         return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{userId}/orders/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{userId}/orders/{orderId}")
     public HttpEntity<OrderDto> readOneOrderByUserIdAndOrderId(@PathVariable final int userId,
                                                                @PathVariable final int orderId) {
         final OrderDto orderDto = orderService.readOneByUserIdAndOrderId(userId, orderId);
@@ -60,7 +60,7 @@ public class UserController {
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public HttpEntity<UserDto> readOne(@PathVariable final int id) {
         final UserDto userDto = userService.readOne(id);
         hateoasCreator.linkUserDtoOne(userDto);

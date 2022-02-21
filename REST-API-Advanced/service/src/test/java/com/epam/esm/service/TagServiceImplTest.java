@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,19 +132,31 @@ class TagServiceImplTest {
         //Then
         assertEquals(expectedTags, actualTags);
         verify(tagRepository, only()).readAll(null, null, null);
-        verify(paginationValidator, only()).paginationValidate( null, null);
+        verify(paginationValidator, only()).paginationValidate(null, null);
         verify(mapper, only()).modelsToDto(tags);
     }
 
     @Test
     void shouldDeleteTag_On_DeleteById() {
         //Given
-        when(tagRepository.readOne(tag1.getId(), true)).thenReturn(Optional.of(tag1));
+        when(tagRepository.deleteById(tag1.getId())).thenReturn(Optional.of(tag1));
         //When
         tagService.deleteById(tag1.getId());
         //Then
-        verify(tagRepository, times(1)).readOne(tag1.getId(), true);
-        verify(tagRepository, times(1)).deleteById(tag1.getId());
-        verifyNoMoreInteractions(tagRepository);
+        verify(tagRepository, only()).deleteById(tag1.getId());
+    }
+
+    @Test
+    void shouldThrowException_On_DeleteById() {
+        //Given
+        dummyRb.setMessage("tag.notFound.id", "Tag with id = %s not found");
+        final String message = String.format("Tag with id = %s not found", tag1.getId());
+        when(tagRepository.deleteById(tag1.getId())).thenReturn(Optional.empty());
+        //When
+        final ServiceException serviceException = assertThrows(ServiceException.class,
+                () -> tagService.deleteById(tag1.getId()));
+        //Then
+        assertEquals(message, serviceException.getMessage());
+        verify(tagRepository, only()).deleteById(tag1.getId());
     }
 }

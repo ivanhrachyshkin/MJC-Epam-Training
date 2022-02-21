@@ -90,9 +90,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public GiftCertificate deleteById(final int id) {
-        final GiftCertificate giftCertificate = entityManager.find(GiftCertificate.class, id);
-        entityManager.remove(giftCertificate);
+    public Optional<GiftCertificate> deleteById(final int id) {
+        final Optional<GiftCertificate> giftCertificate = readOne(id);
+        giftCertificate.ifPresent(entityManager::remove);
         return giftCertificate;
     }
 

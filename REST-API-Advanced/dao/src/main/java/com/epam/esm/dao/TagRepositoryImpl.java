@@ -79,11 +79,13 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Tag deleteById(final int id) {
-        final Tag tag = entityManager.find(Tag.class, id);
-        Query query = entityManager.createQuery(SOFT_DELETE);
-        query.setParameter(1, id).executeUpdate();
-        entityManager.flush();
+    public Optional<Tag> deleteById(final int id) {
+        final Optional<Tag> tag = readOne(id, null);
+        tag.ifPresent(tag1 -> {
+            final Query query = entityManager.createQuery(SOFT_DELETE);
+            query.setParameter(1, id).executeUpdate();
+            entityManager.flush();
+        });
         return tag;
     }
 

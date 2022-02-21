@@ -250,4 +250,18 @@ class OrderServiceImplTest {
         assertEquals(message, serviceException.getMessage());
         verify(orderRepository, only()).readOne(order.getId());
     }
+
+    @Test
+    void shouldThrowException_On_ReadOneByUserIdAndOrderId() {
+        //Given
+        dummyRb.setMessage("order.notFound.user.order", "Order with id = %s not found");
+        when(orderRepository.readOneByUserIdAndOrderId(1,1)).thenReturn(Optional.empty());
+        final String message = String.format("Order with id = %s not found", 1);
+        //When
+        final ServiceException serviceException = assertThrows(ServiceException.class,
+                () -> orderService.readOneByUserIdAndOrderId(1,1));
+        //Then
+        assertEquals(message, serviceException.getMessage());
+        verify(orderRepository, only()).readOneByUserIdAndOrderId(1,1);
+    }
 }

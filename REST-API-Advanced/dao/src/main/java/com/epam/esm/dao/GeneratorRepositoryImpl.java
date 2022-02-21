@@ -32,12 +32,14 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
         final List<Tag> tags = createTags(tagNames);
 
         final Set<String> giftCertificateNames = generateGiftCertificatesNames();
-        final List<GiftCertificate> giftCertificates = createGiftCertificates(giftCertificateNames);
+        final List<GiftCertificate> rawGiftCertificates = createGiftCertificates(giftCertificateNames);
 
-        for (int i = 0; i < giftCertificates.size(); i++) {
-            final GiftCertificate giftCertificate = giftCertificates.get(i);
+        final List<GiftCertificate> giftCertificates = new ArrayList<>();
+        for (int i = 0; i < rawGiftCertificates.size(); i++) {
+            final GiftCertificate giftCertificate = rawGiftCertificates.get(i);
             giftCertificate.setTags(Collections.singleton(tags.get(i / 10)));
-            giftCertificateRepository.create(giftCertificate);
+            final GiftCertificate giftCertificate1 = giftCertificateRepository.create(giftCertificate);
+            giftCertificates.add(giftCertificate1);
         }
 
         final Set<String> userEmails = generateUsersEmails();
@@ -49,7 +51,7 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
             order.setDate(LocalDateTime.now(clock));
             order.setPrice(giftCertificates.get(i).getPrice());
             order.setGiftCertificate(giftCertificates.get(i));
-            entityManager.persist(order);
+            entityManager.merge(order);
         }
     }
 
@@ -88,8 +90,8 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
                     final GiftCertificate newGiftCertificate = new GiftCertificate();
                     newGiftCertificate.setName(s);
                     newGiftCertificate.setDescription(generator.company().industry());
-                    newGiftCertificate.setPrice(random.nextFloat());
-                    newGiftCertificate.setDuration(random.nextInt());
+                    newGiftCertificate.setPrice(random.nextFloat()*10);
+                    newGiftCertificate.setDuration(random.nextInt(20) + 1);
                     newGiftCertificate.setCreateDate(LocalDateTime.now(clock));
                     newGiftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
                     return newGiftCertificate;
@@ -115,5 +117,4 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
                     return user;
                 }).collect(Collectors.toList());
     }
-
 }

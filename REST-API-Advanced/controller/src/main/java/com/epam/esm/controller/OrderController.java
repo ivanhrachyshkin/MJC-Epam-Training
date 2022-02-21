@@ -17,14 +17,14 @@ import java.util.List;
  * The intention of controller - handling of the /gift resource.
  */
 @RestController
-@RequestMapping(value = "/orders")
+@RequestMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class OrderController {
 
     private final HateoasCreator hateoasCreator;
     private final OrderService orderService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<OrderDto> create(@RequestBody OrderDto orderDto) {
         final OrderDto createdOrderDto = orderService.create(orderDto);
         hateoasCreator.linkOrderDtoOne(createdOrderDto);
@@ -33,7 +33,7 @@ public class OrderController {
         return new ResponseEntity<>(createdOrderDto, HttpStatus.CREATED);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public HttpEntity<List<OrderDto>> readAll(@RequestParam(required = false) final Integer page,
                                               @RequestParam(required = false) final Integer size) {
         final List<OrderDto> dtoOrders = orderService.readAll(page, size);
@@ -45,7 +45,7 @@ public class OrderController {
         return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public HttpEntity<OrderDto> readOne(@PathVariable final int id) {
         final OrderDto orderDto = orderService.readOne(id);
         hateoasCreator.linkOrderDtoOne(orderDto);

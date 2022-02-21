@@ -3,6 +3,7 @@ package com.epam.esm.service.validator;
 import com.epam.esm.service.DummyRb;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
+import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,11 +87,17 @@ class GiftCertificateValidatorTest {
     static Stream<Arguments> readAllGiftCertificateValidatorDataProvider() {
         return Stream.of(
                 Arguments.arguments(messages.get("validator.tag.name.empty"),
-                        Collections.singletonList(StringUtils.EMPTY), null, null),
+                        Collections.singletonList(StringUtils.EMPTY),
+                        new GiftCertificateRequestParamsContainer(
+                                null, null, null, null )),
                 Arguments.arguments(messages.get("validator.giftCertificate.name.empty"),
-                        Collections.singletonList("tagName"), StringUtils.EMPTY, null),
+                        Collections.singletonList("tagName"),
+                        new GiftCertificateRequestParamsContainer(
+                                StringUtils.EMPTY, null, null, null )),
                 Arguments.arguments(messages.get("validator.giftCertificate.description.empty"),
-                        Collections.singletonList("tagName"), "name", StringUtils.EMPTY)
+                        Collections.singletonList("tagName"),
+                        new GiftCertificateRequestParamsContainer(
+                                "aa", StringUtils.EMPTY, null, null ))
         );
     }
 
@@ -136,12 +143,12 @@ class GiftCertificateValidatorTest {
     @MethodSource("readAllGiftCertificateValidatorDataProvider")
     void shouldThrowException_On_ReadAllGiftCertificateValidator(final String expected,
                                                                  final List<String> tags,
-                                                                 final String name,
-                                                                 final String description) {
+                                                                 final GiftCertificateRequestParamsContainer container)
+            {
         //When
         final ValidationException validationException
                 = assertThrows(ValidationException.class,
-                () -> giftCertificateValidator.readAllValidate(tags, name, description));
+                () -> giftCertificateValidator.readAllValidate(tags, container));
         //Then
         assertEquals(expected, validationException.getMessage());
     }

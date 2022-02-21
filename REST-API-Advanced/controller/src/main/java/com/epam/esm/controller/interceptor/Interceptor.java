@@ -24,7 +24,6 @@ public class Interceptor implements HandlerInterceptor {
     private final UserServiceImpl userService;
     private final GiftCertificateValidator giftCertificateValidator;
     private final OrderValidator orderValidator;
-    private final SortValidator sortValidator;
     private final TagValidator tagValidator;
     private final PaginationValidator paginationValidator;
     private final RestExceptionHandler restExceptionHandler;
@@ -41,7 +40,6 @@ public class Interceptor implements HandlerInterceptor {
         userService.setRb(resourceBundle);
         giftCertificateValidator.setRb(resourceBundle);
         orderValidator.setRb(resourceBundle);
-        sortValidator.setRb(resourceBundle);
         tagValidator.setRb(resourceBundle);
         paginationValidator.setRb(resourceBundle);
         restExceptionHandler.setRb(resourceBundle);

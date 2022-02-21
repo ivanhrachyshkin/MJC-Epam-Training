@@ -2,8 +2,10 @@ package com.epam.esm.service.validator;
 
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
+import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +23,7 @@ public class GiftCertificateValidator {
 
     public void updateValidate(final GiftCertificateDto giftCertificateDto) {
 
-        if(giftCertificateDto.getId() != null) {
+        if (giftCertificateDto.getId() != null) {
             throw new ValidationException(
                     rb.getString("id.value.passed"),
                     HttpStatus.BAD_REQUEST, properties.getGift());
@@ -52,36 +54,9 @@ public class GiftCertificateValidator {
         }
     }
 
-    public void readAllValidate(final List<String> tags,
-                                final String name,
-                                final String description) {
-
-        if (tags != null && !tags.isEmpty()) {
-            tags.forEach(tag -> {
-                if (tag == null || tag.isEmpty()) {
-                    throw new ValidationException(
-                            rb.getString("validator.tag.name.empty"),
-                            HttpStatus.BAD_REQUEST, properties.getGift());
-                }
-            });
-        }
-
-        if (name != null && name.isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.name.empty"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (description != null && description.isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.description.empty"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-    }
-
     public void createValidate(final GiftCertificateDto giftCertificateDto) {
 
-        if(giftCertificateDto.getId() != null) {
+        if (giftCertificateDto.getId() != null) {
             throw new ValidationException(
                     rb.getString("id.value.passed"),
                     HttpStatus.BAD_REQUEST, properties.getGift());
@@ -93,7 +68,7 @@ public class GiftCertificateValidator {
                     HttpStatus.BAD_REQUEST, properties.getGift());
         }
 
-        if (giftCertificateDto.getDescription()==null || giftCertificateDto.getDescription().isEmpty()) {
+        if (giftCertificateDto.getDescription() == null || giftCertificateDto.getDescription().isEmpty()) {
             throw new ValidationException(
                     rb.getString("validator.giftCertificate.description.required"),
                     HttpStatus.BAD_REQUEST, properties.getGift());
@@ -125,6 +100,52 @@ public class GiftCertificateValidator {
 
         if (giftCertificateDto.getDtoTags() != null) {
             giftCertificateDto.getDtoTags().forEach(tagValidator::createValidate);
+        }
+    }
+
+
+    public void readAllValidate(final List<String> tags,
+                                final GiftCertificateRequestParamsContainer container) {
+
+        if (tags != null && !tags.isEmpty()) {
+            tags.forEach(tag -> {
+                if (tag == null || tag.isEmpty()) {
+                    throw new ValidationException(
+                            rb.getString("validator.tag.name.empty"),
+                            HttpStatus.BAD_REQUEST, properties.getGift());
+                }
+            });
+        }
+
+        if (container.getName() != null && container.getName().isEmpty()) {
+            throw new ValidationException(
+                    rb.getString("validator.giftCertificate.name.empty"),
+                    HttpStatus.BAD_REQUEST, properties.getGift());
+        }
+
+        if (container.getDescription() != null && container.getDescription().isEmpty()) {
+            throw new ValidationException(
+                    rb.getString("validator.giftCertificate.description.empty"),
+                    HttpStatus.BAD_REQUEST, properties.getGift());
+        }
+
+        sortValidate(container.getNameSort());
+        sortValidate(container.getDateSort());
+    }
+
+
+    private void sortValidate(final String sort) {
+
+        if (sort != null && sort.isEmpty()) {
+            throw new ValidationException(rb.getString("sort.empty"),
+                    HttpStatus.BAD_REQUEST, properties.getOrder());
+        }
+
+        if (sort != null
+                && !sort.equalsIgnoreCase("ASC")
+                && !sort.equalsIgnoreCase("DESC")) {
+            throw new ValidationException(rb.getString("invalid.value"),
+                    HttpStatus.BAD_REQUEST, properties.getOrder());
         }
     }
 }

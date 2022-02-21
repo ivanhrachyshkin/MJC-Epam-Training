@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDto;
+import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/gifts")
+@RequestMapping(value = "/gifts", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class GiftCertificateController {
 
@@ -30,17 +31,14 @@ public class GiftCertificateController {
         return new ResponseEntity<>(createdGiftCertificateDto, HttpStatus.CREATED);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public ResponseEntity<List<GiftCertificateDto>> readAll(
             @RequestParam(required = false) final List<String> tags,
-            @RequestParam(required = false) final String name,
-            @RequestParam(required = false) final String description,
-            @RequestParam(required = false) final String dateSort,
-            @RequestParam(required = false) final String nameSort,
+            final GiftCertificateRequestParamsContainer container,
             @RequestParam(required = false) final Integer page,
             @RequestParam(required = false) final Integer size) {
         final List<GiftCertificateDto> dtoGiftCertificates
-                = giftCertificateService.readAll(tags, name, description, dateSort, nameSort, page, size);
+                = giftCertificateService.readAll(tags, container, page, size);
         dtoGiftCertificates.forEach(giftCertificateDto -> {
             hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);
             giftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
@@ -49,7 +47,7 @@ public class GiftCertificateController {
         return new ResponseEntity<>(dtoGiftCertificates, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public HttpEntity<GiftCertificateDto> readOne(@PathVariable final int id) {
         final GiftCertificateDto giftCertificateDto = giftCertificateService.readOne(id);
         hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);
@@ -57,8 +55,7 @@ public class GiftCertificateController {
         return new ResponseEntity<>(giftCertificateDto, HttpStatus.OK);
     }
 
-    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<GiftCertificateDto> update(@PathVariable final Integer id,
                                                  @RequestBody final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.setId(id);
@@ -68,7 +65,7 @@ public class GiftCertificateController {
         return new ResponseEntity<>(updatedGiftCertificateDto, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}")
     public HttpEntity<GiftCertificateDto> deleteById(@PathVariable int id) {
         final GiftCertificateDto giftCertificateDto = giftCertificateService.deleteById(id);
         hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);

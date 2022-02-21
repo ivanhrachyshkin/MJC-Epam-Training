@@ -63,8 +63,9 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto deleteById(final int id) {
-        checkExist(id, true);
-        final Tag tag = tagRepository.deleteById(id);
+        final Tag tag = tagRepository.deleteById(id).orElseThrow( () -> new ServiceException(
+                rb.getString("tag.notFound.id"),
+                HttpStatus.NOT_FOUND, properties.getTag(), id));
         return mapper.modelToDto(tag);
     }
 

@@ -5,11 +5,11 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
+import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
 import com.epam.esm.service.validator.PaginationValidator;
-import com.epam.esm.service.validator.SortValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,10 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,8 +34,6 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateRepository giftCertificateRepository;
     @Mock
     private GiftCertificateValidator giftCertificateValidator;
-    @Mock
-    private SortValidator sortValidator;
     @Mock
     private PaginationValidator paginationValidator;
     @Mock
@@ -108,6 +103,11 @@ class GiftCertificateServiceImplTest {
     @Test
     void shouldReturnGiftCertificates_On_ReadAll() {
         //Given
+        final GiftCertificateRequestParamsContainer container = new GiftCertificateRequestParamsContainer(
+                "name",
+                "description",
+                "dateSort",
+                "nameSort");
         final GiftCertificate giftCertificate2 = new GiftCertificate();
         giftCertificate2.setName("giftCertificate2");
         giftCertificate2.setTags(new HashSet<>(Arrays.asList(tag1, tag2)));
@@ -120,40 +120,34 @@ class GiftCertificateServiceImplTest {
         final List<GiftCertificateDto> expectedGiftCertificates
                 = Arrays.asList(giftCertificateDto1, giftCertificateDto2);
         //When
-        when(giftCertificateRepository.readAll(null,
-                null,
-                null,
-                null,
-                null,
+        when(giftCertificateRepository.readAll(Collections.singletonList(tag1.getName()),
+                container.getName(),
+                container.getDescription(),
+                container.getDateSort(),
+                container.getNameSort(),
                 null,
                 null))
                 .thenReturn(giftCertificates);
         when(mapper.modelsToDto(giftCertificates)).thenReturn(expectedGiftCertificates);
 
         final List<GiftCertificateDto> actualGiftCertificates
-                = giftCertificateService.readAll(null,
-                null,
-                null,
-                null,
-                null,
+                = giftCertificateService.readAll(
+                Collections.singletonList(tag1.getName()),
+                container,
                 null,
                 null);
         //Then
         assertEquals(expectedGiftCertificates, actualGiftCertificates);
         verify(giftCertificateValidator, only()).readAllValidate(
-                null,
-                null,
-                null);
-        verify(giftCertificateRepository, only()).readAll(null,
-                null,
-                null,
-                null,
-                null,
+                Collections.singletonList(tag1.getName()), container);
+        verify(giftCertificateRepository, only()).readAll(Collections.singletonList(tag1.getName()),
+                container.getName(),
+                container.getDescription(),
+                container.getDateSort(),
+                container.getNameSort(),
                 null,
                 null);
         verify(paginationValidator, only()).paginationValidate(null, null);
-        verify(sortValidator, times(2)).sortValidate(null);
-        verifyNoMoreInteractions(sortValidator);
     }
 
     @Test
@@ -187,14 +181,26 @@ class GiftCertificateServiceImplTest {
         //Given
         final GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setId(1);
-        when(giftCertificateRepository.deleteById(giftCertificate.getId())).thenReturn(giftCertificate);
-        when(giftCertificateRepository.readOne(giftCertificate.getId())).thenReturn(Optional.of(giftCertificate));
+        when(giftCertificateRepository.deleteById(giftCertificate.getId())).thenReturn(Optional.of(giftCertificate));
         //When
         giftCertificateService.deleteById(giftCertificate.getId());
         //Then
-        verify(giftCertificateRepository, times(1)).readOne(giftCertificate.getId());
-        verify(giftCertificateRepository, times(1)).deleteById(giftCertificate.getId());
-        verifyNoMoreInteractions(giftCertificateRepository);
+        verify(giftCertificateRepository, only()).deleteById(giftCertificate.getId());
+    }
+
+    @Test
+    void shouldThrowException_On_DeleteById() {
+        //Given
+        dummyRb.setMessage("giftCertificate.notFound.id", "Gift certificate with id = %s not found");
+        when(giftCertificateRepository.deleteById(giftCertificate1.getId())).thenReturn(Optional.empty());
+        final String message = String.format("Gift certificate with id = %s not found", giftCertificate1.getId());
+        //When
+        final ServiceException serviceException = assertThrows(ServiceException.class,
+                () -> giftCertificateService.deleteById(giftCertificate1.getId()));
+        //Then
+
+        assertEquals(message, serviceException.getMessage());
+        verify(giftCertificateRepository, only()).deleteById(giftCertificate1.getId());
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.service.dto.GiftCertificateDto;
+import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 
 import java.util.List;
 
@@ -9,10 +10,7 @@ public interface GiftCertificateService {
     GiftCertificateDto create(GiftCertificateDto giftCertificateDto);
 
     List<GiftCertificateDto> readAll(List<String> tags,
-                                     String name,
-                                     String description,
-                                     String dateSort,
-                                     String nameSort,
+                                     GiftCertificateRequestParamsContainer container,
                                      Integer page,
                                      Integer size);
 
