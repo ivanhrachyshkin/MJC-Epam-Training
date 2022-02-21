@@ -3,6 +3,7 @@ package com.epam.esm.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Audited
 @NoArgsConstructor
 @Getter
 @Setter

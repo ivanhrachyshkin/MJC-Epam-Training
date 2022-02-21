@@ -19,4 +19,5 @@ public class DataSourceProperties {
    private String password;
    private String dialect;
    private String showSql;
+   private String ddl;
 }

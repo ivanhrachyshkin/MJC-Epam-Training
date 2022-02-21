@@ -36,7 +36,6 @@ public class OrderRepositoryImpl implements OrderRepository {
         return entityManager.merge(order);
     }
 
-    @SuppressWarnings("JpaQlInspection")
     @Override
     public List<Order> readAll(final Integer page, final Integer size) {
         final TypedQuery<Order> typedQuery

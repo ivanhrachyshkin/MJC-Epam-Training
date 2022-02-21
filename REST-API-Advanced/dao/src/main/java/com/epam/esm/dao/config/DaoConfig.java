@@ -3,7 +3,6 @@ package com.epam.esm.dao.config;
 import com.github.javafaker.Faker;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -43,6 +42,7 @@ public class DaoConfig {
         final Properties props = new Properties();
         props.put("hibernate.dialect", dataSourceProperties.getDialect());
         props.put("hibernate.show_sql", dataSourceProperties.getShowSql());
+        props.put("hibernate.hbm2ddl.auto", dataSourceProperties.getDdl());
 
         entityManagerFactoryBean.setJpaProperties(props);
         entityManagerFactoryBean.setPersistenceProvider(new HibernatePersistenceProvider());

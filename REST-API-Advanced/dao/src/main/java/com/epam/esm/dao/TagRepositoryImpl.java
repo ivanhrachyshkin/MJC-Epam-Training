@@ -6,10 +6,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
+import javax.persistence.metamodel.Metamodel;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
