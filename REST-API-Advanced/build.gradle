@@ -1,12 +1,10 @@
 plugins{
     id 'org.springframework.boot' version '2.6.3'
-    id "io.spring.dependency-management" version '1.0.3.RELEASE' apply false
 }
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
 
     group 'by.hrachyshkin'
     version '1.0'
@@ -22,7 +20,6 @@ allprojects {
         implementation libs.lombok
         annotationProcessor libs.lombok
         implementation libs.commons.lang3
-        implementation libs.jackson.annotations
     }
 
     test {
