@@ -23,16 +23,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
 
-    private final DummyRb dummyRb = new DummyRb();
     @Mock
     private DtoMapper<Order, OrderDto> mapper;
     @Mock
@@ -50,12 +50,17 @@ class OrderServiceImplTest {
     @InjectMocks
     private OrderServiceImpl orderService;
 
+    private ResourceBundle rb;
     private Order order;
     private OrderDto orderDto;
 
     @BeforeEach
-    public void setUp() {
-        ReflectionTestUtils.setField(orderService, "rb", dummyRb);
+    public void setUp() throws IOException {
+        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("message.properties");
+        assertNotNull(contentStream);
+        rb = new PropertyResourceBundle(contentStream);
+        ReflectionTestUtils.setField(orderService, "rb", rb);
 
         final User user = new User(1);
         final GiftCertificate giftCertificate = new GiftCertificate(1);
@@ -112,8 +117,7 @@ class OrderServiceImplTest {
     void shouldThrowUserException_On_Create() {
         //Given
         final User user = order.getUser();
-        dummyRb.setMessage("user.notFound.id", "User with id = %s not found");
-        final String message = String.format("User with id = %s not found", user.getId());
+        final String message = String.format(rb.getString("user.notFound.id"), user.getId());
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         when(userRepository.readOne(user.getId())).thenReturn(Optional.empty());
 
@@ -133,8 +137,7 @@ class OrderServiceImplTest {
         //Given
         final User user = order.getUser();
         final GiftCertificate giftCertificate = order.getGiftCertificate();
-        dummyRb.setMessage("giftCertificate.notFound.id", "Gift certificate with id = %s not found");
-        final String message = String.format("Gift certificate with id = %s not found", giftCertificate.getId());
+        final String message = String.format(rb.getString("giftCertificate.notFound.id"), giftCertificate.getId());
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         when(userRepository.readOne(user.getId())).thenReturn(Optional.of(user));
         when(giftCertificateRepository.readOne(giftCertificate.getId())).thenReturn(Optional.empty());
@@ -159,8 +162,7 @@ class OrderServiceImplTest {
         when(orderRepository.readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId()))
                 .thenReturn(Optional.of(order));
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
-        dummyRb.setMessage("order.alreadyExists", "Order already exists");
-        final String message = "Order already exists";
+        final String message = rb.getString("order.alreadyExists");
 
         //When
         final ServiceException serviceException
@@ -240,9 +242,8 @@ class OrderServiceImplTest {
     @Test
     void shouldThrowException_On_ReadOne() {
         //Given
-        dummyRb.setMessage("order.notFound.id", "Order with id = %s not found");
         when(orderRepository.readOne(order.getId())).thenReturn(Optional.empty());
-        final String message = String.format("Order with id = %s not found", order.getId());
+        final String message = String.format(rb.getString("order.notFound.id"), order.getId());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> orderService.readOne(order.getId()));
@@ -254,9 +255,8 @@ class OrderServiceImplTest {
     @Test
     void shouldThrowException_On_ReadOneByUserIdAndOrderId() {
         //Given
-        dummyRb.setMessage("order.notFound.user.order", "Order with id = %s not found");
         when(orderRepository.readOneByUserIdAndOrderId(1,1)).thenReturn(Optional.empty());
-        final String message = String.format("Order with id = %s not found", 1);
+        final String message = String.format(rb.getString("order.notFound.user.order"), 1, 1);
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> orderService.readOneByUserIdAndOrderId(1,1));

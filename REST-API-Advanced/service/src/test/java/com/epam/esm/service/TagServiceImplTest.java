@@ -15,19 +15,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
 
-    private final DummyRb dummyRb = new DummyRb();
+
     @Mock
     private DtoMapper<Tag, TagDto> mapper;
     @Mock
@@ -41,14 +39,20 @@ class TagServiceImplTest {
     @InjectMocks
     private TagServiceImpl tagService;
 
+    private ResourceBundle rb;
     private Tag tag1;
     private Tag tag2;
     private TagDto tagDto1;
     private TagDto tagDto2;
 
     @BeforeEach
-    public void setUp() {
-        ReflectionTestUtils.setField(tagService, "rb", dummyRb);
+    public void setUp() throws IOException {
+        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("message.properties");
+        assertNotNull(contentStream);
+        rb = new PropertyResourceBundle(contentStream);
+        ReflectionTestUtils.setField(tagService, "rb", rb);
+
         tag1 = new Tag(1);
         tag2 = new Tag(2);
         tagDto1 = new TagDto(1);
@@ -78,8 +82,7 @@ class TagServiceImplTest {
     @Test
     void shouldThrowException_On_Create() {
         //Given
-        dummyRb.setMessage("tag.alreadyExists.name", "Tag with name = %s is already exist");
-        final String message = String.format("Tag with name = %s is already exist", tag1.getName());
+        final String message = String.format(rb.getString("tag.alreadyExists.name"), tag1.getName());
         when(tagRepository.readOneByName(tag1.getName())).thenReturn(Optional.of(tag1));
         when(mapper.dtoToModel(tagDto1)).thenReturn(tag1);
         tag1.setActive(true);
@@ -109,8 +112,7 @@ class TagServiceImplTest {
     @Test
     void shouldThrowException_On_ReadOne_NotFound() {
         //Given
-        dummyRb.setMessage("tag.notFound.id", "Tag with id = %s not found");
-        final String message = String.format("Tag with id = %s not found", tag1.getId());
+        final String message = String.format(rb.getString("tag.notFound.id"), tag1.getId());
         when(tagRepository.readOne(tag1.getId(), null)).thenReturn(Optional.empty());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
@@ -149,8 +151,7 @@ class TagServiceImplTest {
     @Test
     void shouldThrowException_On_DeleteById() {
         //Given
-        dummyRb.setMessage("tag.notFound.id", "Tag with id = %s not found");
-        final String message = String.format("Tag with id = %s not found", tag1.getId());
+        final String message = String.format(rb.getString("tag.notFound.id"), tag1.getId());
         when(tagRepository.deleteById(tag1.getId())).thenReturn(Optional.empty());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,

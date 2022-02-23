@@ -18,16 +18,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
 
-    private final DummyRb dummyRb = new DummyRb();
     @Mock
     private DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
     @Mock
@@ -41,6 +41,7 @@ class GiftCertificateServiceImplTest {
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
 
+    private ResourceBundle rb;
     private GiftCertificate giftCertificate1;
     private GiftCertificateDto giftCertificateDto1;
     private Tag tag1;
@@ -49,8 +50,13 @@ class GiftCertificateServiceImplTest {
     private TagDto dtoTag2;
 
     @BeforeEach
-    public void setUp() {
-        ReflectionTestUtils.setField(giftCertificateService, "rb", dummyRb);
+    public void setUp() throws IOException {
+        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("message.properties");
+        assertNotNull(contentStream);
+        rb = new PropertyResourceBundle(contentStream);
+        ReflectionTestUtils.setField(giftCertificateService, "rb", rb);
+
         giftCertificate1 = new GiftCertificate(1);
         tag1 = new Tag(1);
         tag2 = new Tag(2);
@@ -60,6 +66,22 @@ class GiftCertificateServiceImplTest {
         dtoTag1 = new TagDto(1);
         dtoTag2 = new TagDto(2);
         giftCertificateDto1.setDtoTags(new HashSet<>(Arrays.asList(dtoTag1, dtoTag2)));
+    }
+
+    @Test
+    void shouldThrowException_On_Create() {
+        //Given
+        final String message = String.format(
+                rb.getString("giftCertificate.alreadyExists.name"), giftCertificate1.getName());
+        when(giftCertificateRepository.readOneByName(giftCertificate1.getName()))
+                .thenReturn(Optional.of(giftCertificate1));
+        //When
+        final ServiceException serviceException
+                = assertThrows(ServiceException.class, () -> giftCertificateService.create(giftCertificateDto1));
+        //Then
+        assertEquals(message, serviceException.getMessage());
+        verify(giftCertificateValidator, only()).createValidate(giftCertificateDto1);
+        verify(giftCertificateRepository, only()).readOneByName(giftCertificate1.getName());
     }
 
     @Test
@@ -83,21 +105,6 @@ class GiftCertificateServiceImplTest {
         verify(mapper, times(1)).dtoToModel(giftCertificateDto1);
         verify(mapper, times(1)).modelToDto(giftCertificate1);
         verifyNoMoreInteractions(mapper);
-    }
-
-    @Test
-    void shouldThrowException_On_Create() {
-        //Given
-        dummyRb.setMessage("giftCertificate.alreadyExists.name", "Gift certificate with name = %s is already exist");
-        final String message = String.format("Gift certificate with name = %s is already exist", giftCertificate1.getName());
-        when(giftCertificateRepository.readOneByName(giftCertificate1.getName())).thenReturn(Optional.of(giftCertificate1));
-        //When
-        final ServiceException serviceException
-                = assertThrows(ServiceException.class, () -> giftCertificateService.create(giftCertificateDto1));
-        //Then
-        assertEquals(message, serviceException.getMessage());
-        verify(giftCertificateValidator, only()).createValidate(giftCertificateDto1);
-        verify(giftCertificateRepository, only()).readOneByName(giftCertificate1.getName());
     }
 
     @Test
@@ -164,9 +171,8 @@ class GiftCertificateServiceImplTest {
     @Test
     void shouldThrowException_On_ReadOne() {
         //Given
-        dummyRb.setMessage("giftCertificate.notFound.id", "Gift certificate with id = %s not found");
         when(giftCertificateRepository.readOne(giftCertificate1.getId())).thenReturn(Optional.empty());
-        final String message = String.format("Gift certificate with id = %s not found", giftCertificate1.getId());
+        final String message = String.format(rb.getString("giftCertificate.notFound.id"), giftCertificate1.getId());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> giftCertificateService.readOne(giftCertificate1.getId()));
@@ -191,9 +197,8 @@ class GiftCertificateServiceImplTest {
     @Test
     void shouldThrowException_On_DeleteById() {
         //Given
-        dummyRb.setMessage("giftCertificate.notFound.id", "Gift certificate with id = %s not found");
         when(giftCertificateRepository.deleteById(giftCertificate1.getId())).thenReturn(Optional.empty());
-        final String message = String.format("Gift certificate with id = %s not found", giftCertificate1.getId());
+        final String message = String.format(rb.getString("giftCertificate.notFound.id"), giftCertificate1.getId());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> giftCertificateService.deleteById(giftCertificate1.getId()));

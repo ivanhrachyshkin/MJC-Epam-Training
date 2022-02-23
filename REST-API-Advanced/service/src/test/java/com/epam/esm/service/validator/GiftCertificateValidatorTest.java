@@ -1,9 +1,9 @@
 package com.epam.esm.service.validator;
 
-import com.epam.esm.service.DummyRb;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,30 +16,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateValidatorTest {
 
-    private static final Map<String, Object> messages = new HashMap<String, Object>() {{
-        put("validator.giftCertificate.name.required", "GiftCertificate name is required");
-        put("validator.giftCertificate.name.empty", "GiftCertificate name is empty");
-        put("validator.giftCertificate.description.required", "GiftCertificate description is required");
-        put("validator.giftCertificate.description.empty", "GiftCertificate description is empty");
-        put("validator.giftCertificate.price.required", "GiftCertificate price is required");
-        put("validator.giftCertificate.price.negative", "GiftCertificate price is non -positive");
-        put("validator.giftCertificate.duration.required", "GiftCertificate duration is required");
-        put("validator.giftCertificate.duration.negative", "GiftCertificate duration is non -positive");
-        put("validator.tag.name.empty", "Tag name is empty");
-        put("sort.empty", "Empty sort");
-        put("invalid.value", "Invalid value");
-        put("id.value.passed", "id shouldn't be passed");
-    }};
-    private final DummyRb dummyRb = new DummyRb();
     @Mock
     private TagValidator tagValidator;
     @Mock
@@ -48,68 +34,67 @@ class GiftCertificateValidatorTest {
     private GiftCertificateValidator giftCertificateValidator;
 
     @BeforeEach
-    void setUp() {
-        ReflectionTestUtils.setField(giftCertificateValidator, "rb", dummyRb);
-        dummyRb.setMessages(messages);
+    void setUp() throws IOException {
+        ReflectionTestUtils.setField(giftCertificateValidator, "rb", getRb());
     }
 
-    static Stream<Arguments> createGiftCertificateValidatorDataProvider() {
+    static Stream<Arguments> createGiftCertificateValidatorDataProvider() throws IOException {
         return Stream.of(
-                Arguments.arguments(messages.get("id.value.passed"), 1,
+                Arguments.arguments(getRb().getString("id.value.passed"), 1,
                         null, StringUtils.EMPTY, null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.name.required"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.name.required"), null,
                         null, StringUtils.EMPTY, null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.name.required"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.name.required"), null,
                         StringUtils.EMPTY, StringUtils.EMPTY, null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.description.required"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.description.required"), null,
                         "name", null, null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.description.required"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.description.required"), null,
                         "name", StringUtils.EMPTY, null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.price.required"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.price.required"), null,
                         "name", "desc", null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.price.negative"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.price.negative"), null,
                         "name", "desc", -1.0F, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.duration.required"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.duration.required"), null,
                         "name", "desc", 1.0F, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.duration.negative"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.duration.negative"), null,
                         "name", "desc", 1.0F, -1)
         );
     }
 
-    static Stream<Arguments> updateGiftCertificateValidatorDataProvider() {
+    static Stream<Arguments> updateGiftCertificateValidatorDataProvider() throws IOException {
         return Stream.of(
-                Arguments.arguments(messages.get("id.value.passed"), 1,
+                Arguments.arguments(getRb().getString("id.value.passed"), 1,
                         null, StringUtils.EMPTY, null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.name.empty"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.name.empty"), null,
                         StringUtils.EMPTY, StringUtils.EMPTY, null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.description.empty"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.description.empty"), null,
                         "name", StringUtils.EMPTY, null, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.price.negative"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.price.negative"), null,
                         "name", "desc", -1.0F, null),
-                Arguments.arguments(messages.get("validator.giftCertificate.duration.negative"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.duration.negative"), null,
                         "name", "desc", 1.0F, -1)
         );
     }
 
-    static Stream<Arguments> readAllGiftCertificateValidatorDataProvider() {
+    static Stream<Arguments> readAllGiftCertificateValidatorDataProvider() throws IOException {
         return Stream.of(
-                Arguments.arguments(messages.get("validator.tag.name.empty"),
+                Arguments.arguments(getRb().getString("validator.tag.name.empty"),
                         Collections.singletonList(StringUtils.EMPTY),
                         new GiftCertificateRequestParamsContainer(
                                 null, null, null, null)),
-                Arguments.arguments(messages.get("validator.giftCertificate.name.empty"),
+                Arguments.arguments(getRb().getString("validator.giftCertificate.name.empty"),
                         Collections.singletonList("tagName"),
                         new GiftCertificateRequestParamsContainer(
                                 StringUtils.EMPTY, null, null, null)),
-                Arguments.arguments(messages.get("validator.giftCertificate.description.empty"),
+                Arguments.arguments(getRb().getString("validator.giftCertificate.description.empty"),
                         Collections.singletonList("tagName"),
                         new GiftCertificateRequestParamsContainer(
                                 "aa", StringUtils.EMPTY, null, null)),
-                Arguments.arguments(messages.get("sort.empty"),
+                Arguments.arguments(getRb().getString("sort.empty"),
                         Collections.singletonList("tagName"),
                         new GiftCertificateRequestParamsContainer(
                                 "aa", "dd", StringUtils.EMPTY, null)),
-                Arguments.arguments(messages.get("invalid.value"),
+                Arguments.arguments(getRb().getString("invalid.value"),
                         Collections.singletonList("tagName"),
                         new GiftCertificateRequestParamsContainer(
                                 "aa", "dd", "asc", "aa"))
@@ -173,7 +158,7 @@ class GiftCertificateValidatorTest {
     void shouldPath_On_CreateGiftCertificateValidator() {
         //Given
         final GiftCertificateDto giftCertificateDto
-                = getGiftCertificateDto(null,"name", "description", 1.0F, 11);
+                = getGiftCertificateDto(null, "name", "description", 1.0F, 11);
         //When
         giftCertificateValidator.createValidate(giftCertificateDto);
     }
@@ -182,9 +167,16 @@ class GiftCertificateValidatorTest {
     void shouldPath_On_UpdateGiftCertificateValidator() {
         //Given
         final GiftCertificateDto giftCertificateDto
-                = getGiftCertificateDto(null,"name", "description", 1.0F, 11);
+                = getGiftCertificateDto(null, "name", "description", 1.0F, 11);
         //When
         giftCertificateValidator.updateValidate(giftCertificateDto);
+    }
+
+    private static ResourceBundle getRb() throws IOException {
+        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("message.properties");
+        assertNotNull(contentStream);
+        return new PropertyResourceBundle(contentStream);
     }
 
     private GiftCertificateDto getGiftCertificateDto(final Integer id,

@@ -1,6 +1,5 @@
 package com.epam.esm.service.validator;
 
-import com.epam.esm.service.DummyRb;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
@@ -15,44 +14,36 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderValidatorTest {
 
-    private static final Map<String, Object> messages = new HashMap<String, Object>() {{
-        put("validator.order.giftId.required", "GiftCertificate name is required");
-        put("validator.order.giftId.negative", "GiftCertificate name is empty");
-        put("validator.order.userId.required", "GiftCertificate description is required");
-        put("validator.order.userId.negative", "GiftCertificate description is empty");
-        put("id.value.passed", "id shouldn't be passed");
-    }};
-
-    private final DummyRb dummyRb = new DummyRb();
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks
     private OrderValidator orderValidator;
 
     @BeforeEach
-    void setUp() {
-        orderValidator.setRb(dummyRb);
-        ReflectionTestUtils.setField(orderValidator, "rb", dummyRb);
-        dummyRb.setMessages(messages);
+    void setUp() throws IOException {
+        ReflectionTestUtils.setField(orderValidator, "rb", getRb());
     }
 
-    static Stream<Arguments> createOrderValidatorDataProvider() {
+    static Stream<Arguments> createOrderValidatorDataProvider() throws IOException {
         return Stream.of(
-                Arguments.arguments(messages.get("id.value.passed"), 1, null, null),
-                Arguments.arguments(messages.get("validator.order.userId.required"), null, null, null),
-                Arguments.arguments(messages.get("validator.order.userId.negative"), null, -1, null),
-                Arguments.arguments(messages.get("validator.order.giftId.required"), null, 1, null),
-                Arguments.arguments(messages.get("validator.order.giftId.negative"), null, 1, -1)
+                Arguments.arguments(getRb().getString("id.value.passed"), 1, null, null),
+                Arguments.arguments(getRb().getString("validator.order.userId.required"), null, null, null),
+                Arguments.arguments(getRb().getString("validator.order.userId.negative"), null, -1, null),
+                Arguments.arguments(getRb().getString("validator.order.giftId.required"), null, 1, null),
+                Arguments.arguments(getRb().getString("validator.order.giftId.negative"), null, 1, -1)
         );
     }
 
@@ -83,5 +74,12 @@ class OrderValidatorTest {
         orderDto.setUserDto(userDto);
         orderDto.setGiftCertificateDto(giftCertificateDto);
         return orderDto;
+    }
+
+    private static ResourceBundle getRb() throws IOException {
+        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("message.properties");
+        assertNotNull(contentStream);
+        return new PropertyResourceBundle(contentStream);
     }
 }

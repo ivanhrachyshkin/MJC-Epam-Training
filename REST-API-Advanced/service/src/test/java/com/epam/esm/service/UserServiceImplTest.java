@@ -14,18 +14,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-    private final DummyRb dummyRb = new DummyRb();
     @Mock
     private DtoMapper<User, UserDto> mapper;
     @Mock
@@ -37,12 +35,17 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    private ResourceBundle rb;
     private User user;
     private UserDto userDto;
 
     @BeforeEach
-    public void setUp() {
-        ReflectionTestUtils.setField(userService, "rb", dummyRb);
+    public void setUp() throws IOException {
+        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("message.properties");
+        assertNotNull(contentStream);
+        rb = new PropertyResourceBundle(contentStream);
+        ReflectionTestUtils.setField(userService, "rb", rb);
 
         user = new User();
         user.setId(1);
@@ -85,9 +88,8 @@ class UserServiceImplTest {
     @Test
     void shouldThrowException_On_ReadOne() {
         //Given
-        dummyRb.setMessage("user.notFound.id", "User with id = %s not found");
         when(userRepository.readOne(user.getId())).thenReturn(Optional.empty());
-        final String message = String.format("User with id = %s not found", user.getId());
+        final String message = String.format(rb.getString("user.notFound.id"), user.getId());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> userService.readOne(user.getId()));
