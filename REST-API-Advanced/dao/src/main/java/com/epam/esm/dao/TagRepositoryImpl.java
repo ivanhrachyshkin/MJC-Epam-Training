@@ -4,11 +4,15 @@ import com.epam.esm.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.persistence.metamodel.Metamodel;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -94,7 +98,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     private void paginateQuery(final TypedQuery<Tag> typedQuery, final Integer page, final Integer size) {
-        if(page != null && size != null) {
+        if (page != null && size != null) {
             typedQuery.setFirstResult((page - 1) * size);
             typedQuery.setMaxResults(size);
         }

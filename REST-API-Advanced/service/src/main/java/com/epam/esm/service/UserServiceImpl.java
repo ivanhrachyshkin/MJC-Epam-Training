@@ -45,6 +45,6 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(
-                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, properties.getUser() , id));
+                        rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, properties.getUser(), id));
     }
 }

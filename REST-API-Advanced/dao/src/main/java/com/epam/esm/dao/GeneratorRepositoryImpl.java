@@ -90,7 +90,7 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
                     final GiftCertificate newGiftCertificate = new GiftCertificate();
                     newGiftCertificate.setName(s);
                     newGiftCertificate.setDescription(generator.company().industry());
-                    newGiftCertificate.setPrice(random.nextFloat()*10);
+                    newGiftCertificate.setPrice(random.nextFloat() * 10);
                     newGiftCertificate.setDuration(random.nextInt(20) + 1);
                     newGiftCertificate.setCreateDate(LocalDateTime.now(clock));
                     newGiftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
