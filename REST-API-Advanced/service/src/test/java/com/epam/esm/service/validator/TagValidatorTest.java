@@ -34,6 +34,18 @@ class TagValidatorTest {
     }
 
     @Test
+    void shouldThrowException_On_CreateTagValidator_ForPassedId() {
+        //When
+        tagValidator.setRb(dummyRb);
+        dummyRb.setMessage("id.value.passed", "id shouldn't be passed");
+        final TagDto tagDto = new TagDto(1);
+        final ValidationException validationException
+                = assertThrows(ValidationException.class, () -> tagValidator.createValidate(tagDto));
+        //Then
+        assertEquals("id shouldn't be passed", validationException.getMessage());
+    }
+
+    @Test
     void shouldPath_On_CreateTagValidator_ForEmptyName() {
         //Given
         tagValidator.setRb(dummyRb);

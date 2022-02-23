@@ -30,6 +30,7 @@ class OrderValidatorTest {
         put("validator.order.giftId.negative", "GiftCertificate name is empty");
         put("validator.order.userId.required", "GiftCertificate description is required");
         put("validator.order.userId.negative", "GiftCertificate description is empty");
+        put("id.value.passed", "id shouldn't be passed");
     }};
 
     private final DummyRb dummyRb = new DummyRb();
@@ -47,10 +48,11 @@ class OrderValidatorTest {
 
     static Stream<Arguments> createOrderValidatorDataProvider() {
         return Stream.of(
-                Arguments.arguments(messages.get("validator.order.userId.required"), null, null),
-                Arguments.arguments(messages.get("validator.order.userId.negative"), -1, null),
-                Arguments.arguments(messages.get("validator.order.giftId.required"), 1, null),
-                Arguments.arguments(messages.get("validator.order.giftId.negative"), 1, -1)
+                Arguments.arguments(messages.get("id.value.passed"), 1, null, null),
+                Arguments.arguments(messages.get("validator.order.userId.required"), null, null, null),
+                Arguments.arguments(messages.get("validator.order.userId.negative"), null, -1, null),
+                Arguments.arguments(messages.get("validator.order.giftId.required"), null, 1, null),
+                Arguments.arguments(messages.get("validator.order.giftId.negative"), null, 1, -1)
         );
     }
 
@@ -58,10 +60,11 @@ class OrderValidatorTest {
     @MethodSource("createOrderValidatorDataProvider")
     void shouldThrowException_On_CreateGiftCertificateValidator(
             final String expected,
+            final Integer orderId,
             final Integer userId,
             final Integer giftId) {
         //Given
-        final OrderDto orderDto = getOrderDto(userId, giftId);
+        final OrderDto orderDto = getOrderDto(orderId, userId, giftId);
         //When
         final ValidationException validationException
                 = assertThrows(ValidationException.class,
@@ -70,11 +73,13 @@ class OrderValidatorTest {
         assertEquals(expected, validationException.getMessage());
     }
 
-    private OrderDto getOrderDto(final Integer userId,
+    private OrderDto getOrderDto(final Integer orderId,
+                                 final Integer userId,
                                  final Integer giftCertificateId) {
         final UserDto userDto = new UserDto(userId);
         final GiftCertificateDto giftCertificateDto = new GiftCertificateDto(giftCertificateId);
         final OrderDto orderDto = new OrderDto();
+        orderDto.setId(orderId);
         orderDto.setUserDto(userDto);
         orderDto.setGiftCertificateDto(giftCertificateDto);
         return orderDto;
