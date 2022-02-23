@@ -127,9 +127,9 @@ class TagServiceImplTest {
         //Given
         final List<Tag> tags = Arrays.asList(tag1, tag2);
         final List<TagDto> expectedTags = Arrays.asList(tagDto1, tagDto2);
-        //When
         when(tagRepository.readAll(null, null, null)).thenReturn(tags);
         when(mapper.modelsToDto(tags)).thenReturn(expectedTags);
+        //When
         final List<TagDto> actualTags = tagService.readAll(null, null, null);
         //Then
         assertEquals(expectedTags, actualTags);

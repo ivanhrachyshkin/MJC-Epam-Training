@@ -88,20 +88,16 @@ class OrderServiceImplTest {
         //Given
         final User user = order.getUser();
         final GiftCertificate giftCertificate = order.getGiftCertificate();
-
         when(userRepository.readOne(user.getId())).thenReturn(Optional.of(user));
         when(giftCertificateRepository.readOne(giftCertificate.getId())).thenReturn(Optional.of(giftCertificate));
         when(orderRepository.readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId())).thenReturn(Optional.empty());
         when(orderRepository.create(order)).thenReturn(order);
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         when(mapper.modelToDto(order)).thenReturn(orderDto);
-
         //When
         final OrderDto actualOrderDto = orderService.create(orderDto);
-
         //Then
         assertEquals(orderDto, actualOrderDto);
-
         verify(orderValidator, only()).createValidate(orderDto);
         verify(giftCertificateRepository, only()).readOne(giftCertificate.getId());
         verify(userRepository, only()).readOne(user.getId());
@@ -120,13 +116,11 @@ class OrderServiceImplTest {
         final String message = String.format(rb.getString("user.notFound.id"), user.getId());
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         when(userRepository.readOne(user.getId())).thenReturn(Optional.empty());
-
         //When
         final ServiceException serviceException
                 = assertThrows(ServiceException.class, () -> orderService.create(orderDto));
         //Then
         assertEquals(message, serviceException.getMessage());
-
         verify(orderValidator, only()).createValidate(orderDto);
         verify(mapper, times(1)).dtoToModel(orderDto);
         verify(userRepository, only()).readOne(user.getId());
@@ -141,13 +135,11 @@ class OrderServiceImplTest {
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         when(userRepository.readOne(user.getId())).thenReturn(Optional.of(user));
         when(giftCertificateRepository.readOne(giftCertificate.getId())).thenReturn(Optional.empty());
-
         //When
         final ServiceException serviceException
                 = assertThrows(ServiceException.class, () -> orderService.create(orderDto));
         //Then
         assertEquals(message, serviceException.getMessage());
-
         verify(orderValidator, only()).createValidate(orderDto);
         verify(mapper, times(1)).dtoToModel(orderDto);
         verify(userRepository, only()).readOne(user.getId());
@@ -163,14 +155,11 @@ class OrderServiceImplTest {
                 .thenReturn(Optional.of(order));
         when(mapper.dtoToModel(orderDto)).thenReturn(order);
         final String message = rb.getString("order.alreadyExists");
-
         //When
         final ServiceException serviceException
                 = assertThrows(ServiceException.class, () -> orderService.create(orderDto));
-
         //Then
         assertEquals(message, serviceException.getMessage());
-
         verify(orderValidator, only()).createValidate(orderDto);
         verify(orderRepository, only()).readOneByUserIdAndGiftCertificateId(user.getId(), giftCertificate.getId());
         verify(mapper, only()).dtoToModel(orderDto);
@@ -181,12 +170,10 @@ class OrderServiceImplTest {
         //Given
         final List<Order> orders = Collections.singletonList(order);
         final List<OrderDto> expectedOrders = Collections.singletonList(orderDto);
-        //When
         when(orderRepository.readAll(null, null)).thenReturn(orders);
         when(mapper.modelsToDto(orders)).thenReturn(expectedOrders);
-
-        final List<OrderDto> actualOrders
-                = orderService.readAll(null, null);
+        //When
+        final List<OrderDto> actualOrders = orderService.readAll(null, null);
         //Then
         assertEquals(expectedOrders, actualOrders);
         verify(orderRepository, only()).readAll(null, null);
@@ -199,10 +186,9 @@ class OrderServiceImplTest {
         //Given
         final List<Order> orders = Collections.singletonList(order);
         final List<OrderDto> expectedOrders = Collections.singletonList(orderDto);
-        //When
         when(orderRepository.readAllByUserId(order.getUser().getId(),null, null)).thenReturn(orders);
         when(mapper.modelsToDto(orders)).thenReturn(expectedOrders);
-
+        //When
         final List<OrderDto> actualOrders
                 = orderService.readAllByUserId(order.getUser().getId(),null, null);
         //Then
@@ -215,10 +201,9 @@ class OrderServiceImplTest {
     @Test
     void shouldReturnOrders_On_readOneByUserIdAndOrderId() {
         //Given
-        //When
         when(orderRepository.readOneByUserIdAndOrderId(order.getUser().getId(), order.getId())).thenReturn(Optional.of(order));
         when(mapper.modelToDto(order)).thenReturn(orderDto);
-
+        //When
         final OrderDto actualOrderDto
                 = orderService.readOneByUserIdAndOrderId(order.getUser().getId(), order.getId());
         //Then
@@ -245,8 +230,8 @@ class OrderServiceImplTest {
         when(orderRepository.readOne(order.getId())).thenReturn(Optional.empty());
         final String message = String.format(rb.getString("order.notFound.id"), order.getId());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
-                () -> orderService.readOne(order.getId()));
+        final ServiceException serviceException
+                = assertThrows(ServiceException.class, () -> orderService.readOne(order.getId()));
         //Then
         assertEquals(message, serviceException.getMessage());
         verify(orderRepository, only()).readOne(order.getId());
@@ -258,8 +243,9 @@ class OrderServiceImplTest {
         when(orderRepository.readOneByUserIdAndOrderId(1,1)).thenReturn(Optional.empty());
         final String message = String.format(rb.getString("order.notFound.user.order"), 1, 1);
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
-                () -> orderService.readOneByUserIdAndOrderId(1,1));
+        final ServiceException serviceException
+                = assertThrows(
+                        ServiceException.class, () -> orderService.readOneByUserIdAndOrderId(1,1));
         //Then
         assertEquals(message, serviceException.getMessage());
         verify(orderRepository, only()).readOneByUserIdAndOrderId(1,1);

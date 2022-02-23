@@ -16,8 +16,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
@@ -32,9 +30,11 @@ class OrderValidatorTest {
     @InjectMocks
     private OrderValidator orderValidator;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        ReflectionTestUtils.setField(orderValidator, "rb", getRb());
+    private static ResourceBundle getRb() throws IOException {
+        final InputStream contentStream
+                = Thread.currentThread().getContextClassLoader().getResourceAsStream("message.properties");
+        assertNotNull(contentStream);
+        return new PropertyResourceBundle(contentStream);
     }
 
     static Stream<Arguments> createOrderValidatorDataProvider() throws IOException {
@@ -45,6 +45,11 @@ class OrderValidatorTest {
                 Arguments.arguments(getRb().getString("validator.order.giftId.required"), null, 1, null),
                 Arguments.arguments(getRb().getString("validator.order.giftId.negative"), null, 1, -1)
         );
+    }
+
+    @BeforeEach
+    void setUp() throws IOException {
+        ReflectionTestUtils.setField(orderValidator, "rb", getRb());
     }
 
     @ParameterizedTest
@@ -58,8 +63,8 @@ class OrderValidatorTest {
         final OrderDto orderDto = getOrderDto(orderId, userId, giftId);
         //When
         final ValidationException validationException
-                = assertThrows(ValidationException.class,
-                () -> orderValidator.createValidate(orderDto));
+                = assertThrows(
+                ValidationException.class, () -> orderValidator.createValidate(orderDto));
         //Then
         assertEquals(expected, validationException.getMessage());
     }
@@ -74,12 +79,5 @@ class OrderValidatorTest {
         orderDto.setUserDto(userDto);
         orderDto.setGiftCertificateDto(giftCertificateDto);
         return orderDto;
-    }
-
-    private static ResourceBundle getRb() throws IOException {
-        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("message.properties");
-        assertNotNull(contentStream);
-        return new PropertyResourceBundle(contentStream);
     }
 }

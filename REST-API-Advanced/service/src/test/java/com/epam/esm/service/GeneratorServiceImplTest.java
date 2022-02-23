@@ -19,8 +19,11 @@ class GeneratorServiceImplTest {
 
     @Test
     void shouldPath_On_Generate() {
+        //Given
         doNothing().when(generatorRepository).generate();
+        //When
         generatorService.generate();
+        //Then
         verify(generatorRepository, only()).generate();
     }
 }

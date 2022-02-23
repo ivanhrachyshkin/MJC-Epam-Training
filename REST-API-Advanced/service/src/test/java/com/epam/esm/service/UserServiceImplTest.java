@@ -61,10 +61,9 @@ class UserServiceImplTest {
         //Given
         final List<User> users = Collections.singletonList(user);
         final List<UserDto> expectedUsers = Collections.singletonList(userDto);
-        //When
         when(userRepository.readAll(null, null)).thenReturn(users);
         when(mapper.modelsToDto(users)).thenReturn(expectedUsers);
-
+        //When
         final List<UserDto> actualOrders = userService.readAll(null, null);
         //Then
         assertEquals(expectedUsers, actualOrders);
@@ -88,8 +87,8 @@ class UserServiceImplTest {
     @Test
     void shouldThrowException_On_ReadOne() {
         //Given
-        when(userRepository.readOne(user.getId())).thenReturn(Optional.empty());
         final String message = String.format(rb.getString("user.notFound.id"), user.getId());
+        when(userRepository.readOne(user.getId())).thenReturn(Optional.empty());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> userService.readOne(user.getId()));

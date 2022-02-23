@@ -1,12 +1,8 @@
 package com.epam.esm.service.dto.mapper;
 
-import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
-import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
-import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
-import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,12 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class UserDtoMapperTest {
@@ -58,7 +52,6 @@ class UserDtoMapperTest {
         final UserDto actualUserDto = userDtoMapper.modelToDto(user);
         //Then
         assertEquals(userDto, actualUserDto);
-
         verify(mapper, only()).map(user, UserDto.class);
     }
 
@@ -71,38 +64,34 @@ class UserDtoMapperTest {
         final User actualUser = userDtoMapper.dtoToModel(userDto);
         //Then
         assertEquals(user, actualUser);
-
         verify(mapper, times(1)).map(userDto, User.class);
         verify(mapper, times(1)).map(orderDto, Order.class);
         verifyNoMoreInteractions(mapper);
     }
 
     @Test
-    void shouldMapGiftCertificateDtos_For_GiftCertificates() {
+    void shouldMapDtoGiftCertificates_For_GiftCertificates() {
         //Given
         final List<User> users = Collections.singletonList(user);
         when(mapper.map(user, UserDto.class)).thenReturn(userDto);
         //When
-        final List<UserDto> actualUserDtos = userDtoMapper.modelsToDto(users);
+        final List<UserDto> dtoActualUsers = userDtoMapper.modelsToDto(users);
         //Then
-        assertEquals(Collections.singletonList(userDto), actualUserDtos);
-
+        assertEquals(Collections.singletonList(userDto), dtoActualUsers);
         verify(mapper, only()).map(user, UserDto.class);
     }
 
     @Test
     void shouldMapGiftCertificates_For_GiftCertificateDtos() {
         //Given
-        final List<UserDto> userDtos = Collections.singletonList(userDto);
+        final List<UserDto> dtoUsers = Collections.singletonList(userDto);
         when(mapper.map(userDto, User.class)).thenReturn(user);
         //When
-        final List<User> actualUsers = userDtoMapper.dtoToModels(userDtos);
+        final List<User> actualUsers = userDtoMapper.dtoToModels(dtoUsers);
         //Then
         assertEquals(Collections.singletonList(user), actualUsers);
-
         verify(mapper, times(1)).map(userDto, User.class);
         verify(mapper, times(1)).map(orderDto, Order.class);
         verifyNoMoreInteractions(mapper);
     }
-
 }

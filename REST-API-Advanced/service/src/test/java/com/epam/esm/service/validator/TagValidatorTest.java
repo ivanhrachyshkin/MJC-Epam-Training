@@ -38,9 +38,9 @@ class TagValidatorTest {
 
     @Test
     void shouldThrowException_On_CreateTagValidator_ForEmptyName() {
-        //When
-
+        //Given
         final TagDto tagDto = new TagDto();
+        //When
         final ValidationException validationException
                 = assertThrows(ValidationException.class, () -> tagValidator.createValidate(tagDto));
         //Then
@@ -52,17 +52,9 @@ class TagValidatorTest {
         //When
         final TagDto tagDto = new TagDto(1);
         final ValidationException validationException
-                = assertThrows(ValidationException.class, () -> tagValidator.createValidate(tagDto));
+                = assertThrows(
+                        ValidationException.class, () -> tagValidator.createValidate(tagDto));
         //Then
         assertEquals(rb.getString("id.value.passed"), validationException.getMessage());
-    }
-
-    @Test
-    void shouldPath_On_CreateTagValidator_ForEmptyName() {
-        //Given
-        final TagDto tagDto = new TagDto();
-        tagDto.setName("name");
-        //When
-        tagValidator.createValidate(tagDto);
     }
 }

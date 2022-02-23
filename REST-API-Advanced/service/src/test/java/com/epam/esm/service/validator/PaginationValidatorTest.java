@@ -15,6 +15,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PaginationValidatorTest {
@@ -28,8 +30,8 @@ class PaginationValidatorTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("message.properties");
+        final InputStream contentStream
+                = Thread.currentThread().getContextClassLoader().getResourceAsStream("message.properties");
         assertNotNull(contentStream);
         rb = new PropertyResourceBundle(contentStream);
         ReflectionTestUtils.setField(paginationValidator, "rb", rb);
@@ -37,26 +39,27 @@ class PaginationValidatorTest {
 
     @Test
     void shouldThrowException_On_SortValidator_ForNegativePage() {
+        //Given
+        final Integer page = -1;
+        final Integer size = null;
         //When
-        final ValidationException validationException = assertThrows(ValidationException.class,
-                () -> paginationValidator.paginationValidate(-1, null));
+        final ValidationException validationException
+                = assertThrows(
+                        ValidationException.class, () -> paginationValidator.paginationValidate(page, size));
         //Then
         assertEquals(rb.getString("invalid.pagination"), validationException.getMessage());
     }
 
     @Test
     void shouldThrowException_On_SortValidator_ForNegativeSize() {
+        //Given
+        final Integer page = null;
+        final Integer size = -1;
         //When
-        final ValidationException validationException = assertThrows(ValidationException.class,
-                () -> paginationValidator.paginationValidate(null, -1));
+        final ValidationException validationException
+                = assertThrows(
+                ValidationException.class, () -> paginationValidator.paginationValidate(page, size));
         //Then
         assertEquals(rb.getString("invalid.pagination"), validationException.getMessage());
-    }
-
-    @Test
-    void shouldPath_On_CreateTagValidator_ForEmptyName() {
-        //Given
-        //When
-        paginationValidator.paginationValidate(1, 100);
     }
 }

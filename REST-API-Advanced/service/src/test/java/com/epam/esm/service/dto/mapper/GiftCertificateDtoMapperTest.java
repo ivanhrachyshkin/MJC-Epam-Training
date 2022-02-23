@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -48,12 +47,13 @@ class GiftCertificateDtoMapperTest {
     @Test
     void shouldMapGiftCertificateDto_For_GiftCertificate() {
         //Given
+        giftCertificate.setTags(null);
+        giftCertificateDto.setDtoTags(Collections.emptySet());
         when(mapper.map(giftCertificate, GiftCertificateDto.class)).thenReturn(giftCertificateDto);
         //When
         final GiftCertificateDto actualGiftCertificateDto = giftCertificateDtoMapper.modelToDto(giftCertificate);
         //Then
         assertEquals(giftCertificateDto, actualGiftCertificateDto);
-
         verify(mapper, only()).map(giftCertificate, GiftCertificateDto.class);
     }
 
@@ -66,35 +66,33 @@ class GiftCertificateDtoMapperTest {
         final GiftCertificate actualGiftCertificate = giftCertificateDtoMapper.dtoToModel(giftCertificateDto);
         //Then
         assertEquals(giftCertificate, actualGiftCertificate);
-
         verify(mapper, times(1)).map(giftCertificateDto, GiftCertificate.class);
         verify(mapper, times(1)).map(tagDto, Tag.class);
         verifyNoMoreInteractions(mapper);
     }
 
     @Test
-    void shouldMapGiftCertificateDtos_For_GiftCertificates() {
+    void shouldMapDtoGiftCertificates_For_GiftCertificates() {
         //Given
         final List<GiftCertificate> giftCertificates = Collections.singletonList(giftCertificate);
         when(mapper.map(giftCertificate, GiftCertificateDto.class)).thenReturn(giftCertificateDto);
         //When
-        final List<GiftCertificateDto> actualGiftCertificateDtos = giftCertificateDtoMapper.modelsToDto(giftCertificates);
+        final List<GiftCertificateDto> dtoActualGiftCertificates
+                = giftCertificateDtoMapper.modelsToDto(giftCertificates);
         //Then
-        assertEquals(Collections.singletonList(giftCertificateDto), actualGiftCertificateDtos);
-
+        assertEquals(Collections.singletonList(giftCertificateDto), dtoActualGiftCertificates);
         verify(mapper, only()).map(giftCertificate, GiftCertificateDto.class);
     }
 
     @Test
-    void shouldMapGiftCertificates_For_GiftCertificateDtos() {
+    void shouldMapGiftCertificates_For_DtoGiftCertificates() {
         //Given
-        final List<GiftCertificateDto> giftCertificateDtos = Collections.singletonList(giftCertificateDto);
+        final List<GiftCertificateDto> dtoGiftCertificates = Collections.singletonList(giftCertificateDto);
         when(mapper.map(giftCertificateDto, GiftCertificate.class)).thenReturn(giftCertificate);
         //When
-        final List<GiftCertificate> actualGiftCertificates = giftCertificateDtoMapper.dtoToModels(giftCertificateDtos);
+        final List<GiftCertificate> actualGiftCertificates = giftCertificateDtoMapper.dtoToModels(dtoGiftCertificates);
         //Then
         assertEquals(Collections.singletonList(giftCertificate), actualGiftCertificates);
-
         verify(mapper, times(1)).map(giftCertificateDto, GiftCertificate.class);
         verify(mapper, times(1)).map(tagDto, Tag.class);
         verifyNoMoreInteractions(mapper);

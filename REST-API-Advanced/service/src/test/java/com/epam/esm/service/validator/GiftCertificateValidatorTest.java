@@ -3,10 +3,8 @@ package com.epam.esm.service.validator;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,7 +16,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,9 +34,11 @@ class GiftCertificateValidatorTest {
     @InjectMocks
     private GiftCertificateValidator giftCertificateValidator;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        ReflectionTestUtils.setField(giftCertificateValidator, "rb", getRb());
+    private static ResourceBundle getRb() throws IOException {
+        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("message.properties");
+        assertNotNull(contentStream);
+        return new PropertyResourceBundle(contentStream);
     }
 
     static Stream<Arguments> createGiftCertificateValidatorDataProvider() throws IOException {
@@ -78,27 +81,37 @@ class GiftCertificateValidatorTest {
 
     static Stream<Arguments> readAllGiftCertificateValidatorDataProvider() throws IOException {
         return Stream.of(
-                Arguments.arguments(getRb().getString("validator.tag.name.empty"),
+                Arguments.arguments(
+                        getRb().getString("validator.tag.name.empty"),
                         Collections.singletonList(StringUtils.EMPTY),
                         new GiftCertificateRequestParamsContainer(
                                 null, null, null, null)),
-                Arguments.arguments(getRb().getString("validator.giftCertificate.name.empty"),
+                Arguments.arguments(
+                        getRb().getString("validator.giftCertificate.name.empty"),
                         Collections.singletonList("tagName"),
                         new GiftCertificateRequestParamsContainer(
                                 StringUtils.EMPTY, null, null, null)),
-                Arguments.arguments(getRb().getString("validator.giftCertificate.description.empty"),
+                Arguments.arguments(
+                        getRb().getString("validator.giftCertificate.description.empty"),
                         Collections.singletonList("tagName"),
                         new GiftCertificateRequestParamsContainer(
                                 "aa", StringUtils.EMPTY, null, null)),
-                Arguments.arguments(getRb().getString("sort.empty"),
+                Arguments.arguments(
+                        getRb().getString("sort.empty"),
                         Collections.singletonList("tagName"),
                         new GiftCertificateRequestParamsContainer(
                                 "aa", "dd", StringUtils.EMPTY, null)),
-                Arguments.arguments(getRb().getString("invalid.value"),
+                Arguments.arguments(
+                        getRb().getString("invalid.value"),
                         Collections.singletonList("tagName"),
                         new GiftCertificateRequestParamsContainer(
                                 "aa", "dd", "asc", "aa"))
         );
+    }
+
+    @BeforeEach
+    void setUp() throws IOException {
+        ReflectionTestUtils.setField(giftCertificateValidator, "rb", getRb());
     }
 
     @ParameterizedTest
@@ -135,8 +148,8 @@ class GiftCertificateValidatorTest {
         final GiftCertificateDto giftCertificateDto = getGiftCertificateDto(id, name, description, price, duration);
         //When
         final ValidationException validationException
-                = assertThrows(ValidationException.class,
-                () -> giftCertificateValidator.updateValidate(giftCertificateDto));
+                = assertThrows(
+                ValidationException.class, () -> giftCertificateValidator.updateValidate(giftCertificateDto));
         //Then
         assertEquals(expected, validationException.getMessage());
     }
@@ -148,35 +161,11 @@ class GiftCertificateValidatorTest {
                                                                  final GiftCertificateRequestParamsContainer container) {
         //When
         final ValidationException validationException
-                = assertThrows(ValidationException.class,
+                = assertThrows(
+                ValidationException.class,
                 () -> giftCertificateValidator.readAllValidate(tags, container));
         //Then
         assertEquals(expected, validationException.getMessage());
-    }
-
-    @Test
-    void shouldPath_On_CreateGiftCertificateValidator() {
-        //Given
-        final GiftCertificateDto giftCertificateDto
-                = getGiftCertificateDto(null, "name", "description", 1.0F, 11);
-        //When
-        giftCertificateValidator.createValidate(giftCertificateDto);
-    }
-
-    @Test
-    void shouldPath_On_UpdateGiftCertificateValidator() {
-        //Given
-        final GiftCertificateDto giftCertificateDto
-                = getGiftCertificateDto(null, "name", "description", 1.0F, 11);
-        //When
-        giftCertificateValidator.updateValidate(giftCertificateDto);
-    }
-
-    private static ResourceBundle getRb() throws IOException {
-        final InputStream contentStream = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("message.properties");
-        assertNotNull(contentStream);
-        return new PropertyResourceBundle(contentStream);
     }
 
     private GiftCertificateDto getGiftCertificateDto(final Integer id,
@@ -184,7 +173,7 @@ class GiftCertificateValidatorTest {
                                                      final String description,
                                                      final Float price,
                                                      final Integer duration) {
-        GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
+        final GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
         giftCertificateDto.setId(id);
         giftCertificateDto.setName(name);
         giftCertificateDto.setDescription(description);

@@ -91,13 +91,10 @@ class GiftCertificateServiceImplTest {
         when(giftCertificateRepository.create(giftCertificate1)).thenReturn(giftCertificate1);
         when(mapper.dtoToModel(giftCertificateDto1)).thenReturn(giftCertificate1);
         when(mapper.modelToDto(giftCertificate1)).thenReturn(giftCertificateDto1);
-
         //When
         final GiftCertificateDto actualGiftCertificateDto = giftCertificateService.create(giftCertificateDto1);
-
         //Then
         assertEquals(giftCertificateDto1, actualGiftCertificateDto);
-
         verify(giftCertificateValidator, only()).createValidate(giftCertificateDto1);
         verify(giftCertificateRepository, times(1)).readOneByName(giftCertificate1.getName());
         verify(giftCertificateRepository, times(1)).create(giftCertificate1);
@@ -159,9 +156,10 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void shouldReturnGiftCertificate_On_ReadOne() {
-        //When
+        //Given
         when(giftCertificateRepository.readOne(giftCertificate1.getId())).thenReturn(Optional.of(giftCertificate1));
         when(mapper.modelToDto(giftCertificate1)).thenReturn(giftCertificateDto1);
+        //When
         final GiftCertificateDto actual = giftCertificateService.readOne(giftCertificate1.getId());
         //Then
         assertEquals(giftCertificateDto1, actual);
@@ -171,13 +169,13 @@ class GiftCertificateServiceImplTest {
     @Test
     void shouldThrowException_On_ReadOne() {
         //Given
-        when(giftCertificateRepository.readOne(giftCertificate1.getId())).thenReturn(Optional.empty());
         final String message = String.format(rb.getString("giftCertificate.notFound.id"), giftCertificate1.getId());
+        when(giftCertificateRepository.readOne(giftCertificate1.getId())).thenReturn(Optional.empty());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
-                () -> giftCertificateService.readOne(giftCertificate1.getId()));
+        final ServiceException serviceException
+                = assertThrows(
+                        ServiceException.class, () -> giftCertificateService.readOne(giftCertificate1.getId()));
         //Then
-
         assertEquals(message, serviceException.getMessage());
         verify(giftCertificateRepository, only()).readOne(giftCertificate1.getId());
     }
@@ -185,25 +183,23 @@ class GiftCertificateServiceImplTest {
     @Test
     void shouldDeleteTag_On_DeleteById() {
         //Given
-        final GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setId(1);
-        when(giftCertificateRepository.deleteById(giftCertificate.getId())).thenReturn(Optional.of(giftCertificate));
+        when(giftCertificateRepository.deleteById(giftCertificate1.getId())).thenReturn(Optional.of(giftCertificate1));
         //When
-        giftCertificateService.deleteById(giftCertificate.getId());
+        giftCertificateService.deleteById(giftCertificate1.getId());
         //Then
-        verify(giftCertificateRepository, only()).deleteById(giftCertificate.getId());
+        verify(giftCertificateRepository, only()).deleteById(giftCertificate1.getId());
     }
 
     @Test
     void shouldThrowException_On_DeleteById() {
         //Given
-        when(giftCertificateRepository.deleteById(giftCertificate1.getId())).thenReturn(Optional.empty());
         final String message = String.format(rb.getString("giftCertificate.notFound.id"), giftCertificate1.getId());
+        when(giftCertificateRepository.deleteById(giftCertificate1.getId())).thenReturn(Optional.empty());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
-                () -> giftCertificateService.deleteById(giftCertificate1.getId()));
+        final ServiceException serviceException
+                = assertThrows(
+                        ServiceException.class, () -> giftCertificateService.deleteById(giftCertificate1.getId()));
         //Then
-
         assertEquals(message, serviceException.getMessage());
         verify(giftCertificateRepository, only()).deleteById(giftCertificate1.getId());
     }
