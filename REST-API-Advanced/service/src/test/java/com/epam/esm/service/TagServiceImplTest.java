@@ -70,7 +70,7 @@ class TagServiceImplTest {
         final TagDto actualTag = tagService.create(tagDto1);
         //Then
         assertEquals(tagDto1, actualTag);
-        verify(tagValidator, only()).createValidate(tagDto1);
+        verify(tagValidator, only()).validate(tagDto1);
         verify(tagRepository, times(1)).readOneByName(tag1.getName());
         verify(tagRepository, times(1)).create(tag1);
         verifyNoMoreInteractions(tagRepository);
@@ -91,7 +91,7 @@ class TagServiceImplTest {
                 () -> tagService.create(tagDto1));
         //Then
         assertEquals(message, serviceException.getMessage());
-        verify(tagValidator, only()).createValidate(tagDto1);
+        verify(tagValidator, only()).validate(tagDto1);
         verify(tagRepository, only()).readOneByName(tag1.getName());
         verify(mapper, only()).dtoToModel(tagDto1);
     }

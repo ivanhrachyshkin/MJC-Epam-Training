@@ -17,7 +17,7 @@ public class TagValidator {
     private ResourceBundle rb;
     private final ExceptionStatusPostfixProperties properties;
 
-    public void createValidate(final TagDto tagDto) {
+    public void validate(final TagDto tagDto) {
 
         if(tagDto.getId() != null) {
             throw new ValidationException(

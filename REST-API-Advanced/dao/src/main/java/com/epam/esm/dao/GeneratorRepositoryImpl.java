@@ -60,7 +60,7 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
         do {
             final String tagName1 = generator.address().city();
             tagNames.add(tagName1);
-        } while (tagNames.size() < 10);
+        } while (tagNames.size() < 1000);
         return tagNames;
     }
 
@@ -79,7 +79,7 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
         do {
             final String giftCertificateName = generator.company().name();
             giftCertificateNames.add(giftCertificateName);
-        } while (giftCertificateNames.size() < 100);
+        } while (giftCertificateNames.size() < 10_000);
         return giftCertificateNames;
     }
 
@@ -103,7 +103,7 @@ public class GeneratorRepositoryImpl implements GeneratorRepository {
         do {
             final String userEmail = generator.name().username().concat("@mail.com");
             usersEmails.add(userEmail);
-        } while (usersEmails.size() < 10);
+        } while (usersEmails.size() < 1000);
         return usersEmails;
     }
 

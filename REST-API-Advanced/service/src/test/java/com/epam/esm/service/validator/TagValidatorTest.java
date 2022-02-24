@@ -42,7 +42,7 @@ class TagValidatorTest {
         final TagDto tagDto = new TagDto();
         //When
         final ValidationException validationException
-                = assertThrows(ValidationException.class, () -> tagValidator.createValidate(tagDto));
+                = assertThrows(ValidationException.class, () -> tagValidator.validate(tagDto));
         //Then
         assertEquals(rb.getString("validator.tag.name.required"), validationException.getMessage());
     }
@@ -53,7 +53,7 @@ class TagValidatorTest {
         final TagDto tagDto = new TagDto(1);
         final ValidationException validationException
                 = assertThrows(
-                        ValidationException.class, () -> tagValidator.createValidate(tagDto));
+                        ValidationException.class, () -> tagValidator.validate(tagDto));
         //Then
         assertEquals(rb.getString("id.value.passed"), validationException.getMessage());
     }

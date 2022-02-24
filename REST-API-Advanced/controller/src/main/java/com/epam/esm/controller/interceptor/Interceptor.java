@@ -1,12 +1,16 @@
 package com.epam.esm.controller.interceptor;
 
 import com.epam.esm.controller.exceptionhandler.RestExceptionHandler;
-import com.epam.esm.service.*;
-import com.epam.esm.service.validator.*;
+import com.epam.esm.service.GiftCertificateServiceImpl;
+import com.epam.esm.service.OrderServiceImpl;
+import com.epam.esm.service.TagServiceImpl;
+import com.epam.esm.service.UserServiceImpl;
+import com.epam.esm.service.validator.GiftCertificateValidator;
+import com.epam.esm.service.validator.OrderValidator;
+import com.epam.esm.service.validator.PaginationValidator;
+import com.epam.esm.service.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.apache.commons.lang3.LocaleUtils;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

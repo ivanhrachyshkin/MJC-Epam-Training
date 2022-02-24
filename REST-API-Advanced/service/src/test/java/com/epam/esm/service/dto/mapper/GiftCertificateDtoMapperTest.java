@@ -60,14 +60,14 @@ class GiftCertificateDtoMapperTest {
     @Test
     void shouldMapGiftCertificate_For_GiftCertificateDto() {
         //Given
+        giftCertificateDto.setDtoTags(Collections.emptySet());
+        giftCertificate.setTags(Collections.emptySet());
         when(mapper.map(giftCertificateDto, GiftCertificate.class)).thenReturn(giftCertificate);
-        when(mapper.map(tagDto, Tag.class)).thenReturn(tag);
         //When
         final GiftCertificate actualGiftCertificate = giftCertificateDtoMapper.dtoToModel(giftCertificateDto);
         //Then
         assertEquals(giftCertificate, actualGiftCertificate);
         verify(mapper, times(1)).map(giftCertificateDto, GiftCertificate.class);
-        verify(mapper, times(1)).map(tagDto, Tag.class);
         verifyNoMoreInteractions(mapper);
     }
 
@@ -94,7 +94,5 @@ class GiftCertificateDtoMapperTest {
         //Then
         assertEquals(Collections.singletonList(giftCertificate), actualGiftCertificates);
         verify(mapper, times(1)).map(giftCertificateDto, GiftCertificate.class);
-        verify(mapper, times(1)).map(tagDto, Tag.class);
-        verifyNoMoreInteractions(mapper);
     }
 }

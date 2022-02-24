@@ -5,7 +5,6 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -22,12 +21,6 @@ public class GiftCertificateValidator {
     private final TagValidator tagValidator;
 
     public void updateValidate(final GiftCertificateDto giftCertificateDto) {
-
-        if (giftCertificateDto.getId() != null) {
-            throw new ValidationException(
-                    rb.getString("id.value.passed"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
 
         if (giftCertificateDto.getName() != null && giftCertificateDto.getName().isEmpty()) {
             throw new ValidationException(
@@ -51,6 +44,10 @@ public class GiftCertificateValidator {
             throw new ValidationException(
                     rb.getString("validator.giftCertificate.duration.negative"),
                     HttpStatus.BAD_REQUEST, properties.getGift());
+        }
+
+        if (giftCertificateDto.getDtoTags() != null) {
+            giftCertificateDto.getDtoTags().forEach(tagValidator::validate);
         }
     }
 
@@ -99,7 +96,7 @@ public class GiftCertificateValidator {
         }
 
         if (giftCertificateDto.getDtoTags() != null) {
-            giftCertificateDto.getDtoTags().forEach(tagValidator::createValidate);
+            giftCertificateDto.getDtoTags().forEach(tagValidator::validate);
         }
     }
 
@@ -107,7 +104,14 @@ public class GiftCertificateValidator {
     public void readAllValidate(final List<String> tags,
                                 final GiftCertificateRequestParamsContainer container) {
 
-        if (tags != null && !tags.isEmpty()) {
+
+        if (tags != null && tags.isEmpty()) {
+            throw new ValidationException(
+                    rb.getString("validator.tag.name.empty"),
+                    HttpStatus.BAD_REQUEST, properties.getGift());
+        }
+
+        if (tags != null) {
             tags.forEach(tag -> {
                 if (tag == null || tag.isEmpty()) {
                     throw new ValidationException(

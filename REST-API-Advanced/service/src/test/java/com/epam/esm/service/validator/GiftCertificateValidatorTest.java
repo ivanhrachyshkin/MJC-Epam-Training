@@ -66,8 +66,6 @@ class GiftCertificateValidatorTest {
 
     static Stream<Arguments> updateGiftCertificateValidatorDataProvider() throws IOException {
         return Stream.of(
-                Arguments.arguments(getRb().getString("id.value.passed"), 1,
-                        null, StringUtils.EMPTY, null, null),
                 Arguments.arguments(getRb().getString("validator.giftCertificate.name.empty"), null,
                         StringUtils.EMPTY, StringUtils.EMPTY, null, null),
                 Arguments.arguments(getRb().getString("validator.giftCertificate.description.empty"), null,

@@ -9,7 +9,6 @@ import com.epam.esm.service.validator.PaginationValidator;
 import com.epam.esm.service.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto create(final TagDto tagDto) {
-        tagValidator.createValidate(tagDto);
+        tagValidator.validate(tagDto);
         final Tag rawTag = mapper.dtoToModel(tagDto);
         final Tag newTag = createOrUpdateOld(rawTag);
         return mapper.modelToDto(newTag);
