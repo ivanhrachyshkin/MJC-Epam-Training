@@ -18,7 +18,7 @@ import java.util.Optional;
 public class OrderRepositoryImpl implements OrderRepository {
 
     private static final String READ_ALL_QUERY
-            = "SELECT o FROM Order o JOIN FETCH o.giftCertificate g JOIN FETCH o.user u";
+            = "SELECT o FROM Order o";
     private static final String READ_ALL_BY_USER_ID_QUERY
             = " SELECT o from Order o JOIN FETCH o.user u JOIN FETCH o.giftCertificate g WHERE u.id = ?1";
     private static final String READ_ONE_BY_USER_ID_AND_GIFT_ID_QUERY
