@@ -6,6 +6,7 @@ import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.PaginationValidator;
+import com.epam.esm.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<User, UserDto> mapper;
     private final UserRepository userRepository;
+    private final UserValidator userValidator;
     private final PaginationValidator paginationValidator;
 
     @Override
@@ -37,11 +39,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto readOne(final int id) {
+        userValidator.validateId(id);
         final User user = checkExist(id);
         return mapper.modelToDto(user);
     }
 
     private User checkExist(final int id) {
+        userValidator.validateId(id);
         return userRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(

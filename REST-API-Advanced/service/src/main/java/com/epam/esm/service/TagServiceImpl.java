@@ -49,6 +49,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto readOne(final int id, final Boolean active) {
+        tagValidator.validateId(id);
         Tag tag = checkExist(id, active);
         return mapper.modelToDto(tag);
     }
@@ -63,6 +64,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto deleteById(final int id) {
+        tagValidator.validateId(id);
         final Tag tag = tagRepository.deleteById(id).orElseThrow( () -> new ServiceException(
                 rb.getString("tag.notFound.id"),
                 HttpStatus.NOT_FOUND, properties.getTag(), id));
@@ -70,6 +72,7 @@ public class TagServiceImpl implements TagService {
     }
 
     private Tag checkExist(final int id, final Boolean active) {
+        tagValidator.validateId(id);
         return tagRepository
                 .readOne(id, active)
                 .orElseThrow(() -> new ServiceException(

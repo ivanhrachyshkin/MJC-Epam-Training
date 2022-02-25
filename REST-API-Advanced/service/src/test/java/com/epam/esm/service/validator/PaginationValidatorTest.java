@@ -53,8 +53,8 @@ class PaginationValidatorTest {
     @Test
     void shouldThrowException_On_SortValidator_ForNegativeSizeAndNullPage() {
         //Given
-        final Integer page = null;
-        final Integer size = -1;
+        final Integer page = -1;
+        final Integer size = 10;
         //When
         final ValidationException validationException
                 = assertThrows(
@@ -66,7 +66,7 @@ class PaginationValidatorTest {
     @Test
     void shouldThrowException_On_SortValidator_ForNegativeSize() {
         //Given
-        final Integer page = 1;
+        final Integer page = 10;
         final Integer size = -1;
         //When
         final ValidationException validationException

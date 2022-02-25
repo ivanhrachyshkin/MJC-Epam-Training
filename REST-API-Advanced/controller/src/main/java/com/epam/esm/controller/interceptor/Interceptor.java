@@ -5,10 +5,7 @@ import com.epam.esm.service.GiftCertificateServiceImpl;
 import com.epam.esm.service.OrderServiceImpl;
 import com.epam.esm.service.TagServiceImpl;
 import com.epam.esm.service.UserServiceImpl;
-import com.epam.esm.service.validator.GiftCertificateValidator;
-import com.epam.esm.service.validator.OrderValidator;
-import com.epam.esm.service.validator.PaginationValidator;
-import com.epam.esm.service.validator.TagValidator;
+import com.epam.esm.service.validator.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.stereotype.Component;
@@ -29,6 +26,7 @@ public class Interceptor implements HandlerInterceptor {
     private final GiftCertificateValidator giftCertificateValidator;
     private final OrderValidator orderValidator;
     private final TagValidator tagValidator;
+    private final UserValidator userValidator;
     private final PaginationValidator paginationValidator;
     private final RestExceptionHandler restExceptionHandler;
 
@@ -45,6 +43,7 @@ public class Interceptor implements HandlerInterceptor {
         giftCertificateValidator.setRb(resourceBundle);
         orderValidator.setRb(resourceBundle);
         tagValidator.setRb(resourceBundle);
+        userValidator.setRb(resourceBundle);
         paginationValidator.setRb(resourceBundle);
         restExceptionHandler.setRb(resourceBundle);
 

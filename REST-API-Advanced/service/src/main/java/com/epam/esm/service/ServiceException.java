@@ -9,10 +9,6 @@ public class ServiceException extends RuntimeException {
     private final HttpStatus status;
     private final String postfix;
 
-    public HttpStatus getStatus() {
-        return status;
-    }
-
     public ServiceException(final String message, final HttpStatus status, String postfix, final Object... args) {
         super(String.format(message, args));
         this.status = status;

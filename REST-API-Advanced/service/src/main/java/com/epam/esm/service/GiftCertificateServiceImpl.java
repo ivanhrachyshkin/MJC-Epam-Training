@@ -78,6 +78,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto deleteById(final int id) {
+        giftCertificateValidator.validateId(id);
         final GiftCertificate deletedGiftCertificate = giftCertificateRepository
                 .deleteById(id)
                 .orElseThrow(() -> new ServiceException(
@@ -87,6 +88,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private GiftCertificate checkExist(final int id) {
+        giftCertificateValidator.validateId(id);
         return giftCertificateRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(

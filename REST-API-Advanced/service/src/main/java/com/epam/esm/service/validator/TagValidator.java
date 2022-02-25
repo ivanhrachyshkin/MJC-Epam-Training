@@ -31,4 +31,11 @@ public class TagValidator {
                     HttpStatus.BAD_REQUEST, properties.getTag());
         }
     }
+
+    public void validateId(final int id) {
+        if (id < 1) {
+            throw new ValidationException(rb.getString("id.non"),
+                    HttpStatus.BAD_REQUEST, properties.getTag());
+        }
+    }
 }

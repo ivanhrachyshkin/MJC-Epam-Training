@@ -75,12 +75,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto readOne(final int id) {
+        orderValidator.validateId(id);
         final Order order = checkExist(id);
         return mapper.modelToDto(order);
     }
 
     @Override
     public OrderDto readOneByUserIdAndOrderId(final int userId, final int orderId) {
+        orderValidator.validateId(userId);
+        orderValidator.validateId(orderId);
         final Order order = orderRepository.
                 readOneByUserIdAndOrderId(userId, orderId)
                 .orElseThrow(() -> new ServiceException(
@@ -90,6 +93,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Order checkExist(final int id) {
+        orderValidator.validateId(id);
         return orderRepository
                 .readOne(id)
                 .orElseThrow(() -> new ServiceException(

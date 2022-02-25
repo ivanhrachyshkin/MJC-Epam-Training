@@ -49,4 +49,11 @@ public class OrderValidator {
                     HttpStatus.BAD_REQUEST, properties.getOrder());
         }
     }
+
+    public void validateId(final int id) {
+        if (id < 1) {
+            throw new ValidationException(rb.getString("id.non"),
+                    HttpStatus.BAD_REQUEST, properties.getOrder());
+        }
+    }
 }

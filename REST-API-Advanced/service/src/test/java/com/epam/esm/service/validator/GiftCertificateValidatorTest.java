@@ -3,14 +3,17 @@ package com.epam.esm.service.validator;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
+import com.epam.esm.service.dto.TagDto;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -23,6 +26,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateValidatorTest {
@@ -66,19 +71,26 @@ class GiftCertificateValidatorTest {
 
     static Stream<Arguments> updateGiftCertificateValidatorDataProvider() throws IOException {
         return Stream.of(
-                Arguments.arguments(getRb().getString("validator.giftCertificate.name.empty"), null,
+                Arguments.arguments(getRb().getString("id.should.passed"), null,
                         StringUtils.EMPTY, StringUtils.EMPTY, null, null),
-                Arguments.arguments(getRb().getString("validator.giftCertificate.description.empty"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.name.empty"), 1,
+                        StringUtils.EMPTY, StringUtils.EMPTY, null, null),
+                Arguments.arguments(getRb().getString("validator.giftCertificate.description.empty"), 1,
                         "name", StringUtils.EMPTY, null, null),
-                Arguments.arguments(getRb().getString("validator.giftCertificate.price.negative"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.price.negative"), 1,
                         "name", "desc", -1.0F, null),
-                Arguments.arguments(getRb().getString("validator.giftCertificate.duration.negative"), null,
+                Arguments.arguments(getRb().getString("validator.giftCertificate.duration.negative"), 1,
                         "name", "desc", 1.0F, -1)
         );
     }
 
     static Stream<Arguments> readAllGiftCertificateValidatorDataProvider() throws IOException {
         return Stream.of(
+                Arguments.arguments(
+                        getRb().getString("validator.tag.name.empty"),
+                        Collections.emptyList(),
+                        new GiftCertificateRequestParamsContainer(
+                                null, null, null, null)),
                 Arguments.arguments(
                         getRb().getString("validator.tag.name.empty"),
                         Collections.singletonList(StringUtils.EMPTY),
@@ -166,6 +178,46 @@ class GiftCertificateValidatorTest {
         assertEquals(expected, validationException.getMessage());
     }
 
+    @Test
+    void shouldThrowException_On_ValidateId() throws IOException {
+        //Given
+        final int id = -1;
+        //When
+        final ValidationException validationException
+                = assertThrows(
+                ValidationException.class, () -> giftCertificateValidator.validateId(id));
+        //Then
+        assertEquals(getRb().getString("id.non"), validationException.getMessage());
+    }
+
+    @Test
+    void shouldPathCreate() {
+        //Given
+        final TagDto tagDto = new TagDto();
+        tagDto.setName("aa");
+        final GiftCertificateDto giftCertificateDto
+                = getGiftCertificateDto(null, "a", "a", 1.9F, 1);
+        giftCertificateDto.setDtoTags(Collections.singleton(tagDto));
+        //When
+        giftCertificateValidator.createValidate(giftCertificateDto);
+        //Then
+        verify(tagValidator, only()).validate(tagDto);
+    }
+
+    @Test
+    void shouldPathUpdate() {
+        //Given
+        final TagDto tagDto = new TagDto();
+        tagDto.setName("aa");
+        final GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
+        giftCertificateDto.setId(1);
+        giftCertificateDto.setDtoTags(Collections.singleton(tagDto));
+        //When
+        giftCertificateValidator.updateValidate(giftCertificateDto);
+        //Then
+        verify(tagValidator, only()).validate(tagDto);
+    }
+
     private GiftCertificateDto getGiftCertificateDto(final Integer id,
                                                      final String name,
                                                      final String description,
@@ -177,6 +229,7 @@ class GiftCertificateValidatorTest {
         giftCertificateDto.setDescription(description);
         giftCertificateDto.setPrice(price);
         giftCertificateDto.setDuration(duration);
+        giftCertificateDto.setDtoTags(Collections.singleton(new TagDto()));
         return giftCertificateDto;
     }
 }

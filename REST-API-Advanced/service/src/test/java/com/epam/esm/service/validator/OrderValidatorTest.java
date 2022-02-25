@@ -5,6 +5,7 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -67,6 +68,17 @@ class OrderValidatorTest {
                 ValidationException.class, () -> orderValidator.createValidate(orderDto));
         //Then
         assertEquals(expected, validationException.getMessage());
+    }
+
+    @Test
+    void shouldThrowException_On_ValidateId() throws IOException {
+        //When
+        final int id = -1;
+        final ValidationException validationException
+                = assertThrows(
+                ValidationException.class, () -> orderValidator.validateId(id));
+        //Then
+        assertEquals(getRb().getString("id.non"), validationException.getMessage());
     }
 
     private OrderDto getOrderDto(final Integer orderId,

@@ -22,6 +22,12 @@ public class GiftCertificateValidator {
 
     public void updateValidate(final GiftCertificateDto giftCertificateDto) {
 
+        if (giftCertificateDto.getId() == null) {
+            throw new ValidationException(
+                    rb.getString("id.should.passed"),
+                    HttpStatus.BAD_REQUEST, properties.getGift());
+        }
+
         if (giftCertificateDto.getName() != null && giftCertificateDto.getName().isEmpty()) {
             throw new ValidationException(
                     rb.getString("validator.giftCertificate.name.empty"),
@@ -104,7 +110,6 @@ public class GiftCertificateValidator {
     public void readAllValidate(final List<String> tags,
                                 final GiftCertificateRequestParamsContainer container) {
 
-
         if (tags != null && tags.isEmpty()) {
             throw new ValidationException(
                     rb.getString("validator.tag.name.empty"),
@@ -137,6 +142,12 @@ public class GiftCertificateValidator {
         sortValidate(container.getDateSort());
     }
 
+    public void validateId(final int id) {
+        if (id < 1) {
+            throw new ValidationException(rb.getString("id.non"),
+                    HttpStatus.BAD_REQUEST, properties.getOrder());
+        }
+    }
 
     private void sortValidate(final String sort) {
 

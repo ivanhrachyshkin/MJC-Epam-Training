@@ -18,12 +18,12 @@ import java.util.ResourceBundle;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class TagValidatorTest {
+class UserValidatorTest {
 
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks
-    private TagValidator tagValidator;
+    private UserValidator userValidator;
 
     private ResourceBundle rb;
 
@@ -33,38 +33,16 @@ class TagValidatorTest {
                 .getResourceAsStream("message.properties");
         assertNotNull(contentStream);
         rb = new PropertyResourceBundle(contentStream);
-        ReflectionTestUtils.setField(tagValidator, "rb", rb);
+        ReflectionTestUtils.setField(userValidator, "rb", rb);
     }
 
     @Test
     void shouldThrowException_On_CreateTagValidator_ForEmptyName() {
         //Given
-        final TagDto tagDto = new TagDto();
+        final int id = 0;
         //When
         final ValidationException validationException
-                = assertThrows(ValidationException.class, () -> tagValidator.validate(tagDto));
-        //Then
-        assertEquals(rb.getString("validator.tag.name.required"), validationException.getMessage());
-    }
-
-    @Test
-    void shouldThrowException_On_CreateTagValidator_ForPassedId() {
-        //When
-        final TagDto tagDto = new TagDto(1);
-        final ValidationException validationException
-                = assertThrows(
-                        ValidationException.class, () -> tagValidator.validate(tagDto));
-        //Then
-        assertEquals(rb.getString("id.value.passed"), validationException.getMessage());
-    }
-
-    @Test
-    void shouldThrowException_On_ValidateId() {
-        //When
-        final int id = -1;
-        final ValidationException validationException
-                = assertThrows(
-                ValidationException.class, () -> tagValidator.validateId(id));
+                = assertThrows(ValidationException.class, () -> userValidator.validateId(id));
         //Then
         assertEquals(rb.getString("id.non"), validationException.getMessage());
     }

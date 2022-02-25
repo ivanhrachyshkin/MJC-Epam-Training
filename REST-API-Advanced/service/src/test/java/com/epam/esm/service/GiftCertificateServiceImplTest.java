@@ -215,7 +215,9 @@ class GiftCertificateServiceImplTest {
         //When
         giftCertificateService.update(giftCertificateDto1);
         //Then
-        verify(giftCertificateValidator, only()).updateValidate(giftCertificateDto1);
+        verify(giftCertificateValidator, times(1)).updateValidate(giftCertificateDto1);
+        verify(giftCertificateValidator, times(1)).validateId(giftCertificateDto1.getId());
+        verifyNoMoreInteractions(giftCertificateValidator);
         verify(giftCertificateRepository, times(1)).readOne(giftCertificate1.getId());
         verify(giftCertificateRepository, times(1)).readOneByName(giftCertificate1.getName());
         verify(giftCertificateRepository, times(1)).update(giftCertificate1);
