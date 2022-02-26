@@ -1,20 +1,19 @@
 package com.epam.esm.service;
 
 import com.epam.esm.service.dto.TagDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface TagService {
 
     TagDto create(final TagDto tagDto);
 
-    List<TagDto> readAll(Boolean active,
-                         Integer page,
-                         Integer size);
+    Page<TagDto> readAll(Boolean active,
+                         Pageable pageable);
 
-    TagDto readOne(int id, Boolean active);
+    TagDto readOne(int id);
 
-    List<TagDto> readMostUsed();
+    Page<TagDto> readMostUsed(Pageable pageable);
 
-    TagDto deleteById(int id);
+    void deleteById(int id);
 }

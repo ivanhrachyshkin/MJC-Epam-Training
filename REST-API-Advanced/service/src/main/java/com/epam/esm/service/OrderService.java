@@ -1,8 +1,9 @@
 package com.epam.esm.service;
 
-import com.epam.esm.model.Order;
 import com.epam.esm.service.dto.OrderDto;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
@@ -10,9 +11,9 @@ public interface OrderService {
 
     OrderDto create(OrderDto orderDto);
 
-    List<OrderDto> readAll(Integer page, Integer size);
+    Page<OrderDto> readAll(Pageable pageable);
 
-    List<OrderDto> readAllByUserId(int userId, Integer page, Integer size);
+    Page<OrderDto> readAllByUserId(int userId, Pageable pageable);
 
     OrderDto readOne(int id);
 

@@ -27,7 +27,7 @@ public class Interceptor implements HandlerInterceptor {
     private final OrderValidator orderValidator;
     private final TagValidator tagValidator;
     private final UserValidator userValidator;
-    private final PaginationValidator paginationValidator;
+    private final PageValidator paginationValidator;
     private final RestExceptionHandler restExceptionHandler;
 
     @Override

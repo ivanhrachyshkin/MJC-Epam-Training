@@ -1,22 +1,20 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.model.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface OrderRepository {
+@Repository
+public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-    Order create(Order order);
+    Page<Order> findOrdersByUserId(int userId, Pageable pageable);
 
-    List<Order> readAll(Integer page, Integer size);
+    Optional<Order> findOrdersByUserIdAndId(int userId, int id);
 
-    List<Order> readAllByUserId(int userId, Integer page, Integer size);
-
-    Optional<Order> readOne(int id);
-
-    Optional<Order> readOneByUserIdAndOrderId(int userId, int orderId);
-
-    Optional<Order> readOneByUserIdAndGiftCertificateId(int userId, int giftCertificateId);
+    Optional<Order> findOrderByUserIdAndAndGiftCertificateId(int userId, int giftCertificateId);
 
 }

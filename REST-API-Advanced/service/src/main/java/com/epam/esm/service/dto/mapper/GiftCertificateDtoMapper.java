@@ -6,6 +6,8 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -46,11 +48,13 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     }
 
     @Override
-    public List<GiftCertificateDto> modelsToDto(List<GiftCertificate> giftCertificates) {
-        return giftCertificates
+    public Page<GiftCertificateDto> modelsToDto(Page<GiftCertificate> giftCertificates) {
+        List<GiftCertificateDto> collect = giftCertificates
                 .stream()
                 .map(this::modelToDto)
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(collect, giftCertificates.getPageable(), giftCertificates.getTotalElements());
     }
 
     @Override

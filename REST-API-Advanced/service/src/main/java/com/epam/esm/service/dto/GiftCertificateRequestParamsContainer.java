@@ -13,6 +13,4 @@ public class GiftCertificateRequestParamsContainer {
 
     private String name;
     private String description;
-    private String dateSort;
-    private String nameSort;
 }

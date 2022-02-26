@@ -15,7 +15,6 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,7 +23,7 @@ class PaginationValidatorTest {
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks
-    private PaginationValidator paginationValidator;
+    private PageValidator paginationValidator;
 
     private ResourceBundle rb;
 

@@ -3,6 +3,7 @@ package com.epam.esm.service.validator;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -10,27 +11,21 @@ import java.util.ResourceBundle;
 
 @Component
 @RequiredArgsConstructor
-public class PaginationValidator {
+public class PageValidator {
 
     @Setter
     private ResourceBundle rb;
     private final ExceptionStatusPostfixProperties properties;
 
-    public void paginationValidate(final Integer page, final Integer size) {
+    public void paginationValidate(final Pageable pageable) {
 
-        if (page == null || size == null) {
+        if (pageable.getPageNumber() < 0) {
             throw new ValidationException(
                     rb.getString("invalid.pagination"),
                     HttpStatus.BAD_REQUEST, properties.getPagination());
         }
 
-        if (page < 1) {
-            throw new ValidationException(
-                    rb.getString("invalid.pagination"),
-                    HttpStatus.BAD_REQUEST, properties.getPagination());
-        }
-
-        if (size < 1) {
+        if (pageable.getPageSize() < 1) {
             throw new ValidationException(
                     rb.getString("invalid.pagination"),
                     HttpStatus.BAD_REQUEST, properties.getPagination());

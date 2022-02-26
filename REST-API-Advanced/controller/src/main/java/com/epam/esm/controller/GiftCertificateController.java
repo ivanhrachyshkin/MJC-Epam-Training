@@ -5,6 +5,10 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,54 +26,53 @@ public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
         final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
         hateoasCreator.linkGiftCertificateDtoOne(createdGiftCertificateDto);
         createdGiftCertificateDto
                 .getDtoTags()
                 .forEach(hateoasCreator::linkTagDto);
-        return new ResponseEntity<>(createdGiftCertificateDto, HttpStatus.CREATED);
+        return createdGiftCertificateDto;
     }
 
     @GetMapping
-    public ResponseEntity<List<GiftCertificateDto>> readAll(
-            @RequestParam(required = false) final List<String> tags,
-            final GiftCertificateRequestParamsContainer container,
-            @RequestParam(required = false) final Integer page,
-            @RequestParam(required = false) final Integer size) {
-        final List<GiftCertificateDto> dtoGiftCertificates
-                = giftCertificateService.readAll(tags, container, page, size);
+    @ResponseStatus(HttpStatus.OK)
+    public PagedModel<GiftCertificateDto> readAll(@RequestParam(required = false) final List<String> tags,
+                                                        final GiftCertificateRequestParamsContainer container,
+                                                        @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        final Page<GiftCertificateDto> dtoGiftCertificates
+                = giftCertificateService.readAll(tags, container, pageable);
         dtoGiftCertificates.forEach(giftCertificateDto -> {
-            hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);
             giftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
         });
-
-        return new ResponseEntity<>(dtoGiftCertificates, HttpStatus.OK);
+        return hateoasCreator.linkGiftCertificateDtos(dtoGiftCertificates);
     }
 
     @GetMapping(value = "/{id}")
-    public HttpEntity<GiftCertificateDto> readOne(@PathVariable final int id) {
+    @ResponseStatus(HttpStatus.OK)
+    public GiftCertificateDto readOne(@PathVariable final int id) {
         final GiftCertificateDto giftCertificateDto = giftCertificateService.readOne(id);
         hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);
         giftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
-        return new ResponseEntity<>(giftCertificateDto, HttpStatus.OK);
+        return giftCertificateDto;
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<GiftCertificateDto> update(@PathVariable final Integer id,
-                                                 @RequestBody final GiftCertificateDto giftCertificateDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public GiftCertificateDto update(@PathVariable final Integer id,
+                                     @RequestBody final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.setId(id);
         final GiftCertificateDto updatedGiftCertificateDto = giftCertificateService.update(giftCertificateDto);
         hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);
         updatedGiftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
-        return new ResponseEntity<>(updatedGiftCertificateDto, HttpStatus.OK);
+        return giftCertificateDto;
     }
 
     @DeleteMapping(value = "/{id}")
-    public HttpEntity<GiftCertificateDto> deleteById(@PathVariable int id) {
-        final GiftCertificateDto giftCertificateDto = giftCertificateService.deleteById(id);
-        hateoasCreator.linkGiftCertificateDtoOne(giftCertificateDto);
-        giftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
-        return new ResponseEntity<>(giftCertificateDto, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteById(@PathVariable int id) {
+        giftCertificateService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

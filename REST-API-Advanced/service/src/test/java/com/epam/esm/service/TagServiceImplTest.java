@@ -5,7 +5,7 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
-import com.epam.esm.service.validator.PaginationValidator;
+import com.epam.esm.service.validator.PageValidator;
 import com.epam.esm.service.validator.TagValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class TagServiceImplTest {
     @Mock
     private TagValidator tagValidator;
     @Mock
-    private PaginationValidator paginationValidator;
+    private PageValidator paginationValidator;
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks

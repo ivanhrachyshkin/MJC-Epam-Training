@@ -1,13 +1,9 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface UserRepository {
-
-    List<User> readAll(Integer page, Integer size);
-
-    Optional<User> readOne(int id);
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
 }

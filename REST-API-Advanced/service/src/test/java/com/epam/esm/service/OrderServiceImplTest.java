@@ -14,7 +14,7 @@ import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.OrderValidator;
-import com.epam.esm.service.validator.PaginationValidator;
+import com.epam.esm.service.validator.PageValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +44,7 @@ class OrderServiceImplTest {
     @Mock
     private OrderValidator orderValidator;
     @Mock
-    private PaginationValidator paginationValidator;
+    private PageValidator paginationValidator;
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks

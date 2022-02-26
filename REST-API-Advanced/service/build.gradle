@@ -2,8 +2,8 @@ dependencies {
     implementation libs.spring.boot.starter
     testImplementation libs.spring.boot.starter.test
     implementation libs.spring.boot.starter.hateoas
+    implementation libs.spring.boot.starter.data.jpa
     implementation libs.modelmapper
-    implementation libs.spring.orm
     implementation project(':model')
     implementation project(':dao')
 }

@@ -4,6 +4,8 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,12 +29,14 @@ public class TagDtoMapper implements DtoMapper<Tag, TagDto> {
     }
 
     @Override
-    public List<TagDto> modelsToDto(List<Tag> tags) {
-        return tags
+    public Page<TagDto> modelsToDto(Page<Tag> tags) {
+        final List<TagDto> collect = tags
+                .getContent()
                 .stream()
                 .map(tag -> modelMapper.map(tag, TagDto.class))
                 .collect(Collectors.toList());
 
+        return new PageImpl<>(collect, tags.getPageable(), tags.getTotalElements());
     }
 
     @Override

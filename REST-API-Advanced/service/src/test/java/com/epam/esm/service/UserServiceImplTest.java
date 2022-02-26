@@ -5,7 +5,7 @@ import com.epam.esm.model.User;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
-import com.epam.esm.service.validator.PaginationValidator;
+import com.epam.esm.service.validator.PageValidator;
 import com.epam.esm.service.validator.UserValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class UserServiceImplTest {
     @Mock
     private UserValidator userValidator;
     @Mock
-    private PaginationValidator paginationValidator;
+    private PageValidator paginationValidator;
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks

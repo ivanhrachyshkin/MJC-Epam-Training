@@ -9,7 +9,7 @@ import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.GiftCertificateValidator;
-import com.epam.esm.service.validator.PaginationValidator;
+import com.epam.esm.service.validator.PageValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ class GiftCertificateServiceImplTest {
     @Mock
     private GiftCertificateValidator giftCertificateValidator;
     @Mock
-    private PaginationValidator paginationValidator;
+    private PageValidator paginationValidator;
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks

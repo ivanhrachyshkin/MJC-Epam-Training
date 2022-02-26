@@ -1,27 +1,15 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.model.GiftCertificate;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface GiftCertificateRepository {
+@Repository
+public interface GiftCertificateRepository
+        extends JpaRepository<GiftCertificate, Integer>, JpaSpecificationExecutor<GiftCertificate> {
 
-    GiftCertificate create(GiftCertificate giftCertificate);
-
-    List<GiftCertificate> readAll(List<String> tags,
-                                  String name,
-                                  String description,
-                                  String dateSort,
-                                  String nameSort,
-                                  Integer page,
-                                  Integer size);
-
-    Optional<GiftCertificate> readOne(int id);
-
-    Optional<GiftCertificate> readOneByName(String name);
-
-    GiftCertificate update(GiftCertificate giftCertificate);
-
-    Optional<GiftCertificate>  deleteById(int id);
+    Optional<GiftCertificate> findByName(String name);
 }

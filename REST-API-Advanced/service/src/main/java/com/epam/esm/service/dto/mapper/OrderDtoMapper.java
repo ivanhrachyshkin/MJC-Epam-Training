@@ -8,6 +8,8 @@ import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -40,11 +42,13 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
     }
 
     @Override
-    public List<OrderDto> modelsToDto(List<Order> orders) {
-        return orders
+    public Page<OrderDto> modelsToDto(Page<Order> orders) {
+        List<OrderDto> collect = orders
                 .stream()
                 .map(this::modelToDto)
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(collect, orders.getPageable(), orders.getTotalElements());
     }
 
     @Override

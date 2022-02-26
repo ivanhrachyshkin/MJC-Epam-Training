@@ -4,6 +4,10 @@ import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,40 +22,39 @@ public class TagController {
     private final TagService tagService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<TagDto> create(@RequestBody final TagDto tagDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public TagDto create(@RequestBody final TagDto tagDto) {
         final TagDto createdTag = tagService.create(tagDto);
-        hateoasCreator.linkTagDto(createdTag);
-        return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
+        hateoasCreator.linkTagDtoOne(createdTag);
+        return createdTag;
     }
 
     @GetMapping
-    public HttpEntity<List<TagDto>> readAll(@RequestParam(required = false) final Boolean active,
-                                            @RequestParam(required = false) final Integer page,
-                                            @RequestParam(required = false) final Integer size) {
-        final List<TagDto> dtoTags = tagService.readAll(active, page, size);
-        dtoTags.forEach(hateoasCreator::linkTagDtoOne);
-        return new ResponseEntity<>(dtoTags, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public PagedModel<TagDto> readAll(@RequestParam(required = false) final Boolean active,
+                                      @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        final Page<TagDto> dtoTags = tagService.readAll(active, pageable);
+        return hateoasCreator.linkTagDtos(dtoTags);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TagDto> readOne(@PathVariable final int id,
-                                          @RequestParam(required = false) final Boolean active) {
-        final TagDto tagDto = tagService.readOne(id, active);
+    @ResponseStatus(HttpStatus.OK)
+    public TagDto readOne(@PathVariable final int id) {
+        final TagDto tagDto = tagService.readOne(id);
         hateoasCreator.linkTagDtoOne(tagDto);
-        return new ResponseEntity<>(tagDto, HttpStatus.OK);
+        return tagDto;
     }
 
     @GetMapping(value = "/mostUsed")
-    public HttpEntity<List<TagDto>> readOneMostUsed() {
-        final List<TagDto> dtoTags = tagService.readMostUsed();
-        dtoTags.forEach(hateoasCreator::linkTagDtoOne);
-        return new ResponseEntity<>(dtoTags, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public PagedModel<TagDto> readOneMostUsed(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        final Page<TagDto> dtoTags = tagService.readMostUsed(pageable);
+        return hateoasCreator.linkTagDtos(dtoTags);
     }
 
     @DeleteMapping(value = "/{id}")
-    public HttpEntity<TagDto> deleteById(@PathVariable final int id) {
-        final TagDto tagDto = tagService.deleteById(id);
-        hateoasCreator.linkTagDtoOne(tagDto);
-        return new ResponseEntity<>(tagDto, HttpStatus.OK);
+    public ResponseEntity<Void> deleteById(@PathVariable final int id) {
+        tagService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

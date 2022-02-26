@@ -7,13 +7,13 @@ import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -27,44 +27,41 @@ public class UserController {
     private final OrderService orderService;
 
     @GetMapping
-    public HttpEntity<List<UserDto>> readAll(final Integer page, final Integer size) {
-        final List<UserDto> dtoUsers = userService.readAll(page, size);
-        dtoUsers.forEach( userDto -> {
-            hateoasCreator.linkUserDtoOne(userDto);
-            userDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto);
-        });
-
-        return new ResponseEntity<>(dtoUsers, HttpStatus.OK);
+    public PagedModel<UserDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        final Page<UserDto> dtoUsers = userService.readAll(pageable);
+        dtoUsers.forEach(userDto -> userDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto));
+        return hateoasCreator.linkUserDtos(dtoUsers);
     }
 
     @GetMapping(value = "/{userId}/orders")
-    public HttpEntity<List<OrderDto>> readOrdersByUserId(@PathVariable final int userId,
-                                                         @RequestParam(required = false) final Integer page,
-                                                         @RequestParam(required = false) final Integer size) {
-        final List<OrderDto> dtoOrders = orderService.readAllByUserId(userId, page, size);
+    @ResponseStatus(HttpStatus.OK)
+    public PagedModel<OrderDto> readOrdersByUserId(@PathVariable final int userId,
+                                             @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        final Page<OrderDto> dtoOrders = orderService.readAllByUserId(userId, pageable);
         dtoOrders.forEach(orderDto -> {
             hateoasCreator.linkOrderDtoOne(orderDto);
             hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
-            hateoasCreator.linkUserDto(orderDto.getUserDto());
         });
-        return new ResponseEntity<>(dtoOrders, HttpStatus.OK);
+        return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
     @GetMapping(value = "/{userId}/orders/{orderId}")
-    public HttpEntity<OrderDto> readOneOrderByUserIdAndOrderId(@PathVariable final int userId,
-                                                               @PathVariable final int orderId) {
+    @ResponseStatus(HttpStatus.OK)
+    public OrderDto readOneOrderByUserIdAndOrderId(@PathVariable final int userId,
+                                                   @PathVariable final int orderId) {
         final OrderDto orderDto = orderService.readOneByUserIdAndOrderId(userId, orderId);
         hateoasCreator.linkOrderDtoOne(orderDto);
         hateoasCreator.linkUserDto(orderDto.getUserDto());
         hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
-        return new ResponseEntity<>(orderDto, HttpStatus.OK);
+        return orderDto;
     }
 
     @GetMapping(value = "/{id}")
-    public HttpEntity<UserDto> readOne(@PathVariable final int id) {
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto readOne(@PathVariable final int id) {
         final UserDto userDto = userService.readOne(id);
-        hateoasCreator.linkUserDtoOne(userDto);
+        hateoasCreator.linkUserDto(userDto);
         userDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return userDto;
     }
 }

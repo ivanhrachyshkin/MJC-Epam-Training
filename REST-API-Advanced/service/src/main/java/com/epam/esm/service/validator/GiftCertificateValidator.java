@@ -136,30 +136,12 @@ public class GiftCertificateValidator {
             throw new ValidationException(
                     rb.getString("validator.giftCertificate.description.empty"),
                     HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        sortValidate(container.getNameSort());
-        sortValidate(container.getDateSort());
+        } //todo sort
     }
 
     public void validateId(final int id) {
         if (id < 1) {
             throw new ValidationException(rb.getString("id.non"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
-    }
-
-    private void sortValidate(final String sort) {
-
-        if (sort != null && sort.isEmpty()) {
-            throw new ValidationException(rb.getString("sort.empty"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
-
-        if (sort != null
-                && !sort.equalsIgnoreCase("ASC")
-                && !sort.equalsIgnoreCase("DESC")) {
-            throw new ValidationException(rb.getString("invalid.value"),
                     HttpStatus.BAD_REQUEST, properties.getOrder());
         }
     }
