@@ -1,29 +1,27 @@
 package com.epam.esm.service.dto;
 
-import com.epam.esm.model.Role;
+import com.epam.esm.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDto extends RepresentationModel<UserDto> {
+public class RoleDto extends RepresentationModel<RoleDto> {
 
     private Integer id;
-    private String username;
-    private String email;
-    private String password;
-    private Set<OrderDto> dtoOrders;
-    private List<RoleDto> dtoRoles;
+    private String name;
+    private List<User> users;
 
-    public UserDto(final Integer id) {
-        this.id = id;
+    public RoleDto(String name) {
+        this.name = name;
     }
 }

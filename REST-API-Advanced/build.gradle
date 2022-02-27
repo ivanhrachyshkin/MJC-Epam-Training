@@ -20,6 +20,7 @@ allprojects {
         implementation libs.lombok
         annotationProcessor libs.lombok
         implementation libs.commons.lang3
+        implementation 'org.springframework.boot:spring-boot-starter-security:2.6.4'
     }
 
     test {

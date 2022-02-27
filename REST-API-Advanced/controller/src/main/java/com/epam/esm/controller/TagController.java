@@ -21,7 +21,7 @@ public class TagController {
     private final HateoasCreator hateoasCreator;
     private final TagService tagService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/admin", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public TagDto create(@RequestBody final TagDto tagDto) {
         final TagDto createdTag = tagService.create(tagDto);
@@ -52,7 +52,7 @@ public class TagController {
         return hateoasCreator.linkTagDtos(dtoTags);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}/admin")
     public ResponseEntity<Void> deleteById(@PathVariable final int id) {
         tagService.deleteById(id);
         return ResponseEntity.noContent().build();

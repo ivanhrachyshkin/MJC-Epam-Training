@@ -26,7 +26,17 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto create(@RequestBody final UserDto userDto) {
+        final UserDto createdUserDto = userService.create(userDto);
+        hateoasCreator.linkUserDto(createdUserDto);
+        createdUserDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto);
+        return createdUserDto;
+    }
+
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public PagedModel<UserDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
         final Page<UserDto> dtoUsers = userService.readAll(pageable);
         dtoUsers.forEach(userDto -> userDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto));
@@ -36,7 +46,7 @@ public class UserController {
     @GetMapping(value = "/{userId}/orders")
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<OrderDto> readOrdersByUserId(@PathVariable final int userId,
-                                             @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+                                                   @PageableDefault(page = 0, size = 10) final Pageable pageable) {
         final Page<OrderDto> dtoOrders = orderService.readAllByUserId(userId, pageable);
         dtoOrders.forEach(orderDto -> {
             hateoasCreator.linkOrderDtoOne(orderDto);

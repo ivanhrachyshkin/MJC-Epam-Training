@@ -1,8 +1,10 @@
 package com.epam.esm.service.dto.mapper;
 
 import com.epam.esm.model.Order;
+import com.epam.esm.model.Role;
 import com.epam.esm.model.User;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +31,11 @@ public class UserDtoMapper implements DtoMapper<User, UserDto> {
                         .map(order -> new OrderDto(order.getId()))
                         .collect(Collectors.toSet());
         dtoUser.setDtoOrders(dtoOrders);
+        final List<RoleDto> dtoRoles = user.getRoles()
+                .stream()
+                .map(role -> modelMapper.map(role, RoleDto.class))
+                .collect(Collectors.toList());
+        dtoUser.setDtoRoles(dtoRoles);
         return dtoUser;
     }
 

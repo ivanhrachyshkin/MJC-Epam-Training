@@ -6,6 +6,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Clock;
 
@@ -21,6 +23,11 @@ public class ServiceConfig {
     @Bean
     public PagedResourcesAssembler<?> pagedResourcesAssembler() {
         return new PagedResourcesAssembler<>(new HateoasPageableHandlerMethodArgumentResolver(), null);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

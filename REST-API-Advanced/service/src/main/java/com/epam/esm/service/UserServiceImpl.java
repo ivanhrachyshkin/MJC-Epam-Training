@@ -1,6 +1,8 @@
 package com.epam.esm.service;
 
+import com.epam.esm.dao.RoleRepository;
 import com.epam.esm.dao.UserRepository;
+import com.epam.esm.model.Role;
 import com.epam.esm.model.User;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.UserDto;
@@ -12,10 +14,11 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 @Service
@@ -27,8 +30,26 @@ public class UserServiceImpl implements UserService {
     private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<User, UserDto> mapper;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserValidator userValidator;
     private final PageValidator paginationValidator;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    @Transactional
+    public UserDto create(final UserDto userDto) {
+        userValidator.validateId(userDto.getId());
+        userValidator.createValidate(userDto);
+        checkExistName(userDto.getUsername());
+        checkExistEmail(userDto.getEmail());
+        final User user = mapper.dtoToModel(userDto);
+        encodePassword(user);
+        final Role userRole = roleRepository.findByName("ROLE_USER");
+        user.setRoles(Collections.singletonList(userRole));
+        final User savedUser = userRepository.save(user);
+        savedUser.setPassword(null);
+        return mapper.modelToDto(user);
+    }
 
     @Override
     @Transactional
@@ -46,11 +67,43 @@ public class UserServiceImpl implements UserService {
         return mapper.modelToDto(user);
     }
 
+    @Override
+    @Transactional
+    public UserDto readOneByName(final String name) {
+        final User user = userRepository.findByUsername(name)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("user.notFound.name"), HttpStatus.NOT_FOUND, properties.getUser(), name));
+        return mapper.modelToDto(user);
+    }
+
     private User checkExist(final int id) {
         userValidator.validateId(id);
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("user.notFound.id"), HttpStatus.NOT_FOUND, properties.getUser(), id));
+    }
+
+    private void checkExistName(final String name) {
+        userRepository
+                .findByUsername(name)
+                .ifPresent(user -> {
+                    throw new ServiceException(
+                            rb.getString("user.exists.name"), HttpStatus.NOT_FOUND, properties.getUser());
+                });
+    }
+
+    private void checkExistEmail(final String email) {
+        userRepository
+                .findByEmail(email)
+                .ifPresent(user -> {
+                    throw new ServiceException(
+                            rb.getString("user.exists.email"), HttpStatus.NOT_FOUND, properties.getUser());
+                });
+    }
+
+    private void encodePassword(final User user) {
+        final String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
     }
 }
