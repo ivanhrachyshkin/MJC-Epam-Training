@@ -1,0 +1,45 @@
+plugins{
+    id 'org.springframework.boot' version '2.6.3'
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+
+    group 'by.hrachyshkin'
+    version '1.0'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation libs.lombok
+        annotationProcessor libs.lombok
+        implementation libs.commons.lang3
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    bootJar {
+        mainClass.set("com.epam.esm.Application")
+    }
+}
+
+dependencies {
+    implementation project(':model')
+    implementation project(':dao')
+    implementation project(':service')
+    implementation project(':controller')
+    implementation project(':view')
+}
+
+
+
+
+

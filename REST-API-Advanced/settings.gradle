@@ -1,0 +1,25 @@
+rootProject.name = 'REST-API-Advanced'
+
+include 'dao','model', 'service','controller', 'view'
+
+enableFeaturePreview('VERSION_CATALOGS')
+
+dependencyResolutionManagement() {
+    versionCatalogs {
+        libs {
+            alias('spring-boot-starter').to('org.springframework.boot:spring-boot-starter:2.6.3')
+            alias('spring-boot-starter-test').to('org.springframework.boot:spring-boot-starter-test:2.6.3')
+            alias('spring-boot-starter-web').to('org.springframework.boot:spring-boot-starter-web:2.6.3')
+            alias('spring-boot-starter-hateoas').to('org.springframework.boot:spring-boot-starter-hateoas:2.6.3')
+            alias('spring-boot-starter-jdbc').to('org.springframework.boot:spring-boot-starter-jdbc:2.6.3')
+            alias('spring-orm').to('org.springframework:spring-orm:5.3.15')
+            alias('hibernate-core').to('org.hibernate:hibernate-core:5.6.4.Final')
+            alias('hibernate-envers').to('org.hibernate:hibernate-envers:5.6.5.Final')
+            alias('postgresql').to('org.postgresql:postgresql:42.3.1')
+            alias('lombok').to('org.projectlombok:lombok:1.18.22')
+            alias('commons-lang3').to('org.apache.commons:commons-lang3:3.12.0')
+            alias('modelmapper').to('org.modelmapper:modelmapper:2.4.5')
+            alias('javafaker').to('com.github.javafaker:javafaker:1.0.2')
+        }
+    }
+}
