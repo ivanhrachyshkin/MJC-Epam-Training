@@ -1,4 +1,4 @@
-rootProject.name = 'REST-API-Advanced'
+rootProject.name = 'REST-API-Security'
 
 include 'dao','model', 'service','controller', 'view'
 

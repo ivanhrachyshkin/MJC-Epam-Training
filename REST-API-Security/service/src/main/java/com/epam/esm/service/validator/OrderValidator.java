@@ -19,13 +19,13 @@ public class OrderValidator {
 
     public void createValidate(final OrderDto orderDto) {
 
-        if(orderDto.getId() != null) {
+        if (orderDto.getId() != null) {
             throw new ValidationException(
                     rb.getString("id.value.passed"),
                     HttpStatus.BAD_REQUEST, properties.getOrder());
         }
 
-        if (orderDto.getUserDto().getId() == null) {
+        if (orderDto.getUserDto() == null || orderDto.getUserDto().getId() == null) {
             throw new ValidationException(
                     rb.getString("validator.order.userId.required"),
                     HttpStatus.BAD_REQUEST, properties.getOrder());
@@ -37,7 +37,7 @@ public class OrderValidator {
                     HttpStatus.BAD_REQUEST, properties.getOrder());
         }
 
-        if (orderDto.getGiftCertificateDto().getId() == null) {
+        if (orderDto.getGiftCertificateDto() == null || orderDto.getGiftCertificateDto().getId() == null) {
             throw new ValidationException(
                     rb.getString("validator.order.giftId.required"),
                     HttpStatus.BAD_REQUEST, properties.getOrder());

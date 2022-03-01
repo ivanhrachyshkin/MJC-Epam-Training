@@ -1,7 +1,5 @@
 package com.epam.esm.service.security.jwt;
 
-import com.epam.esm.service.security.jwt.JwtConfigurer;
-import com.epam.esm.service.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
