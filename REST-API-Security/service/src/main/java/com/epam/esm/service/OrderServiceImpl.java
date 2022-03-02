@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 @Service
@@ -26,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Setter
     private ResourceBundle rb;
+    private final Clock clock;
     private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<Order, OrderDto> mapper;
     private final OrderRepository orderRepository;
@@ -53,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
                         rb.getString("giftCertificate.notFound.id"),
                         HttpStatus.NOT_FOUND, properties.getGift(), giftCertificateId));
         order.setPrice(giftCertificate.getPrice());
+        order.setDate(LocalDateTime.now(clock));
         final Order newOrder = orderRepository.save(order);
         return mapper.modelToDto(newOrder);
     }

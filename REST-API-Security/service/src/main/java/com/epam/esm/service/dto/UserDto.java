@@ -1,6 +1,5 @@
 package com.epam.esm.service.dto;
 
-import com.epam.esm.model.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

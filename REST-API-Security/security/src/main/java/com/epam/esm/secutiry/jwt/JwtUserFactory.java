@@ -1,4 +1,4 @@
-package com.epam.esm.service.security.jwt;
+package com.epam.esm.secutiry.jwt;
 
 import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
@@ -21,8 +21,8 @@ public final class JwtUserFactory {
                 mapToGrantAuthorities(new ArrayList<>(userDto.getDtoRoles())));
     }
 
-    private static List<GrantedAuthority> mapToGrantAuthorities(List<RoleDto> dtoUserRoles) {
-        return dtoUserRoles
+    private static List<GrantedAuthority> mapToGrantAuthorities(List<RoleDto> dtoRoles) {
+        return dtoRoles
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());

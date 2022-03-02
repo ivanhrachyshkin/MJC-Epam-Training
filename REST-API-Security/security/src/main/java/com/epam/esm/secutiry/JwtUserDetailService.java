@@ -1,24 +1,21 @@
-package com.epam.esm.service.security.jwt;
+package com.epam.esm.secutiry;
 
+import com.epam.esm.secutiry.jwt.JwtUserFactory;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.UserDto;
-import org.springframework.context.annotation.Lazy;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class JwtUserDetailService implements UserDetailsService {
 
     private final UserService userService;
 
-    public JwtUserDetailService(@Lazy UserService userService) {
-        this.userService = userService;
-    }
-
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) {
         final UserDto userDto = userService.readOneByName(username);
         return JwtUserFactory.create(userDto);
     }

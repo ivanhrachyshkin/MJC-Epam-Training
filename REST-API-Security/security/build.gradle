@@ -4,6 +4,6 @@ dependencies {
     implementation libs.spring.boot.starter.hateoas
     implementation libs.spring.boot.starter.data.jpa
     implementation libs.modelmapper
-    implementation project(':model')
-    implementation project(':dao')
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation project(':service')
 }

@@ -136,7 +136,7 @@ public class GiftCertificateValidator {
             throw new ValidationException(
                     rb.getString("validator.giftCertificate.description.empty"),
                     HttpStatus.BAD_REQUEST, properties.getGift());
-        } //todo sort
+        }
     }
 
     public void validateId(final int id) {

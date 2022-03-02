@@ -1,10 +1,10 @@
 package com.epam.esm.controller.interceptor;
 
-import com.epam.esm.controller.exceptionhandler.RestExceptionHandler;
 import com.epam.esm.service.GiftCertificateServiceImpl;
 import com.epam.esm.service.OrderServiceImpl;
 import com.epam.esm.service.TagServiceImpl;
 import com.epam.esm.service.UserServiceImpl;
+import com.epam.esm.secutiry.jwt.JwtTokenProvider;
 import com.epam.esm.service.validator.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.LocaleUtils;
@@ -28,7 +28,6 @@ public class Interceptor implements HandlerInterceptor {
     private final TagValidator tagValidator;
     private final UserValidator userValidator;
     private final PageValidator paginationValidator;
-    private final RestExceptionHandler restExceptionHandler;
 
     @Override
     public boolean preHandle(final HttpServletRequest request,
@@ -45,7 +44,6 @@ public class Interceptor implements HandlerInterceptor {
         tagValidator.setRb(resourceBundle);
         userValidator.setRb(resourceBundle);
         paginationValidator.setRb(resourceBundle);
-        restExceptionHandler.setRb(resourceBundle);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

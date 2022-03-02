@@ -3,13 +3,12 @@ package com.epam.esm.controller;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.AuthenticationRequestDto;
 import com.epam.esm.service.dto.UserDto;
-import com.epam.esm.service.security.jwt.JwtTokenProvider;
+import com.epam.esm.secutiry.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,23 +26,18 @@ public class AuthenticationController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
-        try {
-            String username = requestDto.getUsername();
-            String password = requestDto.getPassword();
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password));
-            final UserDto userDto = userService.readOneByName(username);
-            String token = jwtTokenProvider.createToken(username, userDto.getDtoRoles());
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> login(@RequestBody final AuthenticationRequestDto requestDto) {
+        final String username = requestDto.getUsername();
+        final String password = requestDto.getPassword();
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password));
+        final UserDto userDto = userService.readOneByName(username);
+        final String token = jwtTokenProvider.createToken(userDto);
 
-            Map<Object, Object> response = new HashMap<>();
-            response.put("username", username);
-            response.put("token", token);
-
-            return ResponseEntity.ok(response);
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
-        }
+        final Map<String, Object> response = new HashMap<>();
+        response.put("username", username);
+        response.put("token", token);
+        return ResponseEntity.ok(response);
     }
 }

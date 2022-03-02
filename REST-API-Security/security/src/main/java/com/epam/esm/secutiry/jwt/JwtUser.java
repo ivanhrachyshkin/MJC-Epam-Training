@@ -1,4 +1,4 @@
-package com.epam.esm.service.security.jwt;
+package com.epam.esm.secutiry.jwt;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

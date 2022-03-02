@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +38,8 @@ public class GiftCertificateController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<GiftCertificateDto> readAll(@RequestParam(required = false) final List<String> tags,
-                                                        final GiftCertificateRequestParamsContainer container,
-                                                        @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+                                                  final GiftCertificateRequestParamsContainer container,
+                                                  @PageableDefault(page = 0, size = 10) final Pageable pageable) {
         final Page<GiftCertificateDto> dtoGiftCertificates
                 = giftCertificateService.readAll(tags, container, pageable);
         dtoGiftCertificates.forEach(giftCertificateDto -> {

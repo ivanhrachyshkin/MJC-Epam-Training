@@ -1,4 +1,4 @@
-package com.epam.esm.service.security.jwt;
+package com.epam.esm.secutiry.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -20,15 +20,17 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
-
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            final Authentication auth = jwtTokenProvider.getAuthentication(token);
-
-            if (auth != null) {
-                SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            final String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                final Authentication auth = jwtTokenProvider.getAuthentication(token);
+                if (auth != null) {
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
+            filterChain.doFilter(req, res);
+        } catch (JwtAuthenticationException e) {
+            res.getWriter().write(e.getStatus() + e.getMessage());//todo
         }
-        filterChain.doFilter(req, res);
     }
 }
