@@ -1,4 +1,4 @@
-package com.epam.esm.secutiry.jwt.config;
+package com.epam.esm.controller.security.jwt;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

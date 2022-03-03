@@ -1,9 +1,9 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.controller.security.AuthenticationRequestDto;
+import com.epam.esm.controller.security.jwt.JwtTokenProvider;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.dto.AuthenticationRequestDto;
 import com.epam.esm.service.dto.UserDto;
-import com.epam.esm.secutiry.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

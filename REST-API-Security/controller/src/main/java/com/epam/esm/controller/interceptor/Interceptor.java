@@ -4,7 +4,6 @@ import com.epam.esm.service.GiftCertificateServiceImpl;
 import com.epam.esm.service.OrderServiceImpl;
 import com.epam.esm.service.TagServiceImpl;
 import com.epam.esm.service.UserServiceImpl;
-import com.epam.esm.secutiry.jwt.JwtTokenProvider;
 import com.epam.esm.service.validator.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.LocaleUtils;

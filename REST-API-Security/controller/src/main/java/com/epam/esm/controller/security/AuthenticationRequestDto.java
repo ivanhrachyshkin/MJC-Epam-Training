@@ -1,4 +1,4 @@
-package com.epam.esm.service.dto;
+package com.epam.esm.controller.security;
 import lombok.Data;
 
 @Data

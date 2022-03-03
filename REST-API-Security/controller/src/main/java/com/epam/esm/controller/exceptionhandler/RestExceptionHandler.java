@@ -1,7 +1,6 @@
 package com.epam.esm.controller.exceptionhandler;
 
 import com.epam.esm.service.ServiceException;
-import com.epam.esm.secutiry.jwt.JwtAuthenticationException;
 import com.epam.esm.service.validator.ValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,14 +17,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ApiError> handleServiceException(final ServiceException e) {
         final HttpStatus status = e.getStatus();
-        final ApiError apiError = new ApiError(customizeCode(status, e.getPostfix()), e.getMessage());
+        final ApiError apiError = new ApiError(status.value() + e.getPostfix(), e.getMessage());
         return new ResponseEntity<>(apiError, status);
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiError> handleValidationException(final ValidationException e) {
         final HttpStatus status = e.getStatus();
-        final ApiError apiError = new ApiError(customizeCode(status, e.getPostfix()), e.getMessage());
+        final ApiError apiError = new ApiError(status.value() + e.getPostfix(), e.getMessage());
         return new ResponseEntity<>(apiError, status);
     }
 
@@ -36,11 +35,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                              final HttpHeaders headers,
                                                              final HttpStatus status,
                                                              final WebRequest request) {
-        final ApiError error = new ApiError(customizeCode(status, ""), e.getMessage());
+        final ApiError error = new ApiError(status.value() + "", e.getMessage());
         return super.handleExceptionInternal(e, error, headers, status, request);
-    }
-
-    private String customizeCode(final HttpStatus status, final String postfix) {
-        return status.value() + postfix;
     }
 }

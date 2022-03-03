@@ -1,6 +1,5 @@
-package com.epam.esm.secutiry.jwt;
+package com.epam.esm.controller.security.jwt;
 
-import com.epam.esm.secutiry.jwt.config.JwtTokenProperties;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
@@ -76,10 +75,9 @@ public class JwtTokenProvider {
             final Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException(
-                    "expired or invalid token",
+            throw new JwtAuthenticationException("expired or invalid token",
                     HttpStatus.UNAUTHORIZED, exceptionStatusPostfixProperties.getAuth());
-        }//todo
+        }
     }
 
     private List<String> getRoleNames(List<RoleDto> dtoRoles) {

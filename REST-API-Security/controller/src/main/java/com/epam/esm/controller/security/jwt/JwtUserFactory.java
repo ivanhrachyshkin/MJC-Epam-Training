@@ -1,4 +1,4 @@
-package com.epam.esm.secutiry.jwt;
+package com.epam.esm.controller.security.jwt;
 
 import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;

@@ -1,6 +1,6 @@
-package com.epam.esm.secutiry;
+package com.epam.esm.controller.security;
 
-import com.epam.esm.secutiry.jwt.JwtUserFactory;
+import com.epam.esm.controller.security.jwt.JwtUserFactory;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;

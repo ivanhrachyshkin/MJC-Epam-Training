@@ -1,4 +1,4 @@
-package com.epam.esm.secutiry.jwt;
+package com.epam.esm.controller.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
