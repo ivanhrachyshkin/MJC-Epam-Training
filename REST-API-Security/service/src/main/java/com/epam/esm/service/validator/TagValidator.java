@@ -19,6 +19,12 @@ public class TagValidator {
 
     public void validate(final TagDto tagDto) {
 
+        if(tagDto == null) {
+            throw new ValidationException(
+                    rb.getString("validator.tag.null"),
+                    HttpStatus.BAD_REQUEST, properties.getTag());
+        }
+
         if(tagDto.getId() != null) {
             throw new ValidationException(
                     rb.getString("id.value.passed"),

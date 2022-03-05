@@ -6,17 +6,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component("restAuthenticationEntryPoint")
+@Component
 @RequiredArgsConstructor
-public class RestAuthenticationEntryPoint implements org.springframework.security.web.AuthenticationEntryPoint {
+public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    private final ObjectToJsonMapper mapper;
     private final ExceptionStatusPostfixProperties properties;
 
     @Override
@@ -25,18 +28,10 @@ public class RestAuthenticationEntryPoint implements org.springframework.securit
                          final AuthenticationException e) throws IOException {
         final int statusValue = HttpStatus.UNAUTHORIZED.value();
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.
                 getWriter()
-                .write(convertObjectToJson(
+                .write(mapper.convertObjectToJson(
                         new ApiError(statusValue + properties.getAuth(), e.getMessage())));
-    }
-
-    private String convertObjectToJson(final Object object) throws JsonProcessingException {
-        if (object == null) {
-            return null;
-        }
-        final ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
     }
 }

@@ -5,6 +5,7 @@ import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -63,7 +64,7 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        final String bearerToken = req.getHeader("Authorization");
+        final String bearerToken = req.getHeader(HttpHeaders.AUTHORIZATION);
         if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
             return bearerToken.substring(7);
         }
@@ -82,7 +83,7 @@ public class JwtTokenProvider {
 
     private List<String> getRoleNames(List<RoleDto> dtoRoles) {
         final List<String> result = new ArrayList<>();
-        dtoRoles.forEach(role -> result.add(role.getName()));
+        dtoRoles.forEach(role -> result.add(String.valueOf(role.getRoleName())));
         return result;
     }
 }

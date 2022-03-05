@@ -19,6 +19,12 @@ public class OrderValidator {
 
     public void createValidate(final OrderDto orderDto) {
 
+        if (orderDto.getId() == null) {
+            throw new ValidationException(
+                    rb.getString("validator.order.null.value"),
+                    HttpStatus.BAD_REQUEST, properties.getOrder());
+        }
+
         if (orderDto.getId() != null) {
             throw new ValidationException(
                     rb.getString("id.value.passed"),

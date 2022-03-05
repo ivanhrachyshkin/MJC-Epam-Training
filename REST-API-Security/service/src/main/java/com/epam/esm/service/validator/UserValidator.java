@@ -19,18 +19,28 @@ public class UserValidator {
 
     public void createValidate(final UserDto userDto) {
 
+        if (userDto == null) {
+            throw new ValidationException(rb.getString("validator.user.null"),
+                    HttpStatus.BAD_REQUEST, properties.getUser());
+        }
+
+        if (userDto.getId() != null) {
+            throw new ValidationException(rb.getString("id.value.passed"),
+                    HttpStatus.BAD_REQUEST, properties.getUser());
+        }
+
         if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {
-            throw new ValidationException(rb.getString("user.name.required"),
+            throw new ValidationException(rb.getString("validator.user.name.required"),
                     HttpStatus.BAD_REQUEST, properties.getUser());
         }
 
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
-            throw new ValidationException(rb.getString("user.email.required"),
+            throw new ValidationException(rb.getString("validator.user.email.required"),
                     HttpStatus.BAD_REQUEST, properties.getUser());
         }
 
         if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
-            throw new ValidationException(rb.getString("user.password.required"),
+            throw new ValidationException(rb.getString("validator.user.password.required"),
                     HttpStatus.BAD_REQUEST, properties.getUser());
         }
     }

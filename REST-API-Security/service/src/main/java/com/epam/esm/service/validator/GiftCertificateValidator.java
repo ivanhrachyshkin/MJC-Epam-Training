@@ -22,6 +22,12 @@ public class GiftCertificateValidator {
 
     public void updateValidate(final GiftCertificateDto giftCertificateDto) {
 
+        if (giftCertificateDto == null) {
+            throw new ValidationException(
+                    rb.getString("validator.giftCertificate.null"),
+                    HttpStatus.BAD_REQUEST, properties.getGift());
+        }
+
         if (giftCertificateDto.getId() == null) {
             throw new ValidationException(
                     rb.getString("id.should.passed"),
@@ -58,6 +64,12 @@ public class GiftCertificateValidator {
     }
 
     public void createValidate(final GiftCertificateDto giftCertificateDto) {
+
+        if (giftCertificateDto == null) {
+            throw new ValidationException(
+                    rb.getString("validator.giftCertificate.null"),
+                    HttpStatus.BAD_REQUEST, properties.getGift());
+        }
 
         if (giftCertificateDto.getId() != null) {
             throw new ValidationException(

@@ -18,8 +18,13 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column
-    private String name;//todo
+    @Enumerated(EnumType.STRING)
+    private Roles roleName;
 
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
+
+    public enum Roles {
+        ROLE_USER, ROLE_ADMIN
+    }
 }

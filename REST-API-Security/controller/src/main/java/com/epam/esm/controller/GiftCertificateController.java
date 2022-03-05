@@ -4,6 +4,7 @@ import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
+import com.epam.esm.service.dto.RoleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +13,13 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
+import static com.epam.esm.service.dto.RoleDto.Roles.ROLE_ADMIN;
 
 @RestController
 @RequestMapping(value = "/gifts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -24,6 +29,7 @@ public class GiftCertificateController {
     private final HateoasCreator hateoasCreator;
     private final GiftCertificateService giftCertificateService;
 
+    @Secured(ADMIN)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
@@ -57,6 +63,7 @@ public class GiftCertificateController {
         return giftCertificateDto;
     }
 
+    @Secured(ADMIN)
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto update(@PathVariable final Integer id,
@@ -68,6 +75,7 @@ public class GiftCertificateController {
         return giftCertificateDto;
     }
 
+    @Secured(ADMIN)
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteById(@PathVariable int id) {

@@ -5,6 +5,7 @@ import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,8 +14,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
+import java.nio.charset.StandardCharsets;
+
+import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
+import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
@@ -26,6 +33,7 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
+    @RolesAllowed(ADMIN)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody final UserDto userDto) {
@@ -35,6 +43,7 @@ public class UserController {
         return createdUserDto;
     }
 
+    @Secured({USER, ADMIN})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<UserDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
@@ -43,6 +52,7 @@ public class UserController {
         return hateoasCreator.linkUserDtos(dtoUsers);
     }
 
+    @Secured(USER)
     @GetMapping(value = "/{userId}/orders")
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<OrderDto> readOrdersByUserId(@PathVariable final int userId,
@@ -55,6 +65,7 @@ public class UserController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
+    @Secured(USER)
     @GetMapping(value = "/{userId}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDto readOneOrderByUserIdAndOrderId(@PathVariable final int userId,
@@ -66,6 +77,7 @@ public class UserController {
         return orderDto;
     }
 
+    @Secured(USER)
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDto readOne(@PathVariable final int id) {

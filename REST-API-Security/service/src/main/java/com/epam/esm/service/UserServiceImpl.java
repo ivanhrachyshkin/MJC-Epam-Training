@@ -38,13 +38,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto create(final UserDto userDto) {
-        userValidator.validateId(userDto.getId());
         userValidator.createValidate(userDto);
+        userValidator.validateId(userDto.getId());
         checkExistName(userDto.getUsername());
         checkExistEmail(userDto.getEmail());
         final User user = mapper.dtoToModel(userDto);
         encodePassword(user);
-        final Role userRole = roleRepository.findByName("ROLE_USER");
+        final Role userRole = roleRepository.findByRoleName(Role.Roles.ROLE_USER);
         user.setRoles(Collections.singletonList(userRole));
         final User savedUser = userRepository.save(user);
         savedUser.setPassword(null);

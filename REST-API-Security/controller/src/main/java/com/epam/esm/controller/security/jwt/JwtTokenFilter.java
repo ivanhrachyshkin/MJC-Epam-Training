@@ -1,10 +1,12 @@
 package com.epam.esm.controller.security.jwt;
 
 import com.epam.esm.controller.exceptionhandler.ApiError;
+import com.epam.esm.controller.security.ObjectToJsonMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -22,6 +24,7 @@ import java.io.PrintWriter;
 public class JwtTokenFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final ObjectToJsonMapper mapper;
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
@@ -48,18 +51,12 @@ public class JwtTokenFilter extends GenericFilterBean {
                                             final JwtAuthenticationException e) throws IOException {
         final int statusValue = HttpStatus.UNAUTHORIZED.value();
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.
                 getWriter()
-                .write(convertObjectToJson(
+                .write(mapper.convertObjectToJson(
                         new ApiError(statusValue + e.getPostfix(), e.getMessage())));
     }
 
-    private String convertObjectToJson(final Object object) throws JsonProcessingException {
-        if (object == null) {
-            return null;
-        }
-        final ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
-    }
+
 }

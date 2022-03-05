@@ -1,8 +1,12 @@
 package com.epam.esm.controller.config;
 
+import com.epam.esm.controller.security.ObjectToJsonMapper;
 import com.epam.esm.controller.security.RestAuthenticationEntryPoint;
 import com.epam.esm.controller.security.jwt.JwtConfigurer;
+import com.epam.esm.controller.security.jwt.JwtTokenFilter;
 import com.epam.esm.controller.security.jwt.JwtTokenProvider;
+import com.epam.esm.service.dto.RoleDto;
+import jdk.nashorn.internal.runtime.UserAccessorProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,7 +25,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("com.epam.esm.controller.security")
+@EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -28,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ORDERS_ENDPOINT = "/orders";
     private static final String ALL_ENDPOINT = "/";
     private final JwtTokenProvider jwtTokenProvider;
+    private final ObjectToJsonMapper mapper;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
@@ -38,19 +44,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
+
         http
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET).permitAll()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(HttpMethod.POST, ORDERS_ENDPOINT).hasRole("USER")
-                .antMatchers(ALL_ENDPOINT).hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider));
+                .apply(new JwtConfigurer(jwtTokenProvider, mapper));
 
         http
                 .exceptionHandling()

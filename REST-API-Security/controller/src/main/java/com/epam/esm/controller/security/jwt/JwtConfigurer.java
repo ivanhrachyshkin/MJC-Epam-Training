@@ -1,5 +1,6 @@
 package com.epam.esm.controller.security.jwt;
 
+import com.epam.esm.controller.security.ObjectToJsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,10 +11,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final ObjectToJsonMapper mapper;
 
     @Override
     public void configure(HttpSecurity httpSecurity) {
-        final JwtTokenFilter jwtTokenFilter = new JwtTokenFilter(jwtTokenProvider);
+        final JwtTokenFilter jwtTokenFilter = new JwtTokenFilter(jwtTokenProvider, mapper);
         httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
