@@ -1,10 +1,15 @@
 package com.epam.esm.controller.security.jwt;
 
+import com.epam.esm.controller.security.payload.TokenRefreshRequest;
+import com.epam.esm.service.RefreshTokenServiceImpl;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
+import com.epam.esm.service.dto.RefreshTokenDto;
 import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,18 +22,18 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
+    @Setter
+    private ResourceBundle rb;
     private final JwtTokenProperties jwtTokenProperties;
     private final ExceptionStatusPostfixProperties exceptionStatusPostfixProperties;
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenServiceImpl refreshTokenService;
 
     private String secret;
 
@@ -44,7 +49,7 @@ public class JwtTokenProvider {
         final Date date = Date.from(
                 LocalDateTime
                         .now()
-                        .plusMinutes(Long.parseLong(jwtTokenProperties.getExpired()))
+                        .plusSeconds(Long.parseLong(jwtTokenProperties.getJwtExpirationMs()))
                         .atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
@@ -52,15 +57,6 @@ public class JwtTokenProvider {
                 .setExpiration(date)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
-    }
-
-    public Authentication getAuthentication(String token) {
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
-
-    public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
     public String resolveToken(HttpServletRequest req) {
@@ -76,9 +72,27 @@ public class JwtTokenProvider {
             final Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("expired or invalid token",
+            throw new JwtAuthenticationException("token invalid or expired",
                     HttpStatus.UNAUTHORIZED, exceptionStatusPostfixProperties.getAuth());
         }
+    }
+
+    public RefreshTokenDto createRefreshToken(final int userId) {
+        return refreshTokenService.createRefreshToken(userId,
+                Long.parseLong(jwtTokenProperties.getJwtRefreshExpirationMs()));
+    }
+
+    public RefreshTokenDto findByToken(final String token) {
+        return refreshTokenService.findByToken(token);
+    }
+
+    public Authentication getAuthentication(String token) {
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, StringUtils.EMPTY, userDetails.getAuthorities());
+    }
+
+    private String getUsername(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
     private List<String> getRoleNames(List<RoleDto> dtoRoles) {

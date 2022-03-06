@@ -48,7 +48,8 @@ public class HateoasCreator {
     }
 
     public PagedModel<GiftCertificateDto> linkGiftCertificateDtos(Page<GiftCertificateDto> giftCertificateDtos) {
-        return pagedResourcesAssemblerGift.toModel(giftCertificateDtos, this::linkGiftCertificateDtoOne, linkTo(methodOn(GiftCertificateController.class)
+        return pagedResourcesAssemblerGift.toModel(giftCertificateDtos,
+                this::linkGiftCertificateDtoOne, linkTo(methodOn(GiftCertificateController.class)
                 .readAll(null, null, Pageable.unpaged()))
                 .withSelfRel());
     }
@@ -91,7 +92,8 @@ public class HateoasCreator {
     }
 
     public PagedModel<OrderDto> linkOrderDtos(Page<OrderDto> dtoOrders) {
-        return pagedResourcesAssemblerOrder.toModel(dtoOrders, this::linkOrderDtoOne, linkTo(methodOn(OrderController.class)
+        return pagedResourcesAssemblerOrder.toModel(dtoOrders,
+                this::linkOrderDtoOne, linkTo(methodOn(OrderController.class)
                 .readAll(Pageable.unpaged()))
                 .withSelfRel());
     }

@@ -2,9 +2,11 @@ package com.epam.esm.controller.exceptionhandler;
 
 import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.validator.ValidationException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,6 +30,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, status);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleJWTAuthenticationException(final AccessDeniedException e) {
+        final ApiError apiError = new ApiError(HttpStatus.FORBIDDEN.toString(), e.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+
     @Override
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleExceptionInternal(final Exception e,
@@ -35,7 +43,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                              final HttpHeaders headers,
                                                              final HttpStatus status,
                                                              final WebRequest request) {
-        final ApiError error = new ApiError(status.value() + "", e.getMessage());
+        final ApiError error = new ApiError(status.value() + StringUtils.EMPTY, e.getMessage());
         return super.handleExceptionInternal(e, error, headers, status, request);
     }
 }

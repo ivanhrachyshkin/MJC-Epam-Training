@@ -2,26 +2,19 @@ package com.epam.esm.controller.config;
 
 import com.epam.esm.controller.security.ObjectToJsonMapper;
 import com.epam.esm.controller.security.RestAuthenticationEntryPoint;
-import com.epam.esm.controller.security.jwt.JwtConfigurer;
 import com.epam.esm.controller.security.jwt.JwtTokenFilter;
 import com.epam.esm.controller.security.jwt.JwtTokenProvider;
-import com.epam.esm.service.dto.RoleDto;
-import jdk.nashorn.internal.runtime.UserAccessorProperty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -30,16 +23,20 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_ENDPOINT = "/auth/login";
-    private static final String ORDERS_ENDPOINT = "/orders";
-    private static final String ALL_ENDPOINT = "/";
-    private final JwtTokenProvider jwtTokenProvider;
+    private static final String REFRESH_TOKEN_ENDPOINT = "/auth/refreshToken";
     private final ObjectToJsonMapper mapper;
+    private final JwtTokenProvider jwtTokenProvider;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public JwtTokenFilter authenticationJwtTokenFilter() {
+        return new JwtTokenFilter(jwtTokenProvider, mapper);
     }
 
     @Override
@@ -52,10 +49,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers(REFRESH_TOKEN_ENDPOINT).permitAll()
                 .antMatchers(HttpMethod.GET).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider, mapper));
+                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .exceptionHandling()

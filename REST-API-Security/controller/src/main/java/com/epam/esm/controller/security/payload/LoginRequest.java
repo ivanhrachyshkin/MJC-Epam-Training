@@ -1,8 +1,10 @@
-package com.epam.esm.controller.security;
+package com.epam.esm.controller.security.payload;
+
 import lombok.Data;
 
 @Data
-public class AuthenticationRequestDto {
+public class LoginRequest {
+
     private String username;
     private String password;
 }

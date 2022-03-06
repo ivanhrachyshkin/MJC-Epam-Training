@@ -1,11 +1,8 @@
 package com.epam.esm.service.dto;
 
-import com.epam.esm.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +14,6 @@ public class RoleDto extends RepresentationModel<RoleDto> {
 
     private Integer id;
     private Roles roleName;
-    private List<User> users;
 
     public enum Roles {
         ROLE_USER, ROLE_ADMIN;

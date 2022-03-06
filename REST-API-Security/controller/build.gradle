@@ -3,7 +3,8 @@ dependencies {
     implementation libs.spring.boot.starter.web
     implementation libs.spring.boot.starter.hateoas
     implementation libs.spring.boot.starter.data.jpa
+    implementation libs.spring.boot.starter.security
     implementation libs.modelmapper
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation libs.jjwt
     implementation project(':service')
 }

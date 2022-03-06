@@ -57,6 +57,4 @@ public class JwtTokenFilter extends GenericFilterBean {
                 .write(mapper.convertObjectToJson(
                         new ApiError(statusValue + e.getPostfix(), e.getMessage())));
     }
-
-
 }
