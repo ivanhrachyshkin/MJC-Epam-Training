@@ -1,6 +1,7 @@
 package com.epam.esm.controller.interceptor;
 
 import com.epam.esm.controller.security.jwt.JwtTokenProvider;
+import com.epam.esm.controller.security.payload.requestvalidator.RequestValidator;
 import com.epam.esm.service.GiftCertificateServiceImpl;
 import com.epam.esm.service.OrderServiceImpl;
 import com.epam.esm.service.TagServiceImpl;
@@ -29,6 +30,7 @@ public class Interceptor implements HandlerInterceptor {
     private final UserValidator userValidator;
     private final JwtTokenProvider jwtTokenProvider;
     private final PageValidator paginationValidator;
+    private final RequestValidator requestValidator;
 
     @Override
     public boolean preHandle(final HttpServletRequest request,
@@ -46,6 +48,7 @@ public class Interceptor implements HandlerInterceptor {
         userValidator.setRb(resourceBundle);
         paginationValidator.setRb(resourceBundle);
         jwtTokenProvider.setRb(resourceBundle);
+        requestValidator.setRb(resourceBundle);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

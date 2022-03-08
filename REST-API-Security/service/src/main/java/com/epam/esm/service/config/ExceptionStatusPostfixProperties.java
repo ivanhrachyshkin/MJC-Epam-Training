@@ -19,5 +19,6 @@ public class ExceptionStatusPostfixProperties {
     private String order;
     private String pagination;
     private String auth;
+    private String req;
 
 }

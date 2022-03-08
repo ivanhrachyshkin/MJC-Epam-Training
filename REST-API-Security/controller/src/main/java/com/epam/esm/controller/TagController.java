@@ -22,7 +22,7 @@ public class TagController {
     private final HateoasCreator hateoasCreator;
     private final TagService tagService;
 
-    @PreAuthorize("hasRole('ADMINadded')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public TagDto create(@RequestBody final TagDto tagDto) {

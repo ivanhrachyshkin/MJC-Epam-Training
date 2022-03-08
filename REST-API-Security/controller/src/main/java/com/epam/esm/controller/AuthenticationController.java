@@ -4,6 +4,7 @@ import com.epam.esm.controller.security.jwt.JwtTokenProvider;
 import com.epam.esm.controller.security.payload.LoginResponse;
 import com.epam.esm.controller.security.payload.TokenRefreshRequest;
 import com.epam.esm.controller.security.payload.TokenRefreshResponse;
+import com.epam.esm.controller.security.payload.requestvalidator.RequestValidator;
 import com.epam.esm.service.RefreshTokenServiceImpl;
 import com.epam.esm.service.UserService;
 import com.epam.esm.controller.security.payload.LoginRequest;
@@ -27,10 +28,12 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenServiceImpl refreshTokenService;
+    private final RequestValidator requestValidator;
     private final UserService userService;
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> login(@RequestBody final LoginRequest request) {//todo validation
+    public ResponseEntity<?> login(@RequestBody final LoginRequest request) {
+        requestValidator.validateLoginRequest(request);
         final String username = request.getUsername();
         final String password = request.getPassword();
         authenticationManager.authenticate(
@@ -44,7 +47,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(@RequestBody final TokenRefreshRequest request) {//todo validation
+    public ResponseEntity<?> refreshToken(@RequestBody final TokenRefreshRequest request) {
+        requestValidator.validateRefreshTokenRequest(request);
         final String requestRefreshToken = request.getRefreshToken();
         final RefreshTokenDto refreshTokenDto = jwtTokenProvider.findByToken(requestRefreshToken);
         final UserDto userDto = refreshTokenDto.getUserDto();
