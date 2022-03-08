@@ -15,6 +15,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -33,7 +34,7 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
-    @RolesAllowed(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody final UserDto userDto) {
@@ -43,7 +44,7 @@ public class UserController {
         return createdUserDto;
     }
 
-    @Secured({USER, ADMIN})
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<UserDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
@@ -52,7 +53,7 @@ public class UserController {
         return hateoasCreator.linkUserDtos(dtoUsers);
     }
 
-    @Secured(USER)
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{userId}/orders")
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<OrderDto> readOrdersByUserId(@PathVariable final int userId,
@@ -65,7 +66,7 @@ public class UserController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
-    @Secured(USER)
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{userId}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDto readOneOrderByUserIdAndOrderId(@PathVariable final int userId,
@@ -77,7 +78,7 @@ public class UserController {
         return orderDto;
     }
 
-    @Secured(USER)
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDto readOne(@PathVariable final int id) {

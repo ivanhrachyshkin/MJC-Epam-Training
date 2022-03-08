@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class OrderController {
     private final HateoasCreator hateoasCreator;
     private final OrderService orderService;
 
-    @Secured({ADMIN, USER})
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public OrderDto create(@RequestBody OrderDto orderDto) {
         final OrderDto createdOrderDto = orderService.create(orderDto);
@@ -40,7 +41,7 @@ public class OrderController {
         return createdOrderDto;
     }
 
-    @Secured(USER)
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<OrderDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
@@ -52,7 +53,7 @@ public class OrderController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
-    @Secured(USER)
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{id}")
     public HttpEntity<OrderDto> readOne(@PathVariable final int id) {
         final OrderDto orderDto = orderService.readOne(id);

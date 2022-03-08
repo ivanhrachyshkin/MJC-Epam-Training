@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class GiftCertificateController {
     private final HateoasCreator hateoasCreator;
     private final GiftCertificateService giftCertificateService;
 
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
@@ -63,7 +64,7 @@ public class GiftCertificateController {
         return giftCertificateDto;
     }
 
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto update(@PathVariable final Integer id,
@@ -75,7 +76,7 @@ public class GiftCertificateController {
         return giftCertificateDto;
     }
 
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteById(@PathVariable int id) {

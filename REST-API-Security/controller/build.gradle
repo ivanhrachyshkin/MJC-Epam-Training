@@ -1,10 +1,19 @@
+apply plugin: "io.spring.dependency-management"
 dependencies {
     implementation libs.spring.boot.starter
     implementation libs.spring.boot.starter.web
     implementation libs.spring.boot.starter.hateoas
     implementation libs.spring.boot.starter.data.jpa
     implementation libs.spring.boot.starter.security
+    implementation 'org.keycloak:keycloak-spring-boot-starter:17.0.0'
     implementation libs.modelmapper
     implementation libs.jjwt
     implementation project(':service')
+
+
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.keycloak.bom:keycloak-adapter-bom:3.4.1.Final"
+    }
 }

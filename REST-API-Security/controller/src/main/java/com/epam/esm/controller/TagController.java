@@ -11,10 +11,8 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 
 @RestController
 @RequestMapping(value = "/tags", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -24,7 +22,7 @@ public class TagController {
     private final HateoasCreator hateoasCreator;
     private final TagService tagService;
 
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMINadded')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public TagDto create(@RequestBody final TagDto tagDto) {
@@ -56,7 +54,7 @@ public class TagController {
         return hateoasCreator.linkTagDtos(dtoTags);
     }
 
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}/admin")
     public ResponseEntity<Void> deleteById(@PathVariable final int id) {
         tagService.deleteById(id);
