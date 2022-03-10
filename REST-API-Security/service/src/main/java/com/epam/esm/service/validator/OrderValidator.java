@@ -1,12 +1,17 @@
 package com.epam.esm.service.validator;
 
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
+import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 @Component
@@ -17,49 +22,50 @@ public class OrderValidator {
     private ResourceBundle rb;
     private final ExceptionStatusPostfixProperties properties;
 
-    public void createValidate(final OrderDto orderDto) {
-
-        if (orderDto.getId() == null) {
-            throw new ValidationException(
-                    rb.getString("validator.order.null.value"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
-
-        if (orderDto.getId() != null) {
-            throw new ValidationException(
-                    rb.getString("id.value.passed"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
-
-        if (orderDto.getUserDto() == null || orderDto.getUserDto().getId() == null) {
-            throw new ValidationException(
-                    rb.getString("validator.order.userId.required"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
-
-        if (orderDto.getUserDto().getId() <= 0) {
-            throw new ValidationException(
-                    rb.getString("validator.order.userId.negative"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
-
-        if (orderDto.getGiftCertificateDto() == null || orderDto.getGiftCertificateDto().getId() == null) {
-            throw new ValidationException(
-                    rb.getString("validator.order.giftId.required"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
-
-        if (orderDto.getGiftCertificateDto().getId() <= 0) {
-            throw new ValidationException(
-                    rb.getString("validator.order.giftId.negative"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
-    }
-
     public void validateId(final int id) {
         if (id < 1) {
             throw new ValidationException(rb.getString("id.non"),
                     HttpStatus.BAD_REQUEST, properties.getOrder());
         }
+    }
+
+    public void createValidate(final OrderDto orderDto) {
+
+        if (orderDto == null) {
+            throwValidationException("validator.order.null.value");
+        }
+
+        if (orderDto.getId() != null) {
+            throwValidationException("id.should.not.passed");
+        }
+        validateOrderUserAndCertificate(orderDto);
+        validateNumberFields(orderDto);
+    }
+
+    private void validateOrderUserAndCertificate(final OrderDto orderDto) {
+        final UserDto userDto = orderDto.getUserDto();
+        final GiftCertificateDto giftCertificateDto = orderDto.getGiftCertificateDto();
+
+        if (giftCertificateDto == null || giftCertificateDto.getId() == null) {
+            throwValidationException("validator.order.giftId.required");
+        }
+
+        if (userDto == null || userDto.getId() == null) {
+            throwValidationException("validator.order.userId.required");
+        }
+    }
+
+    private void validateNumberFields(final OrderDto orderDto) {
+        if (orderDto.getUserDto().getId() <= 0) {
+            throwValidationException("validator.order.userId.negative");
+        }
+
+        if (orderDto.getGiftCertificateDto().getId() <= 0) {
+            throwValidationException("validator.order.giftId.negative");
+        }
+    }
+
+    private void throwValidationException(final String rbKey) {
+        throw new ValidationException(rb.getString(rbKey), HttpStatus.BAD_REQUEST, properties.getOrder());
     }
 }

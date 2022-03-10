@@ -20,15 +20,15 @@ public class PageValidator {
     public void paginationValidate(final Pageable pageable) {
 
         if (pageable.getPageNumber() < 0) {
-            throw new ValidationException(
-                    rb.getString("invalid.pagination"),
-                    HttpStatus.BAD_REQUEST, properties.getPagination());
+            throwValidationException("invalid.pagination");
         }
 
         if (pageable.getPageSize() < 1) {
-            throw new ValidationException(
-                    rb.getString("invalid.pagination"),
-                    HttpStatus.BAD_REQUEST, properties.getPagination());
+            throwValidationException("invalid.pagination");
         }
+    }
+
+    private void throwValidationException(final String rbKey) {
+        throw new ValidationException(rb.getString(rbKey), HttpStatus.BAD_REQUEST, properties.getPagination());
     }
 }

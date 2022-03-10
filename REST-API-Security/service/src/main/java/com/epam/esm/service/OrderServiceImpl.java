@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto create(final OrderDto orderDto) {
+    public OrderDto create(final OrderDto orderDto) { //todo for user
         orderValidator.createValidate(orderDto);
         final Order order = mapper.dtoToModel(orderDto);
         checkExistByIds(order);

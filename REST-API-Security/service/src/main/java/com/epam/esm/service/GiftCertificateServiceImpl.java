@@ -111,7 +111,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private GiftCertificate checkExist(final int id) {
-        giftCertificateValidator.validateId(id);
         return giftCertificateRepository
                 .findById(id)
                 .orElseThrow(() -> new ServiceException(

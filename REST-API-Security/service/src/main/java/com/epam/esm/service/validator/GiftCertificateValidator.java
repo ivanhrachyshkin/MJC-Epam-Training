@@ -5,11 +5,12 @@ import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -20,141 +21,104 @@ public class GiftCertificateValidator {
     private final ExceptionStatusPostfixProperties properties;
     private final TagValidator tagValidator;
 
-    public void updateValidate(final GiftCertificateDto giftCertificateDto) {
-
-        if (giftCertificateDto == null) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.null"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (giftCertificateDto.getId() == null) {
-            throw new ValidationException(
-                    rb.getString("id.should.passed"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (giftCertificateDto.getName() != null && giftCertificateDto.getName().isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.name.empty"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (giftCertificateDto.getDescription() != null && giftCertificateDto.getDescription().isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.description.empty"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (giftCertificateDto.getPrice() != null && giftCertificateDto.getPrice() <= 0) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.price.negative"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (giftCertificateDto.getDuration() != null && giftCertificateDto.getDuration() <= 0) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.duration.negative"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (giftCertificateDto.getDtoTags() != null) {
-            giftCertificateDto.getDtoTags().forEach(tagValidator::validate);
+    public void validateId(final int id) {
+        if (id < 1) {
+            throwValidationException("id.non");
         }
     }
 
     public void createValidate(final GiftCertificateDto giftCertificateDto) {
-
-        if (giftCertificateDto == null) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.null"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
         if (giftCertificateDto.getId() != null) {
-            throw new ValidationException(
-                    rb.getString("id.value.passed"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
+            throwValidationException("id.should.not.passed");
         }
+        final Map<Object, String> fieldsWithRbKeys = getFieldWithRbKey(giftCertificateDto);
+        fieldsWithRbKeys.forEach(this::validateNullOrEmpty);
+    }
 
-        if (giftCertificateDto.getName() == null || giftCertificateDto.getName().isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.name.required"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
+    public void updateValidate(final GiftCertificateDto giftCertificateDto) {
+        if (giftCertificateDto.getId() != null) {
+            throwValidationException("id.should.passed");
         }
+        final Map<Object, String> fieldsWithRbKeys = getFieldWithRbKey(giftCertificateDto);
+        fieldsWithRbKeys.forEach(this::validateNotNullAndEmpty);
+    }
 
-        if (giftCertificateDto.getDescription() == null || giftCertificateDto.getDescription().isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.description.required"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
+    public void readAllValidate(final List<String> tags,
+                                final GiftCertificateRequestParamsContainer container) {
+        validateTags(tags);
+        validateContainer(container);
+    }
 
-        if (giftCertificateDto.getPrice() == null) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.price.required"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
+    private Map<Object, String> getFieldWithRbKey(final GiftCertificateDto giftCertificateDto) {
+        if (giftCertificateDto == null) {
+            throwValidationException("validator.giftCertificate.null");
         }
+        validateNumberFields(giftCertificateDto);
 
-        if (giftCertificateDto.getPrice() <= 0) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.price.negative"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (giftCertificateDto.getDuration() == null) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.duration.required"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (giftCertificateDto.getDuration() <= 0) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.duration.negative"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
+        final String name = giftCertificateDto.getName();
+        final String description = giftCertificateDto.getDescription();
+        final Float price = giftCertificateDto.getPrice();
+        final Integer duration = giftCertificateDto.getDuration();
 
         if (giftCertificateDto.getDtoTags() != null) {
             giftCertificateDto.getDtoTags().forEach(tagValidator::validate);
         }
+
+        final Map<Object, String> values = new HashMap<>();
+        values.put(name, "validator.giftCertificate.name.required");
+        values.put(description, "validator.giftCertificate.description.required");
+        values.put(price, "validator.giftCertificate.description.required");
+        values.put(duration, "validator.giftCertificate.description.required");
+        return values;
     }
 
-
-    public void readAllValidate(final List<String> tags,
-                                final GiftCertificateRequestParamsContainer container) {
-
-        if (tags != null && tags.isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.tag.name.empty"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
+    private void validateNullOrEmpty(final Object field, final String rbKey) {
+        if (ObjectUtils.isEmpty(field)) {
+            throwValidationException(rbKey);
         }
+    }
 
+    private void validateNotNullAndEmpty(final Object field, final String rbKey) {
+        if (field != null && ObjectUtils.isEmpty(field)) {
+            throwValidationException(rbKey);
+        }
+    }
+
+    private void validateNumberFields(final GiftCertificateDto giftCertificateDto) {
+        if (giftCertificateDto.getPrice() <= 0) {
+            throwValidationException("validator.giftCertificate.price.negative");
+        }
+        if (giftCertificateDto.getDuration() <= 0) {
+            throwValidationException("validator.giftCertificate.duration.negative");
+        }
+    }
+
+    private void validateContainer(final GiftCertificateRequestParamsContainer container) {
+        final String name = container.getName();
+        final String description = container.getName();
+
+        if (name != null && name.isEmpty()) {
+            throwValidationException("validator.giftCertificate.name.empty");
+        }
+        if (description != null && description.isEmpty()) {
+            throwValidationException("validator.giftCertificate.description.empty");
+        }
+    }
+
+    private void validateTags(final List<String> tags) {
+        if (tags != null && tags.isEmpty()) {
+            throwValidationException("validator.tag.name.empty");
+        }
         if (tags != null) {
             tags.forEach(tag -> {
-                if (tag == null || tag.isEmpty()) {
-                    throw new ValidationException(
-                            rb.getString("validator.tag.name.empty"),
-                            HttpStatus.BAD_REQUEST, properties.getGift());
+                if (ObjectUtils.isEmpty(tags)) {
+                    throwValidationException("validator.tag.name.empty");
                 }
             });
         }
-
-        if (container.getName() != null && container.getName().isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.name.empty"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
-
-        if (container.getDescription() != null && container.getDescription().isEmpty()) {
-            throw new ValidationException(
-                    rb.getString("validator.giftCertificate.description.empty"),
-                    HttpStatus.BAD_REQUEST, properties.getGift());
-        }
     }
 
-    public void validateId(final int id) {
-        if (id < 1) {
-            throw new ValidationException(rb.getString("id.non"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
-        }
+    private void throwValidationException(final String rbKey) {
+        throw new ValidationException(rb.getString(rbKey), HttpStatus.BAD_REQUEST, properties.getGift());
     }
 }

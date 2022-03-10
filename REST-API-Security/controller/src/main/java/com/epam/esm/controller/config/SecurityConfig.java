@@ -18,9 +18,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
-    private static final String LOGIN_ENDPOINT = "/auth/login";
-    private static final String REFRESH_TOKEN_ENDPOINT = "/auth/refreshToken";
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -49,7 +46,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
                 .antMatchers("/users/**").fullyAuthenticated()
                 .antMatchers("/orders/**").fullyAuthenticated();
-        http.csrf().disable();
+//        http.authorizeRequests().anyRequest().permitAll();
+//        http.csrf().disable();
 
     }
 }
