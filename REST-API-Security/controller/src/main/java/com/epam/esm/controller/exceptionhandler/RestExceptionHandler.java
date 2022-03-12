@@ -3,6 +3,7 @@ package com.epam.esm.controller.exceptionhandler;
 import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

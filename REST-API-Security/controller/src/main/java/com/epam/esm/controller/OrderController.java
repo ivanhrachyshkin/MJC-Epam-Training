@@ -31,6 +31,7 @@ public class OrderController {
     private final HateoasCreator hateoasCreator;
     private final OrderService orderService;
 
+    @Secured({USER,ADMIN})
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public OrderDto create(@RequestBody OrderDto orderDto) {
@@ -41,6 +42,7 @@ public class OrderController {
         return createdOrderDto;
     }
 
+    @Secured({USER,ADMIN})
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -53,6 +55,7 @@ public class OrderController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
+    @Secured({USER,ADMIN})
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{id}")
     public HttpEntity<OrderDto> readOne(@PathVariable final int id) {

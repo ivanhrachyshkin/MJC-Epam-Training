@@ -19,7 +19,7 @@ public class TagValidator {
     private final ExceptionStatusPostfixProperties properties;
 
     public void validateId(final int id) {
-        if (id < 1) {
+        if (id <= 0) {
            throwValidationException("id.non");
         }
     }

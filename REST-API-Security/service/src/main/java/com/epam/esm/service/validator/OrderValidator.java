@@ -23,7 +23,7 @@ public class OrderValidator {
     private final ExceptionStatusPostfixProperties properties;
 
     public void validateId(final int id) {
-        if (id < 1) {
+        if (id <= 0) {
             throw new ValidationException(rb.getString("id.non"),
                     HttpStatus.BAD_REQUEST, properties.getOrder());
         }

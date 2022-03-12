@@ -2,7 +2,9 @@ package com.epam.esm.controller;
 
 import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.TagDto;
+import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +13,12 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
+import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @RestController
 @RequestMapping(value = "/tags", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -22,6 +28,7 @@ public class TagController {
     private final HateoasCreator hateoasCreator;
     private final TagService tagService;
 
+    @Secured({ADMIN})
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -54,6 +61,7 @@ public class TagController {
         return hateoasCreator.linkTagDtos(dtoTags);
     }
 
+    @Secured({ADMIN})
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}/admin")
     public ResponseEntity<Void> deleteById(@PathVariable final int id) {

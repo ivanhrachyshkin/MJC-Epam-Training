@@ -18,8 +18,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.time.Clock;
-
 @Configuration
 @ComponentScan("com.epam.esm.controller")
 @EnableSpringDataWebSupport

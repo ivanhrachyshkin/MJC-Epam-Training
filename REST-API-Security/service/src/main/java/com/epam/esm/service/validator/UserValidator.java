@@ -22,7 +22,8 @@ public class UserValidator {
     private final ExceptionStatusPostfixProperties properties;
 
     public void validateId(final int id) {
-      throwValidationException("id.non");
+        if (id <= 0)
+            throwValidationException("id.non");
     }
 
     public void createValidate(final UserDto userDto) {

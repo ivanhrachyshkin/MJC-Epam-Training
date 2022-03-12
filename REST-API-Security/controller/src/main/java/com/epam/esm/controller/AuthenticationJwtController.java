@@ -5,12 +5,12 @@ import com.epam.esm.controller.security.payload.LoginResponse;
 import com.epam.esm.controller.security.payload.TokenRefreshRequest;
 import com.epam.esm.controller.security.payload.TokenRefreshResponse;
 import com.epam.esm.controller.security.payload.requestvalidator.RequestValidator;
-import com.epam.esm.service.RefreshTokenServiceImpl;
 import com.epam.esm.service.UserService;
 import com.epam.esm.controller.security.payload.LoginRequest;
 import com.epam.esm.service.dto.RefreshTokenDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Profile("jwt")
 @RestController
 @RequestMapping(value = "/auth")
 @RequiredArgsConstructor
-public class AuthenticationController {
+public class AuthenticationJwtController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenServiceImpl refreshTokenService;
     private final RequestValidator requestValidator;
     private final UserService userService;
 

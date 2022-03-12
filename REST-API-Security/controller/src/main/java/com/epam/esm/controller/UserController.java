@@ -5,6 +5,7 @@ import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,8 +14,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
+import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @RestController
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,6 +42,7 @@ public class UserController {
         return createdUserDto;
     }
 
+    @Secured({USER,ADMIN})
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -44,6 +52,7 @@ public class UserController {
         return hateoasCreator.linkUserDtos(dtoUsers);
     }
 
+    @Secured({USER,ADMIN})
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{userId}/orders")
     @ResponseStatus(HttpStatus.OK)
@@ -57,6 +66,7 @@ public class UserController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
+    @Secured({USER,ADMIN})
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{userId}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
@@ -69,6 +79,7 @@ public class UserController {
         return orderDto;
     }
 
+    @Secured({ADMIN})
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)

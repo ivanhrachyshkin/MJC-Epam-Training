@@ -22,7 +22,7 @@ public class GiftCertificateValidator {
     private final TagValidator tagValidator;
 
     public void validateId(final int id) {
-        if (id < 1) {
+        if (id <= 0) {
             throwValidationException("id.non");
         }
     }

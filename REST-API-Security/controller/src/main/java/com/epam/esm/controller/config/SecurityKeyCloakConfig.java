@@ -5,18 +5,21 @@ import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticatio
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
+@Profile("keycloak")
 @KeycloakConfiguration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
+public class SecurityKeyCloakConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Bean
     @Override
@@ -40,14 +43,12 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http
+                .httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST).fullyAuthenticated()
                 .antMatchers("/tags/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
-                .antMatchers("/users/**").fullyAuthenticated()
-                .antMatchers("/orders/**").fullyAuthenticated();
-//        http.authorizeRequests().anyRequest().permitAll();
-//        http.csrf().disable();
-
+                .antMatchers(HttpMethod.GET, "/gifts/**").permitAll();
     }
 }
