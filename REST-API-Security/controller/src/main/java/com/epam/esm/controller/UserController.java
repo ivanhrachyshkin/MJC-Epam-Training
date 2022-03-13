@@ -8,6 +8,7 @@ import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -32,7 +33,7 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @Secured({ADMIN})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody final UserDto userDto) {
@@ -42,8 +43,17 @@ public class UserController {
         return createdUserDto;
     }
 
-    @Secured({USER,ADMIN})
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Profile("keycloak")
+    @Secured({ADMIN, USER})
+    @PostMapping(value = "keycloak")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto createKeycloakUser(@RequestBody final UserDto userDto) {
+        final UserDto createdUserDto = userService.createKeycloakUser(userDto);
+        hateoasCreator.linkUserDto(createdUserDto);
+        return createdUserDto;
+    }
+
+    @Secured({USER, ADMIN})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<UserDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
@@ -52,7 +62,7 @@ public class UserController {
         return hateoasCreator.linkUserDtos(dtoUsers);
     }
 
-    @Secured({USER,ADMIN})
+    @Secured({USER, ADMIN})
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{userId}/orders")
     @ResponseStatus(HttpStatus.OK)
@@ -66,8 +76,19 @@ public class UserController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
-    @Secured({USER,ADMIN})
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Secured({USER})
+    @PostMapping(value = "/{userId}/orders", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public OrderDto createOrderByUser(@PathVariable final int userId, @RequestBody OrderDto orderDto) {
+        orderDto.getUserDto().setId(userId);//todo refactor
+        final OrderDto createdOrderDto = orderService.create(orderDto);
+        hateoasCreator.linkOrderDtoOne(createdOrderDto);
+        hateoasCreator.linkUserDto(createdOrderDto.getUserDto());
+        hateoasCreator.linkGiftCertificateDto(createdOrderDto.getGiftCertificateDto());
+        return createdOrderDto;
+    }
+
+
+    @Secured({USER, ADMIN})
     @GetMapping(value = "/{userId}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDto readOneOrderByUserIdAndOrderId(@PathVariable final int userId,
@@ -79,8 +100,7 @@ public class UserController {
         return orderDto;
     }
 
-    @Secured({ADMIN})
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Secured({ADMIN, USER})
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDto readOne(@PathVariable final int id) {

@@ -3,10 +3,12 @@ package com.epam.esm.service.validator;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -22,15 +24,13 @@ public class OrderValidator {
     private ResourceBundle rb;
     private final ExceptionStatusPostfixProperties properties;
 
-    public void validateId(final int id) {
-        if (id <= 0) {
-            throw new ValidationException(rb.getString("id.non"),
-                    HttpStatus.BAD_REQUEST, properties.getOrder());
+    public void validateId(final Integer id) {
+        if (id != null && id <= 0) {
+            throwValidationException("id.non");
         }
     }
 
     public void createValidate(final OrderDto orderDto) {
-
         if (orderDto == null) {
             throwValidationException("validator.order.null.value");
         }

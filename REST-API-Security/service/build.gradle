@@ -7,4 +7,6 @@ dependencies {
     implementation libs.modelmapper
     implementation project(':model')
     implementation project(':dao')
+    implementation 'org.keycloak:keycloak-spring-boot-starter:17.0.0'
+    implementation 'org.keycloak:keycloak-admin-client:17.0.0'
 }

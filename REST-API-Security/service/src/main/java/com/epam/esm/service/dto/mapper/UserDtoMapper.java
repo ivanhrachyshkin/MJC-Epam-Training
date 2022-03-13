@@ -43,8 +43,8 @@ public class UserDtoMapper implements DtoMapper<User, UserDto> {
     public User dtoToModel(final UserDto userDto) {
         final User user = modelMapper.map(userDto, User.class);
         emptyOrdersIfNull(user);
-        final Set<Order> orders = userDto
-                .getDtoOrders()
+        final Set<Order> orders = user
+                .getOrders()
                 .stream()
                 .map(orderDto -> modelMapper.map(orderDto, Order.class))
                 .collect(Collectors.toSet());

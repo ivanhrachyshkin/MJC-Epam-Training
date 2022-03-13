@@ -39,22 +39,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto create(final OrderDto orderDto) { //todo for user
+    public OrderDto create(final OrderDto orderDto) {
         orderValidator.createValidate(orderDto);
         final Order order = mapper.dtoToModel(orderDto);
         checkExistByIds(order);
         final Integer userId = order.getUser().getId();
         final Integer giftCertificateId = order.getGiftCertificate().getId();
-        userRepository
-                .findById(userId)
-                .orElseThrow(() -> new ServiceException(
-                        rb.getString("user.notFound.id"),
-                        HttpStatus.NOT_FOUND, properties.getUser(), userId));
-        final GiftCertificate giftCertificate = giftCertificateRepository
-                .findById(giftCertificateId)
-                .orElseThrow(() -> new ServiceException(
-                        rb.getString("giftCertificate.notFound.id"),
-                        HttpStatus.NOT_FOUND, properties.getGift(), giftCertificateId));
+        checkExistUserId(userId);
+        final GiftCertificate giftCertificate = checkExistGiftCertificateId(giftCertificateId);
         order.setPrice(giftCertificate.getPrice());
         order.setDate(LocalDateTime.now(clock));
         final Order newOrder = orderRepository.save(order);
@@ -113,5 +105,21 @@ public class OrderServiceImpl implements OrderService {
                     throw new ServiceException(
                             rb.getString("order.alreadyExists"), HttpStatus.CONFLICT, properties.getOrder());
                 });
+    }
+
+    private void checkExistUserId(final int userId) {
+        userRepository
+                .findById(userId)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("user.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getUser(), userId));
+    }
+
+    private GiftCertificate checkExistGiftCertificateId(final int giftCertificateId) {
+        return giftCertificateRepository
+                .findById(giftCertificateId)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("giftCertificate.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getGift(), giftCertificateId));
     }
 }

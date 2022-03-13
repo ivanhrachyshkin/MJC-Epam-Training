@@ -18,9 +18,9 @@ public class TagValidator {
     private ResourceBundle rb;
     private final ExceptionStatusPostfixProperties properties;
 
-    public void validateId(final int id) {
-        if (id <= 0) {
-           throwValidationException("id.non");
+    public void validateId(final Integer id) {
+        if (id != null && id <= 0) {
+            throwValidationException("id.non");
         }
     }
 

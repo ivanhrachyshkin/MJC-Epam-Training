@@ -20,5 +20,4 @@ public class ExceptionStatusPostfixProperties {
     private String pagination;
     private String auth;
     private String req;
-
 }

@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface UserService {
 
-    public UserDto create(UserDto userDto);
+    UserDto createKeycloakUser(UserDto userDto);
+
+    UserDto create(UserDto userDto);
 
     Page<UserDto> readAll(Pageable pageable);
 
-    UserDto readOneByName( String name);
+    UserDto readOneByName(String name);
 
     UserDto readOne(int id);
 }

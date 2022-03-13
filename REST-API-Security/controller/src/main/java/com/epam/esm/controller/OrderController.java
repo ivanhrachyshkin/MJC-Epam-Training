@@ -32,7 +32,6 @@ public class OrderController {
     private final OrderService orderService;
 
     @Secured({USER,ADMIN})
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public OrderDto create(@RequestBody OrderDto orderDto) {
         final OrderDto createdOrderDto = orderService.create(orderDto);
@@ -43,7 +42,6 @@ public class OrderController {
     }
 
     @Secured({USER,ADMIN})
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<OrderDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
@@ -56,7 +54,6 @@ public class OrderController {
     }
 
     @Secured({USER,ADMIN})
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{id}")
     public HttpEntity<OrderDto> readOne(@PathVariable final int id) {
         final OrderDto orderDto = orderService.readOne(id);

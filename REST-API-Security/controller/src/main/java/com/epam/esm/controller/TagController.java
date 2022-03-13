@@ -29,7 +29,6 @@ public class TagController {
     private final TagService tagService;
 
     @Secured({ADMIN})
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public TagDto create(@RequestBody final TagDto tagDto) {
@@ -62,7 +61,6 @@ public class TagController {
     }
 
     @Secured({ADMIN})
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}/admin")
     public ResponseEntity<Void> deleteById(@PathVariable final int id) {
         tagService.deleteById(id);

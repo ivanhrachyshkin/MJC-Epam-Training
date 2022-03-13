@@ -21,8 +21,8 @@ public class GiftCertificateValidator {
     private final ExceptionStatusPostfixProperties properties;
     private final TagValidator tagValidator;
 
-    public void validateId(final int id) {
-        if (id <= 0) {
+    public void validateId(final Integer id) {
+        if (id != null && id <= 0) {
             throwValidationException("id.non");
         }
     }
@@ -67,8 +67,8 @@ public class GiftCertificateValidator {
         final Map<Object, String> values = new HashMap<>();
         values.put(name, "validator.giftCertificate.name.required");
         values.put(description, "validator.giftCertificate.description.required");
-        values.put(price, "validator.giftCertificate.description.required");
-        values.put(duration, "validator.giftCertificate.description.required");
+        values.put(price, "validator.giftCertificate.price.required");
+        values.put(duration, "validator.giftCertificate.duration.required");
         return values;
     }
 

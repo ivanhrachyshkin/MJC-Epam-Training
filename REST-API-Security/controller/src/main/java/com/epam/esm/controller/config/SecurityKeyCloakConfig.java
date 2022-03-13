@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 
 @Profile("keycloak")
 @KeycloakConfiguration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityKeyCloakConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Bean
@@ -49,6 +49,7 @@ public class SecurityKeyCloakConfig extends KeycloakWebSecurityConfigurerAdapter
                 .and()
                 .authorizeRequests()
                 .antMatchers("/tags/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/gifts/**").permitAll();
+                .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
+                .antMatchers("/keycloakCreateUser").permitAll();
     }
 }

@@ -25,4 +25,10 @@ public class UserDto extends RepresentationModel<UserDto> {
     public UserDto(final Integer id) {
         this.id = id;
     }
+
+    public UserDto(final String username, final String email, final String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }
