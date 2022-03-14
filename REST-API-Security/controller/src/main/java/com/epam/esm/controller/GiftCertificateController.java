@@ -5,11 +5,13 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import com.epam.esm.service.dto.RoleDto;
+import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import java.util.List;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 import static com.epam.esm.service.dto.RoleDto.Roles.ROLE_ADMIN;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/gifts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,14 +36,14 @@ public class GiftCertificateController {
 
     @Secured(ADMIN)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
+    public ResponseEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
         final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
         hateoasCreator.linkGiftCertificateDtoOne(createdGiftCertificateDto);
         createdGiftCertificateDto
                 .getDtoTags()
                 .forEach(hateoasCreator::linkTagDto);
-        return createdGiftCertificateDto;
+        final HttpHeaders httpHeaders = setLocationHeader(createdGiftCertificateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(createdGiftCertificateDto);
     }
 
     @GetMapping
@@ -82,5 +86,14 @@ public class GiftCertificateController {
     public ResponseEntity<Void> deleteById(@PathVariable int id) {
         giftCertificateService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private HttpHeaders setLocationHeader(final GiftCertificateDto giftCertificateDto) {
+        final String href = linkTo(methodOn(GiftCertificateController.class)
+                .readOne(giftCertificateDto.getId()))
+                .withSelfRel().getHref();
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.LOCATION, href);
+        return httpHeaders;
     }
 }

@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface OrderService {
 
-    OrderDto create(OrderDto orderDto);
+    OrderDto create(OrderDto orderDto, Integer userId);
 
-    Page<OrderDto> readAll(Pageable pageable);
+    Page<OrderDto> readAll(Pageable pageable, Integer userId);
 
     Page<OrderDto> readAllByUserId(int userId, Pageable pageable);
 

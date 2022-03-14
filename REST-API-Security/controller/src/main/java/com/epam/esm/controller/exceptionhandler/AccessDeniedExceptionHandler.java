@@ -24,15 +24,15 @@ public class AccessDeniedExceptionHandler implements AccessDeniedHandler {
     @Override
     public void handle(final HttpServletRequest request,
                        final HttpServletResponse response,
-                       final AccessDeniedException e) throws IOException, ServletException {
+                       final AccessDeniedException e) throws IOException {
 
-        final int statusValue = HttpStatus.UNAUTHORIZED.value();
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        final int statusValue = HttpStatus.FORBIDDEN.value();
+        response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.
                 getWriter()
                 .write(mapper.convertObjectToJson(
-                        new ApiError(statusValue + properties.getAuth(), e.getMessage())));
+                        new ApiError(statusValue + properties.getAuth(), HttpStatus.FORBIDDEN.toString())));//todo
 
     }
 }

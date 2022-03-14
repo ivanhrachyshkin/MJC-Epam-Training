@@ -55,6 +55,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(date)
+                .setId(String.valueOf(userDto.getId()))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
@@ -67,7 +68,7 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public boolean validateToken(String token) throws JwtAuthenticationException {
+    public boolean validateToken(final String token) throws JwtAuthenticationException {
         try {
             final Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());

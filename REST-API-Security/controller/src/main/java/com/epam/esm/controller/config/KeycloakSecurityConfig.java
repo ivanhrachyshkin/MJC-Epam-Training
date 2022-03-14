@@ -2,7 +2,6 @@ package com.epam.esm.controller.config;
 
 import com.epam.esm.controller.exceptionhandler.AccessDeniedExceptionHandler;
 import com.epam.esm.controller.security.RestAuthenticationEntryPoint;
-import com.epam.esm.service.dto.RoleDto;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;

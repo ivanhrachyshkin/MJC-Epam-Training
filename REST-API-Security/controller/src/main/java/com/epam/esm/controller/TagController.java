@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.controller.hateoas.HateoasCreator;
+import com.epam.esm.controller.security.jwt.JwtUser;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.TagDto;
@@ -10,15 +11,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 import static com.epam.esm.service.dto.RoleDto.Roles.USER;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/tags", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,11 +39,11 @@ public class TagController {
 
     @Secured({ADMIN})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public TagDto create(@RequestBody final TagDto tagDto) {
+    public ResponseEntity<TagDto> create(@RequestBody final TagDto tagDto) {
         final TagDto createdTag = tagService.create(tagDto);
         hateoasCreator.linkTagDtoOne(createdTag);
-        return createdTag;
+        final HttpHeaders httpHeaders = setLocationHeader(tagDto);
+        return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(tagDto);
     }
 
     @GetMapping
@@ -49,8 +58,7 @@ public class TagController {
     @ResponseStatus(HttpStatus.OK)
     public TagDto readOne(@PathVariable final int id) {
         final TagDto tagDto = tagService.readOne(id);
-        hateoasCreator.linkTagDtoOne(tagDto);
-        return tagDto;
+        return hateoasCreator.linkTagDtoOne(tagDto);
     }
 
     @GetMapping(value = "/mostUsed")
@@ -65,5 +73,14 @@ public class TagController {
     public ResponseEntity<Void> deleteById(@PathVariable final int id) {
         tagService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private HttpHeaders setLocationHeader(final TagDto tagDto) {
+        final String href = linkTo(methodOn(OrderController.class)
+                .readOne(tagDto.getId()))
+                .withSelfRel().getHref();
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.LOCATION, href);
+        return httpHeaders;
     }
 }

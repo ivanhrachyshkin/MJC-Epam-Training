@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -94,14 +95,14 @@ public class HateoasCreator {
     public PagedModel<OrderDto> linkOrderDtos(Page<OrderDto> dtoOrders) {
         return pagedResourcesAssemblerOrder.toModel(dtoOrders,
                 this::linkOrderDtoOne, linkTo(methodOn(OrderController.class)
-                .readAll(Pageable.unpaged()))
+                .readAll(Pageable.unpaged(), null))
                 .withSelfRel());
     }
 
     public OrderDto linkOrderDtoOne(final OrderDto orderDto) {
       return  orderDto
                 .add(linkTo(methodOn(OrderController.class)
-                        .create(orderDto)).withRel("method").withType("POST"))
+                        .create(orderDto, null)).withRel("method").withType("POST"))
                 .add(linkTo(methodOn(OrderController.class)
                         .readOne(orderDto.getId()))
                         .withSelfRel());

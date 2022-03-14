@@ -5,8 +5,10 @@ import com.epam.esm.dao.OrderRepository;
 import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
+import com.epam.esm.model.User;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.OrderValidator;
 import com.epam.esm.service.validator.PageValidator;
@@ -21,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+
+import static com.epam.esm.model.Role.Roles.ROLE_ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -39,13 +43,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto create(final OrderDto orderDto) {
-        orderValidator.createValidate(orderDto);
+    public OrderDto create(final OrderDto orderDto, final Integer userId) {
+        final User user = checkExistUser(userId);
+        createValidationByRoles(user, orderDto);
         final Order order = mapper.dtoToModel(orderDto);
-        checkExistByIds(order);
-        final Integer userId = order.getUser().getId();
         final Integer giftCertificateId = order.getGiftCertificate().getId();
-        checkExistUserId(userId);
         final GiftCertificate giftCertificate = checkExistGiftCertificateId(giftCertificateId);
         order.setPrice(giftCertificate.getPrice());
         order.setDate(LocalDateTime.now(clock));
@@ -55,9 +57,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Page<OrderDto> readAll(final Pageable pageable) {
+    public Page<OrderDto> readAll(final Pageable pageable, final Integer userId) {
         paginationValidator.paginationValidate(pageable);
-        final Page<Order> orders = orderRepository.findAll(pageable);
+        final User user = checkExistUser(userId);
+        final Page<Order> orders = getOrdersForReadAllByRole(user, pageable);
         return mapper.modelsToDto(orders);
     }
 
@@ -98,17 +101,8 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND, properties.getOrder(), id));
     }
 
-    private void checkExistByIds(final Order order) {
-        orderRepository
-                .findOrderByUserIdAndAndGiftCertificateId(order.getUser().getId(), order.getGiftCertificate().getId())
-                .ifPresent(order1 -> {
-                    throw new ServiceException(
-                            rb.getString("order.alreadyExists"), HttpStatus.CONFLICT, properties.getOrder());
-                });
-    }
-
-    private void checkExistUserId(final int userId) {
-        userRepository
+    private User checkExistUser(final int userId) {
+        return userRepository
                 .findById(userId)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("user.notFound.id"),
@@ -121,5 +115,25 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("giftCertificate.notFound.id"),
                         HttpStatus.NOT_FOUND, properties.getGift(), giftCertificateId));
+    }
+
+    private Page<Order> getOrdersForReadAllByRole(final User user, final Pageable pageable) {
+        final Page<Order> orders;
+        if (user.getRoles().get(0).getRoleName().equals(ROLE_ADMIN)) {
+            orders = orderRepository.findAll(pageable);
+        } else {
+            orders = orderRepository.findOrdersByUserId(user.getId(), pageable);
+        }
+        return orders;
+    }
+
+    private void createValidationByRoles(final User user, final OrderDto orderDto) {
+        if (user.getRoles().get(0).getRoleName().equals(ROLE_ADMIN)) {
+            orderValidator.createValidateAdminRole(orderDto);
+            checkExistUser(orderDto.getUserDto().getId());
+        } else {
+            orderValidator.createValidateUserRole(orderDto);
+            orderDto.setUserDto(new UserDto(user.getId()));
+        }
     }
 }

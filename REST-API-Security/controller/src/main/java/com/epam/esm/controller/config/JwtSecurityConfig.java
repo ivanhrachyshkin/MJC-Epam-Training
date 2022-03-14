@@ -1,5 +1,6 @@
 package com.epam.esm.controller.config;
 
+import com.epam.esm.controller.exceptionhandler.AccessDeniedExceptionHandler;
 import com.epam.esm.controller.security.ObjectToJsonMapper;
 import com.epam.esm.controller.security.RestAuthenticationEntryPoint;
 import com.epam.esm.controller.security.jwt.JwtTokenFilter;
@@ -29,6 +30,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectToJsonMapper mapper;
     private final JwtTokenProvider jwtTokenProvider;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
+    private final AccessDeniedExceptionHandler handler;
 
     @Bean
     @Override
@@ -52,13 +54,18 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
                 .antMatchers(REFRESH_TOKEN_ENDPOINT).permitAll()
-                .antMatchers(HttpMethod.GET).permitAll()
+                .antMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/gifts/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
+                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint);
+                .authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(handler);
     }
 }

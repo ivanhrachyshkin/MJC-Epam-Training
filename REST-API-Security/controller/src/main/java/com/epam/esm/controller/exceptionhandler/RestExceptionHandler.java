@@ -6,8 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -29,12 +27,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         final HttpStatus status = e.getStatus();
         final ApiError apiError = new ApiError(status.value() + e.getPostfix(), e.getMessage());
         return new ResponseEntity<>(apiError, status);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiError> handleAccessDeniedException(final AccessDeniedException e) {
-        final ApiError apiError = new ApiError(HttpStatus.FORBIDDEN.toString(), e.getMessage());
-        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
     @Override
