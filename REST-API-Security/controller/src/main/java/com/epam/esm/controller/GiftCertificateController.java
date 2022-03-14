@@ -30,7 +30,7 @@ public class GiftCertificateController {
     private final HateoasCreator hateoasCreator;
     private final GiftCertificateService giftCertificateService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @Secured(ADMIN)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
@@ -64,7 +64,7 @@ public class GiftCertificateController {
         return giftCertificateDto;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @Secured(ADMIN)
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto update(@PathVariable final Integer id,
@@ -76,7 +76,7 @@ public class GiftCertificateController {
         return giftCertificateDto;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @Secured(ADMIN)
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteById(@PathVariable int id) {

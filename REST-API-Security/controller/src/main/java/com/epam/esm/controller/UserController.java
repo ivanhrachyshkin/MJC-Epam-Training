@@ -44,13 +44,10 @@ public class UserController {
     }
 
     @Profile("keycloak")
-    @Secured({ADMIN, USER})
     @PostMapping(value = "keycloak")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createKeycloakUser(@RequestBody final UserDto userDto) {
-        final UserDto createdUserDto = userService.createKeycloakUser(userDto);
-        hateoasCreator.linkUserDto(createdUserDto);
-        return createdUserDto;
+        return userService.createKeycloakUser(userDto);
     }
 
     @Secured({USER, ADMIN})
@@ -63,7 +60,6 @@ public class UserController {
     }
 
     @Secured({USER, ADMIN})
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/{userId}/orders")
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<OrderDto> readOrdersByUserId(@PathVariable final int userId,
@@ -79,7 +75,7 @@ public class UserController {
     @Secured({USER})
     @PostMapping(value = "/{userId}/orders", consumes = MediaType.APPLICATION_JSON_VALUE)
     public OrderDto createOrderByUser(@PathVariable final int userId, @RequestBody OrderDto orderDto) {
-        orderDto.getUserDto().setId(userId);//todo refactor
+        orderDto.getUserDto().setId(userId);
         final OrderDto createdOrderDto = orderService.create(orderDto);
         hateoasCreator.linkOrderDtoOne(createdOrderDto);
         hateoasCreator.linkUserDto(createdOrderDto.getUserDto());

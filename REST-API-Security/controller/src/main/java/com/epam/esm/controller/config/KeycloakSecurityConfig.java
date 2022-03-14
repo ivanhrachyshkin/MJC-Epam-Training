@@ -1,5 +1,9 @@
 package com.epam.esm.controller.config;
 
+import com.epam.esm.controller.exceptionhandler.AccessDeniedExceptionHandler;
+import com.epam.esm.controller.security.RestAuthenticationEntryPoint;
+import com.epam.esm.service.dto.RoleDto;
+import lombok.RequiredArgsConstructor;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
@@ -19,7 +23,11 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @Profile("keycloak")
 @KeycloakConfiguration
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class SecurityKeyCloakConfig extends KeycloakWebSecurityConfigurerAdapter {
+@RequiredArgsConstructor
+public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
+
+    private final RestAuthenticationEntryPoint authenticationEntryPoint;
+    private final AccessDeniedExceptionHandler handler;
 
     @Bean
     @Override
@@ -43,13 +51,21 @@ public class SecurityKeyCloakConfig extends KeycloakWebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http
-                .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/tags/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/gifts/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
-                .antMatchers("/keycloakCreateUser").permitAll();
+                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/keycloakCreateUser").permitAll()
+                .anyRequest().authenticated();
+
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(handler);
     }
 }

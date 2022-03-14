@@ -3,11 +3,11 @@ package com.epam.esm.controller.exceptionhandler;
 import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -32,7 +32,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiError> handleJWTAuthenticationException(final AccessDeniedException e) {
+    public ResponseEntity<ApiError> handleAccessDeniedException(final AccessDeniedException e) {
         final ApiError apiError = new ApiError(HttpStatus.FORBIDDEN.toString(), e.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }

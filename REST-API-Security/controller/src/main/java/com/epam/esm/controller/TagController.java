@@ -61,7 +61,7 @@ public class TagController {
     }
 
     @Secured({ADMIN})
-    @DeleteMapping(value = "/{id}/admin")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable final int id) {
         tagService.deleteById(id);
         return ResponseEntity.noContent().build();
