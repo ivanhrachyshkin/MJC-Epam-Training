@@ -95,14 +95,14 @@ public class HateoasCreator {
     public PagedModel<OrderDto> linkOrderDtos(Page<OrderDto> dtoOrders) {
         return pagedResourcesAssemblerOrder.toModel(dtoOrders,
                 this::linkOrderDtoOne, linkTo(methodOn(OrderController.class)
-                .readAll(Pageable.unpaged(), null))
+                .readAll(Pageable.unpaged()))
                 .withSelfRel());
     }
 
     public OrderDto linkOrderDtoOne(final OrderDto orderDto) {
       return  orderDto
                 .add(linkTo(methodOn(OrderController.class)
-                        .create(orderDto, null)).withRel("method").withType("POST"))
+                        .create(orderDto)).withRel("method").withType("POST"))
                 .add(linkTo(methodOn(OrderController.class)
                         .readOne(orderDto.getId()))
                         .withSelfRel());

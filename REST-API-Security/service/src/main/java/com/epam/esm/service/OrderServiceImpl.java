@@ -17,6 +17,8 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 import static com.epam.esm.model.Role.Roles.ROLE_ADMIN;
+import static com.epam.esm.model.Role.Roles.ROLE_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -43,24 +46,23 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto create(final OrderDto orderDto, final Integer userId) {
-        final User user = checkExistUser(userId);
-        createValidationByRoles(user, orderDto);
+    public OrderDto create(final OrderDto orderDto) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final User principal = getPrincipalFromAuthentication(authentication);
+        validateOrderByRoles(principal, orderDto);
         final Order order = mapper.dtoToModel(orderDto);
-        final Integer giftCertificateId = order.getGiftCertificate().getId();
-        final GiftCertificate giftCertificate = checkExistGiftCertificateId(giftCertificateId);
-        order.setPrice(giftCertificate.getPrice());
-        order.setDate(LocalDateTime.now(clock));
-        final Order newOrder = orderRepository.save(order);
-        return mapper.modelToDto(newOrder);
+        final Order preparedOrder = prepareOrderForCreation(order);
+        final Order createdOrder = orderRepository.save(preparedOrder);
+        return mapper.modelToDto(createdOrder);
     }
 
     @Override
     @Transactional
-    public Page<OrderDto> readAll(final Pageable pageable, final Integer userId) {
+    public Page<OrderDto> readAll(final Pageable pageable) {
         paginationValidator.paginationValidate(pageable);
-        final User user = checkExistUser(userId);
-        final Page<Order> orders = getOrdersForReadAllByRole(user, pageable);
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final User principal = getPrincipalFromAuthentication(authentication);
+        final Page<Order> orders = getOrdersForReadAllByUserRole(principal, pageable);
         return mapper.modelsToDto(orders);
     }
 
@@ -117,23 +119,41 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND, properties.getGift(), giftCertificateId));
     }
 
-    private Page<Order> getOrdersForReadAllByRole(final User user, final Pageable pageable) {
+    private Page<Order> getOrdersForReadAllByUserRole(final User user, final Pageable pageable) {
         final Page<Order> orders;
-        if (user.getRoles().get(0).getRoleName().equals(ROLE_ADMIN)) {
-            orders = orderRepository.findAll(pageable);
-        } else {
+        if (ROLE_USER.equals(user.getRoles().get(0).getRoleName())) {
             orders = orderRepository.findOrdersByUserId(user.getId(), pageable);
+        } else {
+            orders = orderRepository.findAll(pageable);
         }
         return orders;
     }
 
-    private void createValidationByRoles(final User user, final OrderDto orderDto) {
-        if (user.getRoles().get(0).getRoleName().equals(ROLE_ADMIN)) {
-            orderValidator.createValidateAdminRole(orderDto);
-            checkExistUser(orderDto.getUserDto().getId());
-        } else {
-            orderValidator.createValidateUserRole(orderDto);
+    private void validateOrderByRoles(final User user, final OrderDto orderDto) {
+        if (ROLE_USER.equals(user.getRoles().get(0).getRoleName())) {//todo NPE equals ignore case
+            orderValidator.createValidate(orderDto, false);
             orderDto.setUserDto(new UserDto(user.getId()));
+        } else {
+            orderValidator.createValidate(orderDto, true);
+            checkExistUser(orderDto.getUserDto().getId());
         }
+    }
+
+    private Order prepareOrderForCreation(final Order order) {
+        final Integer giftCertificateId = order.getGiftCertificate().getId();
+        final GiftCertificate giftCertificate = checkExistGiftCertificateId(giftCertificateId);
+        order.setPrice(giftCertificate.getPrice()); //todo sum of certificate
+        order.setDate(LocalDateTime.now(clock));
+        return order;
+    }
+
+    private User getPrincipalFromAuthentication(final Authentication authentication) {
+        final String name = authentication.getName();
+        return userRepository
+                .findByUsername(name).orElseThrow(() -> {
+                    throw new ServiceException(
+                            rb.getString("user.exists.name"),
+                            HttpStatus.NOT_FOUND, properties.getUser());
+                });
     }
 }

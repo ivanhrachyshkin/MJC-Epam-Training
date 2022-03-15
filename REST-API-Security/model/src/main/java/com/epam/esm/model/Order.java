@@ -25,7 +25,7 @@ public class Order implements Serializable {
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gift_certificate_id", nullable = false)
-    private GiftCertificate giftCertificate;
+    private GiftCertificate giftCertificate;// todo list certificates
     @Column(nullable = false)
     private Float price;
     @Column(nullable = false)

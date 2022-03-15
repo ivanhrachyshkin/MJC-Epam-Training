@@ -56,8 +56,8 @@ public class Interceptor implements HandlerInterceptor {
     private String getLang(final HttpServletRequest request) {
         String lang = "en_US";
         final String langHeaderValue = request.getHeader("Lang");
-        if (langHeaderValue != null) {
-            lang = langHeaderValue.equals("ru_RU") ? "ru_RU" : "en_US";
+        if (langHeaderValue != null && langHeaderValue.equals("ru_RU")) {
+            lang = "ru_RU";
         }
         return lang;
     }

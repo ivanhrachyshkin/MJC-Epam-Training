@@ -2,26 +2,17 @@ package com.epam.esm.controller;
 
 
 import com.epam.esm.controller.hateoas.HateoasCreator;
-import com.epam.esm.controller.security.JwtUserDetailsService;
-import com.epam.esm.controller.security.jwt.JwtUser;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.OrderDto;
-import com.epam.esm.service.dto.RoleDto;
-import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
-import java.util.List;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 import static com.epam.esm.service.dto.RoleDto.Roles.USER;
@@ -35,13 +26,12 @@ public class OrderController {
 
     private final HateoasCreator hateoasCreator;
     private final OrderService orderService;
-    private final JwtUserDetailsService userDetailsService;
 
+    @Profile("jwt")
     @Secured({USER, ADMIN})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderDto> create(@RequestBody final OrderDto orderDto, final Principal principal) {
-        final Integer userId = getPrincipalId(principal);
-        final OrderDto createdOrderDto = orderService.create(orderDto, userId);
+    public ResponseEntity<OrderDto> create(@RequestBody final OrderDto orderDto) {
+        final OrderDto createdOrderDto = orderService.create(orderDto);
         hateoasCreator.linkOrderDtoOne(createdOrderDto);
         hateoasCreator.linkUserDto(createdOrderDto.getUserDto());
         hateoasCreator.linkGiftCertificateDto(createdOrderDto.getGiftCertificateDto());
@@ -49,13 +39,12 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(createdOrderDto);
     }
 
+    @Profile("jwt")
     @Secured({USER, ADMIN})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PagedModel<OrderDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable,
-                                        final Principal principal) {
-        final Integer userId = getPrincipalId(principal);
-        final Page<OrderDto> dtoOrders = orderService.readAll(pageable, userId);
+    public PagedModel<OrderDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        final Page<OrderDto> dtoOrders = orderService.readAll(pageable);
         dtoOrders.forEach(orderDto -> {
             hateoasCreator.linkUserDto(orderDto.getUserDto());
             hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
@@ -73,6 +62,19 @@ public class OrderController {
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
+    @Secured({ADMIN})
+    @GetMapping(value = "{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public PagedModel<OrderDto> readForUser(@PathVariable final int userId,
+                                            @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        final Page<OrderDto> dtoOrders = orderService.readAllByUserId(userId, pageable);
+        dtoOrders.forEach(orderDto -> {
+            hateoasCreator.linkOrderDtoOne(orderDto);
+            hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+        });
+        return hateoasCreator.linkOrderDtos(dtoOrders);
+    }
+
     private HttpHeaders setLocationHeader(final OrderDto orderDto) {
         final String href = linkTo(methodOn(OrderController.class)
                 .readOne(orderDto.getId()))
@@ -80,11 +82,5 @@ public class OrderController {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.LOCATION, href);
         return httpHeaders;
-    }
-
-    private Integer getPrincipalId (final Principal principal) {
-        final String name = principal.getName();
-        final JwtUser userDetails = (JwtUser) userDetailsService.loadUserByUsername(name);
-        return userDetails.getId();
     }
 }

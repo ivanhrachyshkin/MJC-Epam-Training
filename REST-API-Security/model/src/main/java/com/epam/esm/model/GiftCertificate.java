@@ -40,7 +40,7 @@ public class GiftCertificate {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    @OneToMany(mappedBy = "giftCertificate", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "giftCertificate")
     private Set<Order> orders = new HashSet<>();
 
     public GiftCertificate(final Integer id) {

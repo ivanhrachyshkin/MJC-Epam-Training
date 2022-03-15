@@ -25,29 +25,22 @@ public class OrderValidator {
         }
     }
 
-    public void createValidateAdminRole(final OrderDto orderDto) {
+    public void createValidate(final OrderDto orderDto, final boolean isAdmin) {//todo parameter isadmin
         if (orderDto == null) {
             throwValidationException("validator.order.null.value");
         }
         if (orderDto.getId() != null) {
             throwValidationException("id.should.not.passed");
         }
-        validateOrderGiftCertificate(orderDto);
-        validateOrderUserForAdminRole(orderDto);
+
+        if (isAdmin) {
+            validateGiftCertificateForAdmin(orderDto);
+        } else {
+            validateGiftCertificateForUser(orderDto);
+        }
     }
 
-    public void createValidateUserRole(final OrderDto orderDto) {
-        if (orderDto == null) {
-            throwValidationException("validator.order.null.value");
-        }
-        if (orderDto.getId() != null) {
-            throwValidationException("id.should.not.passed");
-        }
-        validateOrderGiftCertificate(orderDto);
-        validateOrderUserForUserRole(orderDto);
-    }
-
-    private void validateOrderGiftCertificate(final OrderDto orderDto) {
+    private void validateGiftCertificateForAdmin(final OrderDto orderDto) {
         final GiftCertificateDto giftCertificateDto = orderDto.getGiftCertificateDto();
         if (giftCertificateDto == null || giftCertificateDto.getId() == null) {
             throwValidationException("validator.order.giftId.required");
@@ -57,7 +50,7 @@ public class OrderValidator {
         }
     }
 
-    private void validateOrderUserForAdminRole(final OrderDto orderDto) {
+    private void validateGiftCertificateForUser(final OrderDto orderDto) {
         final UserDto userDto = orderDto.getUserDto();
         if (userDto == null || userDto.getId() == null) {
             throwValidationException("validator.order.userId.required");
