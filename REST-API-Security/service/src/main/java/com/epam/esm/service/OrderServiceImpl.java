@@ -12,6 +12,7 @@ import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.OrderValidator;
 import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-import static com.epam.esm.model.Role.Roles.ROLE_ADMIN;
 import static com.epam.esm.model.Role.Roles.ROLE_USER;
 
 @Service
@@ -140,9 +140,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Order prepareOrderForCreation(final Order order) {
-        final Integer giftCertificateId = order.getGiftCertificate().getId();
-        final GiftCertificate giftCertificate = checkExistGiftCertificateId(giftCertificateId);
-        order.setPrice(giftCertificate.getPrice()); //todo sum of certificate
+        float sum = 0;
+        for (GiftCertificate giftCertificate : order.getGiftCertificates()) {
+            final GiftCertificate oldGiftCertificate = checkExistGiftCertificateId(giftCertificate.getId());
+            sum += oldGiftCertificate.getPrice();
+        }
+        order.setPrice(sum);
         order.setDate(LocalDateTime.now(clock));
         return order;
     }
@@ -150,10 +153,9 @@ public class OrderServiceImpl implements OrderService {
     private User getPrincipalFromAuthentication(final Authentication authentication) {
         final String name = authentication.getName();
         return userRepository
-                .findByUsername(name).orElseThrow(() -> {
-                    throw new ServiceException(
-                            rb.getString("user.exists.name"),
-                            HttpStatus.NOT_FOUND, properties.getUser());
-                });
+                .findByUsername(name).orElseThrow(() ->
+                        new ValidationException(
+                                rb.getString("user.exists.name"),
+                                HttpStatus.NOT_FOUND, properties.getUser()));
     }
 }

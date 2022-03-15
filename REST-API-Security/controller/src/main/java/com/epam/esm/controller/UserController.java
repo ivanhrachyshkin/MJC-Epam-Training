@@ -14,9 +14,10 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -27,17 +28,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final HttpServletResponse response;
     private final HateoasCreator hateoasCreator;
     private final UserService userService;
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<UserDto> create(@RequestBody final UserDto userDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto create(@RequestBody final UserDto userDto) {
         final UserDto createdUserDto = userService.create(userDto);
         hateoasCreator.linkUserDto(createdUserDto);
         createdUserDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto);
-        final HttpHeaders httpHeaders = setLocationHeader(createdUserDto);
-        return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(createdUserDto);
+        setLocationHeader(createdUserDto);
+        return createdUserDto;
     }
 
     @Secured({ADMIN})
@@ -57,7 +60,7 @@ public class UserController {
         final OrderDto orderDto = orderService.readOneByUserIdAndOrderId(userId, orderId);
         hateoasCreator.linkOrderDtoOne(orderDto);
         hateoasCreator.linkUserDto(orderDto.getUserDto());
-        hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+        // hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
         return orderDto;
     }
 
@@ -71,12 +74,10 @@ public class UserController {
         return userDto;
     }
 
-    private HttpHeaders setLocationHeader(final UserDto userDto) {
+    private void setLocationHeader(final UserDto userDto) {
         final String href = linkTo(methodOn(UserController.class)
                 .readOne(userDto.getId()))
                 .withSelfRel().getHref();
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.LOCATION, href);
-        return httpHeaders;
+        response.addHeader(HttpHeaders.LOCATION, href);
     }
 }

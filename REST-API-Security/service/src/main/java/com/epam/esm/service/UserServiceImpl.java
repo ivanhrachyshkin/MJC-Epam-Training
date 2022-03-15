@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto create(final UserDto userDto) {
         userValidator.createValidate(userDto);
-        userValidator.validateId(userDto.getId());
         checkExistName(userDto.getUsername());
         checkExistEmail(userDto.getEmail());
         final User user = mapper.dtoToModel(userDto);
@@ -71,8 +70,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto createKeycloakUser(final UserDto userDto) {
         userValidator.createValidate(userDto);
-        userValidator.validateId(userDto.getId());
-
         final User user = mapper.dtoToModel(userDto);
         final String username = user.getUsername();
         final String email = user.getEmail();

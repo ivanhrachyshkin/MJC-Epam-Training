@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,8 +26,14 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
     @Override
     public OrderDto modelToDto(final Order order) {
         final OrderDto orderDto = modelMapper.map(order, OrderDto.class);
+        final Set<GiftCertificateDto> giftCertificateDtos = order
+                .getGiftCertificates()
+                .stream()
+                .map(giftCertificate ->
+                        modelMapper.map(giftCertificate, GiftCertificateDto.class))
+                .collect(Collectors.toSet());
         orderDto.setUserDto(new UserDto(order.getUser().getId()));
-        orderDto.setGiftCertificateDto(new GiftCertificateDto(order.getGiftCertificate().getId()));
+        orderDto.setDtoGiftCertificates(giftCertificateDtos);
         return orderDto;
     }
 
@@ -34,10 +41,14 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
     public Order dtoToModel(final OrderDto orderDto) {
         final Order order = modelMapper.map(orderDto, Order.class);
         final User user = modelMapper.map(orderDto.getUserDto(), User.class);
-        final GiftCertificate giftCertificate
-                = modelMapper.map(orderDto.getGiftCertificateDto(), GiftCertificate.class);
+        Set<GiftCertificate> giftCertificates = orderDto
+                .getDtoGiftCertificates()
+                .stream()
+                .map(giftCertificateDto ->
+                        modelMapper.map(giftCertificateDto, GiftCertificate.class))
+                .collect(Collectors.toSet());
         order.setUser(user);
-        order.setGiftCertificate(giftCertificate);
+        order.setGiftCertificates(giftCertificates);
         return order;
     }
 

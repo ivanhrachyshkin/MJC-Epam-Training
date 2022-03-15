@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +22,7 @@ public class OrderDto extends RepresentationModel<OrderDto> {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime date;
     private UserDto userDto;
-    private GiftCertificateDto giftCertificateDto;
+    private Set<GiftCertificateDto> dtoGiftCertificates;
 
     public OrderDto(final Integer id) {
         this.id = id;

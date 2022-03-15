@@ -7,6 +7,7 @@ import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
@@ -34,16 +36,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class TagController {
 
+    private final HttpServletResponse response;
     private final HateoasCreator hateoasCreator;
     private final TagService tagService;
 
     @Secured({ADMIN})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TagDto> create(@RequestBody final TagDto tagDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public TagDto create(@RequestBody final TagDto tagDto) {
         final TagDto createdTag = tagService.create(tagDto);
-        hateoasCreator.linkTagDtoOne(createdTag);
-        final HttpHeaders httpHeaders = setLocationHeader(tagDto);
-        return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(tagDto);
+        setLocationHeader(createdTag);
+        return hateoasCreator.linkTagDtoOne(createdTag);
     }
 
     @GetMapping
@@ -75,12 +78,10 @@ public class TagController {
         return ResponseEntity.noContent().build();
     }
 
-    private HttpHeaders setLocationHeader(final TagDto tagDto) {
-        final String href = linkTo(methodOn(OrderController.class)
+    private void setLocationHeader(final TagDto tagDto) {
+        final String href = linkTo(methodOn(TagController.class)
                 .readOne(tagDto.getId()))
                 .withSelfRel().getHref();
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.LOCATION, href);
-        return httpHeaders;
+        response.addHeader(HttpHeaders.LOCATION, href);
     }
 }

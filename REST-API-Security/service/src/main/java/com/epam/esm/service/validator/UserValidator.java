@@ -30,6 +30,9 @@ public class UserValidator {
         if (userDto == null) {
             throwValidationException("validator.user.null");
         }
+        if (userDto.getId() != null) {
+            throwValidationException("id.should.not.passed");
+        }
         final Map<Object, String> fieldsWithRbKeys = getFieldWithRbKey(userDto);
         fieldsWithRbKeys.forEach(this::validateNullOrEmpty);
     }

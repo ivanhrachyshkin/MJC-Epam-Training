@@ -19,6 +19,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
@@ -31,19 +32,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class GiftCertificateController {
 
+    private final HttpServletResponse response;
     private final HateoasCreator hateoasCreator;
     private final GiftCertificateService giftCertificateService;
 
     @Secured(ADMIN)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GiftCertificateDto> create(@RequestBody GiftCertificateDto giftCertificateDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public GiftCertificateDto create(@RequestBody GiftCertificateDto giftCertificateDto) {
         final GiftCertificateDto createdGiftCertificateDto = giftCertificateService.create(giftCertificateDto);
         hateoasCreator.linkGiftCertificateDtoOne(createdGiftCertificateDto);
         createdGiftCertificateDto
                 .getDtoTags()
                 .forEach(hateoasCreator::linkTagDto);
-        final HttpHeaders httpHeaders = setLocationHeader(createdGiftCertificateDto);
-        return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(createdGiftCertificateDto);
+        setLocationHeader(createdGiftCertificateDto);
+        return giftCertificateDto;
     }
 
     @GetMapping
@@ -88,12 +91,10 @@ public class GiftCertificateController {
         return ResponseEntity.noContent().build();
     }
 
-    private HttpHeaders setLocationHeader(final GiftCertificateDto giftCertificateDto) {
+    private void setLocationHeader(final GiftCertificateDto giftCertificateDto) {
         final String href = linkTo(methodOn(GiftCertificateController.class)
                 .readOne(giftCertificateDto.getId()))
                 .withSelfRel().getHref();
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.LOCATION, href);
-        return httpHeaders;
+        response.addHeader(HttpHeaders.LOCATION, href);
     }
 }

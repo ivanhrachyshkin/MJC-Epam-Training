@@ -4,6 +4,7 @@ package com.epam.esm.controller;
 import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.OrderDto;
+import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 import static com.epam.esm.service.dto.RoleDto.Roles.USER;
@@ -24,19 +27,23 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class OrderController {
 
+    private final HttpServletResponse response;
     private final HateoasCreator hateoasCreator;
     private final OrderService orderService;
 
     @Profile("jwt")
     @Secured({USER, ADMIN})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderDto> create(@RequestBody final OrderDto orderDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDto create(@RequestBody final OrderDto orderDto) {
         final OrderDto createdOrderDto = orderService.create(orderDto);
         hateoasCreator.linkOrderDtoOne(createdOrderDto);
         hateoasCreator.linkUserDto(createdOrderDto.getUserDto());
-        hateoasCreator.linkGiftCertificateDto(createdOrderDto.getGiftCertificateDto());
-        final HttpHeaders httpHeaders = setLocationHeader(createdOrderDto);
-        return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(createdOrderDto);
+        orderDto
+                .getDtoGiftCertificates()
+                .forEach(hateoasCreator::linkGiftCertificateDto);
+        setLocationHeader(createdOrderDto);
+       return orderDto;
     }
 
     @Profile("jwt")
@@ -47,7 +54,9 @@ public class OrderController {
         final Page<OrderDto> dtoOrders = orderService.readAll(pageable);
         dtoOrders.forEach(orderDto -> {
             hateoasCreator.linkUserDto(orderDto.getUserDto());
-            hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+            orderDto
+                    .getDtoGiftCertificates()
+                    .forEach(hateoasCreator::linkGiftCertificateDto);
         });
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
@@ -58,7 +67,9 @@ public class OrderController {
         final OrderDto orderDto = orderService.readOne(id);
         hateoasCreator.linkOrderDtoOne(orderDto);
         hateoasCreator.linkUserDto(orderDto.getUserDto());
-        hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+        orderDto
+                .getDtoGiftCertificates()
+                .forEach(hateoasCreator::linkGiftCertificateDto);
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
@@ -70,17 +81,17 @@ public class OrderController {
         final Page<OrderDto> dtoOrders = orderService.readAllByUserId(userId, pageable);
         dtoOrders.forEach(orderDto -> {
             hateoasCreator.linkOrderDtoOne(orderDto);
-            hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+            orderDto
+                    .getDtoGiftCertificates()
+                    .forEach(hateoasCreator::linkGiftCertificateDto);
         });
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
-    private HttpHeaders setLocationHeader(final OrderDto orderDto) {
+    private void setLocationHeader(final OrderDto orderDto) {
         final String href = linkTo(methodOn(OrderController.class)
                 .readOne(orderDto.getId()))
                 .withSelfRel().getHref();
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.LOCATION, href);
-        return httpHeaders;
+        response.addHeader(HttpHeaders.LOCATION, href);
     }
 }
