@@ -60,7 +60,7 @@ public class UserController {
         final OrderDto orderDto = orderService.readOneByUserIdAndOrderId(userId, orderId);
         hateoasCreator.linkOrderDtoOne(orderDto);
         hateoasCreator.linkUserDto(orderDto.getUserDto());
-        // hateoasCreator.linkGiftCertificateDto(orderDto.getGiftCertificateDto());
+        orderDto.getDtoGiftCertificates().forEach(hateoasCreator::linkGiftCertificateDto);
         return orderDto;
     }
 

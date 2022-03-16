@@ -16,14 +16,9 @@ public class TagDto extends RepresentationModel<TagDto> {
 
     private Integer id;
     private String name;
-    private Boolean active;
+    private Boolean isActive;
 
     public TagDto(final Integer id) {
         this.id = id;
-    }
-
-    public TagDto(final Integer id, final Boolean active) {
-        this.id = id;
-        this.active = active;
     }
 }

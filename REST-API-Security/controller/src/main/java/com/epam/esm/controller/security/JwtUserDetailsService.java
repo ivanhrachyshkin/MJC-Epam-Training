@@ -15,7 +15,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     private final UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(final String username) { //todo return user?
+    public UserDetails loadUserByUsername(final String username) {
         final UserDto userDto = userService.readOneByName(username);
         return JwtUserFactory.create(userDto);
     }

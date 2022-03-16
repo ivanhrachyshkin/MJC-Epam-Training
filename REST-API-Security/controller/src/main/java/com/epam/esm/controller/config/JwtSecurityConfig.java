@@ -7,6 +7,7 @@ import com.epam.esm.controller.security.jwt.JwtTokenFilter;
 import com.epam.esm.controller.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Profile("jwt")
 @Configuration
+@ComponentScan("com.epam.esm.controller")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
@@ -53,11 +55,12 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(REFRESH_TOKEN_ENDPOINT).permitAll()
+                .antMatchers(REFRESH_TOKEN_ENDPOINT).hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/gifts/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()

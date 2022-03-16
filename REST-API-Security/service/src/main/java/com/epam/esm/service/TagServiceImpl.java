@@ -3,8 +3,10 @@ package com.epam.esm.service;
 import com.epam.esm.dao.TagRepository;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
+import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
+import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.PageValidator;
 import com.epam.esm.service.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,24 +32,23 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
     private final PageValidator paginationValidator;
+    private final AuthorityValidator authorityValidator;
 
     @Override
     @Transactional
     public TagDto create(final TagDto tagDto) {
         tagValidator.validate(tagDto);
         final Tag rawTag = mapper.dtoToModel(tagDto);
-        rawTag.setActive(true);
+        rawTag.setIsActive(true);
         final Tag newTag = createOrUpdateOld(rawTag);
         return mapper.modelToDto(newTag);
     }
 
     @Override
     @Transactional
-    public Page<TagDto> readAll(final Boolean active, final Pageable pageable) {
+    public Page<TagDto> readAll(final Pageable pageable) {
         paginationValidator.paginationValidate(pageable);
-        final Page<Tag> tags = active == null
-                ? tagRepository.findAll(pageable)
-                : tagRepository.findAllByActive(active, pageable);
+        final Page<Tag> tags = getTagsByUserRole(pageable);
         return mapper.modelsToDto(tags);
     }
 
@@ -54,7 +56,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public TagDto readOne(final int id) {
         tagValidator.validateId(id);
-        Tag tag = checkExist(id, true);
+        final Tag tag = getTagByUserRole(id);
         return mapper.modelToDto(tag);
     }
 
@@ -69,15 +71,40 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public void deleteById(final int id) {
         tagValidator.validateId(id);
-        Tag tag = checkExist(id, true);
-        tag.setActive(false);
+        Tag tag = checkExistActive(id);
+        tag.setIsActive(false);
         tagRepository.save(tag);
     }
 
-    private Tag checkExist(final int id, final Boolean active) {
+    private Page<Tag> getTagsByUserRole(final Pageable pageable) {
+        if (authorityValidator.validateAuthority(new SimpleGrantedAuthority(RoleDto.Roles.ADMIN))) {
+            return tagRepository.findAll(pageable);
+        } else {
+            return tagRepository.findAllByIsActive(true, pageable);
+        }
+    }
+
+    private Tag getTagByUserRole(final int id) {
+        if (authorityValidator.validateAuthority(new SimpleGrantedAuthority(RoleDto.Roles.ADMIN))) {
+            return checkExist(id);
+        } else {
+            return checkExistActive(id);
+        }
+    }
+
+    private Tag checkExist(final int id) {
         tagValidator.validateId(id);
         return tagRepository
-                .findByIdAndActive(id, active)
+                .findById(id)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("tag.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getTag(), id));
+    }
+
+    private Tag checkExistActive(final int id) {
+        tagValidator.validateId(id);
+        return tagRepository
+                .findByIdAndIsActive(id, true)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("tag.notFound.id"),
                         HttpStatus.NOT_FOUND, properties.getTag(), id));
@@ -85,7 +112,7 @@ public class TagServiceImpl implements TagService {
 
     private Tag createOrUpdateOld(final Tag rawTag) {
         final Optional<Tag> optionalTag = tagRepository.findByName(rawTag.getName());
-        if (optionalTag.isPresent() && optionalTag.get().getActive()) {
+        if (optionalTag.isPresent() && optionalTag.get().getIsActive()) {
             throw new ServiceException(
                     rb.getString("tag.alreadyExists.name"),
                     HttpStatus.CONFLICT, properties.getTag(), optionalTag.get().getName());

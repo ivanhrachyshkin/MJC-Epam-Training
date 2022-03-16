@@ -48,11 +48,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDto create(final OrderDto orderDto) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final User principal = getPrincipalFromAuthentication(authentication);
-        validateOrderByRoles(principal, orderDto);
+        final User user = getUserFromAuthentication();
+        validateOrderByRoles(user, orderDto);
         final Order order = mapper.dtoToModel(orderDto);
-        final Order preparedOrder = prepareOrderForCreation(order);
-        final Order createdOrder = orderRepository.save(preparedOrder);
+        final Order createdOrder = orderRepository.save(prepareOrderForCreation(order));
         return mapper.modelToDto(createdOrder);
     }
 
@@ -60,8 +59,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Page<OrderDto> readAll(final Pageable pageable) {
         paginationValidator.paginationValidate(pageable);
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final User principal = getPrincipalFromAuthentication(authentication);
+        final User principal = getUserFromAuthentication();
         final Page<Order> orders = getOrdersForReadAllByUserRole(principal, pageable);
         return mapper.modelsToDto(orders);
     }
@@ -120,17 +118,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Page<Order> getOrdersForReadAllByUserRole(final User user, final Pageable pageable) {
-        final Page<Order> orders;
         if (ROLE_USER.equals(user.getRoles().get(0).getRoleName())) {
-            orders = orderRepository.findOrdersByUserId(user.getId(), pageable);
+            return orderRepository.findOrdersByUserId(user.getId(), pageable);
         } else {
-            orders = orderRepository.findAll(pageable);
+            return orderRepository.findAll(pageable);
         }
-        return orders;
     }
 
     private void validateOrderByRoles(final User user, final OrderDto orderDto) {
-        if (ROLE_USER.equals(user.getRoles().get(0).getRoleName())) {//todo NPE equals ignore case
+        if (ROLE_USER.equals(user.getRoles().get(0).getRoleName())) {//todo NPE
             orderValidator.createValidate(orderDto, false);
             orderDto.setUserDto(new UserDto(user.getId()));
         } else {
@@ -146,11 +142,12 @@ public class OrderServiceImpl implements OrderService {
             sum += oldGiftCertificate.getPrice();
         }
         order.setPrice(sum);
-        order.setDate(LocalDateTime.now(clock));
-        return order;
+        order.setDate(LocalDateTime.now(clock));// todo mock method service=spy privatemethod=@visiblefortest
+        return order;//todo shift date to db
     }
 
-    private User getPrincipalFromAuthentication(final Authentication authentication) {
+    private User getUserFromAuthentication() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final String name = authentication.getName();
         return userRepository
                 .findByUsername(name).orElseThrow(() ->

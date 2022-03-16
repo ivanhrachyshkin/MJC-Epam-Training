@@ -1,14 +1,16 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateRepository;
-import com.epam.esm.dao.GiftCertificateSpecification;
 import com.epam.esm.dao.TagRepository;
+import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
+import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
+import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.GiftCertificateValidator;
 import com.epam.esm.service.validator.PageValidator;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,9 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +32,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static com.epam.esm.dao.GiftCertificateSpecification.giftCertificateFiltered;
+import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +47,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagRepository tagRepository;
     private final GiftCertificateValidator giftCertificateValidator;
     private final PageValidator paginationValidator;
+    private final AuthorityValidator authorityValidator;
 
     @Override
     @Transactional
@@ -64,15 +71,31 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         paginationValidator.paginationValidate(pageable);
         final String giftCertificateName = container.getName();
         final String giftCertificateDescription = container.getDescription();
-        final Page<GiftCertificate> giftCertificates = giftCertificateRepository
-                .findAll(giftCertificateFiltered(tags, giftCertificateName, giftCertificateDescription), pageable);
+        final Page<GiftCertificate> giftCertificates
+                = getGiftCertificatesByUserRole(tags, giftCertificateName, giftCertificateDescription, pageable);
         return mapper.modelsToDto(giftCertificates);
+    }
+
+    private Page<GiftCertificate> getGiftCertificatesByUserRole(final List<String> tags,
+                                                                final String giftCertificateName,
+                                                                final String giftCertificateDescription,
+                                                                final Pageable pageable) {
+        final Boolean isActive;
+        if (authorityValidator.validateAuthority(new SimpleGrantedAuthority(RoleDto.Roles.ADMIN))) {
+            isActive = null;
+        } else {
+            isActive = true;
+        }
+        return giftCertificateRepository
+                .findAll(giftCertificateFiltered(tags, giftCertificateName, giftCertificateDescription, isActive),
+                        pageable);
     }
 
     @Override
     @Transactional
     public GiftCertificateDto readOne(final int id) {
-        final GiftCertificate giftCertificate = checkExist(id);
+        giftCertificateValidator.validateId(id);
+        final GiftCertificate giftCertificate = getGiftCertificateByUserRole(id);
         return mapper.modelToDto(giftCertificate);
     }
 
@@ -94,13 +117,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public void deleteById(final int id) {
         giftCertificateValidator.validateId(id);
-        checkExist(id);
-        giftCertificateRepository.deleteById(id);
+        final GiftCertificate giftCertificate = checkExist(id);
+        giftCertificate.setActive(false);
+        giftCertificateRepository.save(giftCertificate);
     }
 
     private void setTagId(final Set<Tag> tags) {
         tags.forEach(tag -> {
-            tag.setActive(true);
+            tag.setIsActive(true);
             final Optional<Tag> oldTag = tagRepository.findByName(tag.getName());
             if (oldTag.isPresent()) {
                 tag.setId(oldTag.get().getId());
@@ -110,9 +134,25 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         });
     }
 
+    private GiftCertificate getGiftCertificateByUserRole(final int id) {
+        if (authorityValidator.validateAuthority(new SimpleGrantedAuthority(RoleDto.Roles.ADMIN))) {
+            return checkExist(id);
+        } else {
+            return checkExistIsActive(id);
+        }
+    }
+
     private GiftCertificate checkExist(final int id) {
         return giftCertificateRepository
                 .findById(id)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("giftCertificate.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getGift(), id));
+    }
+
+    private GiftCertificate checkExistIsActive(final int id) {
+        return giftCertificateRepository
+                .findByIdAndActive(id, true)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("giftCertificate.notFound.id"),
                         HttpStatus.NOT_FOUND, properties.getGift(), id));
@@ -128,3 +168,4 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 });
     }
 }
+

@@ -4,14 +4,15 @@ package com.epam.esm.controller;
 import com.epam.esm.controller.hateoas.HateoasCreator;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.OrderDto;
-import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class OrderController {
                 .getDtoGiftCertificates()
                 .forEach(hateoasCreator::linkGiftCertificateDto);
         setLocationHeader(createdOrderDto);
-       return orderDto;
+       return createdOrderDto;
     }
 
     @Profile("jwt")
@@ -63,18 +64,18 @@ public class OrderController {
 
     @Secured({ADMIN})
     @GetMapping(value = "/{id}")
-    public HttpEntity<OrderDto> readOne(@PathVariable final int id) {
+    public OrderDto readOne(@PathVariable final int id) {
         final OrderDto orderDto = orderService.readOne(id);
         hateoasCreator.linkOrderDtoOne(orderDto);
         hateoasCreator.linkUserDto(orderDto.getUserDto());
         orderDto
                 .getDtoGiftCertificates()
                 .forEach(hateoasCreator::linkGiftCertificateDto);
-        return new ResponseEntity<>(orderDto, HttpStatus.OK);
+        return orderDto;
     }
 
     @Secured({ADMIN})
-    @GetMapping(value = "{userId}")
+    @GetMapping(value = "/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<OrderDto> readForUser(@PathVariable final int userId,
                                             @PageableDefault(page = 0, size = 10) final Pageable pageable) {

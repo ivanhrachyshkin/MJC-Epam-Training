@@ -11,7 +11,9 @@ import java.util.List;
 public class GiftCertificateSpecification {
 
     public static Specification<GiftCertificate> giftCertificateFiltered(final List<String> tags,
-                                                                         final String name, final String description) {
+                                                                         final String name,
+                                                                         final String description,
+                                                                         final Boolean active) {
 
         return (root, query, criteriaBuilder) -> {
 
@@ -42,6 +44,13 @@ public class GiftCertificateSpecification {
                         : criteriaBuilder.and(predicate, giftCertificateDescriptionPredicate);
             }
 
+            if (active != null) {
+                final Predicate giftCertificateActivePredicate
+                        = criteriaBuilder.equal(root.get("active"), active);
+                predicate = predicate == null
+                        ? giftCertificateActivePredicate
+                        : criteriaBuilder.and(predicate, giftCertificateActivePredicate);
+            }
             return predicate;
         };
     }

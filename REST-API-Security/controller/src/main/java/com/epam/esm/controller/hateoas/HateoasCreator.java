@@ -75,7 +75,7 @@ public class HateoasCreator {
 
     public PagedModel<TagDto> linkTagDtos(Page<TagDto> dtoTags) {
         return pagedResourcesAssemblerTag.toModel(dtoTags, this::linkTagDtoOne, linkTo(methodOn(TagController.class)
-                .readAll(true, Pageable.unpaged()))
+                .readAll(Pageable.unpaged()))
                 .withSelfRel());
     }
 

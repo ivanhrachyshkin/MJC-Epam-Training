@@ -16,6 +16,11 @@ import java.time.Clock;
 public class ServiceConfig {
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
@@ -23,11 +28,6 @@ public class ServiceConfig {
     @Bean
     public PagedResourcesAssembler<?> pagedResourcesAssembler() {
         return new PagedResourcesAssembler<>(new HateoasPageableHandlerMethodArgumentResolver(), null);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean

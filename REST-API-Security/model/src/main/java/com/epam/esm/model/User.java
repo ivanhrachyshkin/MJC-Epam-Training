@@ -25,10 +25,10 @@ public class User {
     private String username;
     @Column(unique = true)
     private String email;
-    @Column
+    @Column(unique = true)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user")
     private Set<Order> orders = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

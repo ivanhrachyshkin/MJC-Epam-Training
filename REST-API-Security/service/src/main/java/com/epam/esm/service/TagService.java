@@ -8,8 +8,7 @@ public interface TagService {
 
     TagDto create(final TagDto tagDto);
 
-    Page<TagDto> readAll(Boolean active,
-                         Pageable pageable);
+    Page<TagDto> readAll(Pageable pageable);
 
     TagDto readOne(int id);
 

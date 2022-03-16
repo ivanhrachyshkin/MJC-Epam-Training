@@ -3,6 +3,9 @@ package com.epam.esm.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -22,8 +25,8 @@ public class Tag {
     private Integer id;
     @Column(unique = true)
     private String name;
-    @Column (nullable = false)
-    private Boolean active;
+    @Column(columnDefinition = "boolean default true")
+    private Boolean isActive;
     @ManyToMany(mappedBy = "tags")
     private Set<GiftCertificate> giftCertificates = new HashSet<>();
 

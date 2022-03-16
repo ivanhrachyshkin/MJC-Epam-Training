@@ -12,4 +12,8 @@ public interface GiftCertificateRepository
         extends JpaRepository<GiftCertificate, Integer>, JpaSpecificationExecutor<GiftCertificate> {
 
     Optional<GiftCertificate> findByName(String name);
+
+    Optional<GiftCertificate> findByNameAndActive(String name, boolean isActive);
+
+    Optional<GiftCertificate> findByIdAndActive(Integer id, Boolean active);
 }

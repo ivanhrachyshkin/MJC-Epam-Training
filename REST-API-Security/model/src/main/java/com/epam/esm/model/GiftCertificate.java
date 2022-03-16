@@ -33,6 +33,8 @@ public class GiftCertificate {
     private LocalDateTime createDate;
     @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
+    @Column(columnDefinition = "boolean default true")
+    private Boolean active;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "gift_certificate_tags",

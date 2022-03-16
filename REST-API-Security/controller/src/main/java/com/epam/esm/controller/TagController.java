@@ -51,9 +51,8 @@ public class TagController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PagedModel<TagDto> readAll(@RequestParam(required = false) final Boolean active,
-                                      @PageableDefault(page = 0, size = 10) final Pageable pageable) {
-        final Page<TagDto> dtoTags = tagService.readAll(active, pageable);
+    public PagedModel<TagDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        final Page<TagDto> dtoTags = tagService.readAll(pageable);
         return hateoasCreator.linkTagDtos(dtoTags);
     }
 
