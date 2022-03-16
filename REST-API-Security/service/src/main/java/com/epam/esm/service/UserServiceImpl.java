@@ -58,12 +58,12 @@ public class UserServiceImpl implements UserService {
         checkExistName(userDto.getUsername());
         checkExistEmail(userDto.getEmail());
         final User user = mapper.dtoToModel(userDto);
-        encodePassword(user);
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         final Role userRole = roleRepository.findByRoleName(Role.Roles.ROLE_USER);
         user.setRoles(Collections.singletonList(userRole));
         final User savedUser = userRepository.save(user);
-        savedUser.setPassword(null);
-        return mapper.modelToDto(user);
+        return mapper.modelToDto(savedUser);
     }
 
     @Override
@@ -139,11 +139,6 @@ public class UserServiceImpl implements UserService {
                             rb.getString("user.exists.email"),
                             HttpStatus.NOT_FOUND, statusPostfixProperties.getUser());
                 });
-    }
-
-    private void encodePassword(final User user) {
-        final String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
     }
 
     private Keycloak getKeycloak() {
