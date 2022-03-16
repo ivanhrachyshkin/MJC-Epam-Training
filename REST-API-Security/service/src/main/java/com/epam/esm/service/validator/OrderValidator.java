@@ -25,7 +25,7 @@ public class OrderValidator {
         }
     }
 
-    public void createValidate(final OrderDto orderDto, final boolean isAdmin) {//todo parameter isadmin
+    public void createValidate(final OrderDto orderDto, final boolean isAdmin) {
         if (orderDto == null) {
             throwValidationException("validator.order.null.value");
         }

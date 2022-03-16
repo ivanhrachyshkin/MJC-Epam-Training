@@ -77,7 +77,7 @@ public class TagServiceImpl implements TagService {
     }
 
     private Page<Tag> getTagsByUserRole(final Pageable pageable) {
-        if (authorityValidator.validateAuthority(new SimpleGrantedAuthority(RoleDto.Roles.ADMIN))) {
+        if (authorityValidator.validateAuthorityAdmin()) {
             return tagRepository.findAll(pageable);
         } else {
             return tagRepository.findAllByIsActive(true, pageable);
@@ -85,7 +85,7 @@ public class TagServiceImpl implements TagService {
     }
 
     private Tag getTagByUserRole(final int id) {
-        if (authorityValidator.validateAuthority(new SimpleGrantedAuthority(RoleDto.Roles.ADMIN))) {
+        if (authorityValidator.validateAuthorityAdmin()) {
             return checkExist(id);
         } else {
             return checkExistActive(id);

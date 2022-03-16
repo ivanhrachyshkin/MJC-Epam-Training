@@ -2,13 +2,11 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateRepository;
 import com.epam.esm.dao.TagRepository;
-import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
-import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.GiftCertificateValidator;
@@ -18,9 +16,6 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +27,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static com.epam.esm.dao.GiftCertificateSpecification.giftCertificateFiltered;
-import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @Service
 @RequiredArgsConstructor
@@ -74,21 +68,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         final Page<GiftCertificate> giftCertificates
                 = getGiftCertificatesByUserRole(tags, giftCertificateName, giftCertificateDescription, pageable);
         return mapper.modelsToDto(giftCertificates);
-    }
-
-    private Page<GiftCertificate> getGiftCertificatesByUserRole(final List<String> tags,
-                                                                final String giftCertificateName,
-                                                                final String giftCertificateDescription,
-                                                                final Pageable pageable) {
-        final Boolean isActive;
-        if (authorityValidator.validateAuthority(new SimpleGrantedAuthority(RoleDto.Roles.ADMIN))) {
-            isActive = null;
-        } else {
-            isActive = true;
-        }
-        return giftCertificateRepository
-                .findAll(giftCertificateFiltered(tags, giftCertificateName, giftCertificateDescription, isActive),
-                        pageable);
     }
 
     @Override
@@ -134,8 +113,23 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         });
     }
 
+    private Page<GiftCertificate> getGiftCertificatesByUserRole(final List<String> tags,
+                                                                final String giftCertificateName,
+                                                                final String giftCertificateDescription,
+                                                                final Pageable pageable) {
+        final Boolean isActive;
+        if (authorityValidator.validateAuthorityAdmin()) {
+            isActive = null;
+        } else {
+            isActive = true;
+        }
+        return giftCertificateRepository
+                .findAll(giftCertificateFiltered(tags, giftCertificateName, giftCertificateDescription, isActive),
+                        pageable);
+    }
+
     private GiftCertificate getGiftCertificateByUserRole(final int id) {
-        if (authorityValidator.validateAuthority(new SimpleGrantedAuthority(RoleDto.Roles.ADMIN))) {
+        if (authorityValidator.validateAuthorityAdmin()) {
             return checkExist(id);
         } else {
             return checkExistIsActive(id);

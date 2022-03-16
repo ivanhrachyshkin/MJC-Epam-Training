@@ -10,6 +10,7 @@ import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
+import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.OrderValidator;
 import com.epam.esm.service.validator.PageValidator;
 import com.epam.esm.service.validator.ValidationException;
@@ -43,11 +44,11 @@ public class OrderServiceImpl implements OrderService {
     private final GiftCertificateRepository giftCertificateRepository;
     private final OrderValidator orderValidator;
     private final PageValidator paginationValidator;
+    private final AuthorityValidator authorityValidator;
 
     @Override
     @Transactional
     public OrderDto create(final OrderDto orderDto) {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final User user = getUserFromAuthentication();
         validateOrderByRoles(user, orderDto);
         final Order order = mapper.dtoToModel(orderDto);
@@ -126,12 +127,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void validateOrderByRoles(final User user, final OrderDto orderDto) {
-        if (ROLE_USER.equals(user.getRoles().get(0).getRoleName())) {//todo NPE
-            orderValidator.createValidate(orderDto, false);
-            orderDto.setUserDto(new UserDto(user.getId()));
-        } else {
+        if (authorityValidator.validateAuthorityAdmin()) {
             orderValidator.createValidate(orderDto, true);
             checkExistUser(orderDto.getUserDto().getId());
+        } else {
+            orderValidator.createValidate(orderDto, false);
+            orderDto.setUserDto(new UserDto(user.getId()));
         }
     }
 
