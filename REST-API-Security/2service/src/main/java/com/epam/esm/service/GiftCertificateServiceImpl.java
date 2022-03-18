@@ -118,7 +118,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                                                 final String giftCertificateDescription,
                                                                 final Pageable pageable) {
         final Boolean isActive;
-        if (authorityValidator.validateAuthorityAdmin()) {
+        if (authorityValidator.isAdmin()) {
             isActive = null;
         } else {
             isActive = true;
@@ -129,7 +129,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private GiftCertificate getGiftCertificateByUserRole(final int id) {
-        if (authorityValidator.validateAuthorityAdmin()) {
+        if (authorityValidator.isAdmin()) {
             return checkExist(id);
         } else {
             return checkExistIsActive(id);

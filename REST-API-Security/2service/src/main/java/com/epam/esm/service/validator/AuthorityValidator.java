@@ -10,7 +10,7 @@ import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 @Component
 public class AuthorityValidator {
 
-    public boolean validateAuthorityAdmin() {
+    public boolean isAdmin() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getAuthorities().contains(new SimpleGrantedAuthority(ADMIN));
     }

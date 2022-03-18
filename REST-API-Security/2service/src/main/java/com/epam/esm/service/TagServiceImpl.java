@@ -53,7 +53,6 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto readOne(final int id) {
-        tagValidator.validateId(id);
         final Tag tag = getTagByUserRole(id);
         return mapper.modelToDto(tag);
     }
@@ -68,27 +67,18 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public void deleteById(final int id) {
-        tagValidator.validateId(id);
         Tag tag = checkExistActive(id);
         tag.setIsActive(false);
         tagRepository.save(tag);
     }
 
     private Page<Tag> getTagsByUserRole(final Pageable pageable) {
-        if (authorityValidator.validateAuthorityAdmin()) {
-            return tagRepository.findAll(pageable);
-        } else {
-            return tagRepository.findAllByIsActive(true, pageable);
-        }
-    }
+        return authorityValidator.isAdmin() ?
+                tagRepository.findAll(pageable)
+                : tagRepository.findAllByIsActive(true, pageable);}
 
     private Tag getTagByUserRole(final int id) {
-        if (authorityValidator.validateAuthorityAdmin()) {
-            return checkExist(id);
-        } else {
-            return checkExistActive(id);
-        }
-    }
+        return authorityValidator.isAdmin() ? checkExist(id) : checkExistActive(id);}
 
     private Tag checkExist(final int id) {
         tagValidator.validateId(id);

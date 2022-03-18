@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void validateOrderByRoles(final User user, final OrderDto orderDto) {
-        if (authorityValidator.validateAuthorityAdmin()) {
+        if (authorityValidator.isAdmin()) {
             orderValidator.createValidate(orderDto, true);
             checkExistUser(orderDto.getUserDto().getId());
         } else {
