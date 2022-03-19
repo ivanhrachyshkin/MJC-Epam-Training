@@ -51,6 +51,8 @@ public class GiftCertificateValidator {
         validateContainer(container);
     }
 
+    //todo active date
+
     private Map<Object, String> getFieldWithRbKey(final GiftCertificateDto giftCertificateDto) {
         if (giftCertificateDto == null) {
             throwValidationException("validator.giftCertificate.null");

@@ -37,7 +37,7 @@ public class TagServiceImpl implements TagService {
     public TagDto create(final TagDto tagDto) {
         tagValidator.validate(tagDto);
         final Tag rawTag = mapper.dtoToModel(tagDto);
-        rawTag.setIsActive(true);
+        rawTag.setActive(true);
         final Tag newTag = createOrUpdateOld(rawTag);
         return mapper.modelToDto(newTag);
     }
@@ -53,6 +53,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto readOne(final int id) {
+        tagValidator.validateId(id);
         final Tag tag = getTagByUserRole(id);
         return mapper.modelToDto(tag);
     }
@@ -67,21 +68,23 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public void deleteById(final int id) {
-        Tag tag = checkExistActive(id);
-        tag.setIsActive(false);
+        tagValidator.validateId(id);
+        final Tag tag = checkExistActive(id);
+        tag.setActive(false);
         tagRepository.save(tag);
     }
 
     private Page<Tag> getTagsByUserRole(final Pageable pageable) {
         return authorityValidator.isAdmin() ?
                 tagRepository.findAll(pageable)
-                : tagRepository.findAllByIsActive(true, pageable);}
+                : tagRepository.findAllByActive(true, pageable);
+    }
 
     private Tag getTagByUserRole(final int id) {
-        return authorityValidator.isAdmin() ? checkExist(id) : checkExistActive(id);}
+        return authorityValidator.isAdmin() ? checkExist(id) : checkExistActive(id);
+    }
 
     private Tag checkExist(final int id) {
-        tagValidator.validateId(id);
         return tagRepository
                 .findById(id)
                 .orElseThrow(() -> new ServiceException(
@@ -90,9 +93,8 @@ public class TagServiceImpl implements TagService {
     }
 
     private Tag checkExistActive(final int id) {
-        tagValidator.validateId(id);
         return tagRepository
-                .findByIdAndIsActive(id, true)
+                .findByIdAndActive(id, true)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("tag.notFound.id"),
                         HttpStatus.NOT_FOUND, properties.getTag(), id));
@@ -100,7 +102,7 @@ public class TagServiceImpl implements TagService {
 
     private Tag createOrUpdateOld(final Tag rawTag) {
         final Optional<Tag> optionalTag = tagRepository.findByName(rawTag.getName());
-        if (optionalTag.isPresent() && optionalTag.get().getIsActive()) {
+        if (optionalTag.isPresent() && optionalTag.get().getActive()) {
             throw new ServiceException(
                     rb.getString("tag.alreadyExists.name"),
                     HttpStatus.CONFLICT, properties.getTag(), optionalTag.get().getName());

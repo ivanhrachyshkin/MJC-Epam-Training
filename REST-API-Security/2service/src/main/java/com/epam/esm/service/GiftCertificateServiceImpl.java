@@ -19,8 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -34,7 +32,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Setter
     private ResourceBundle rb;
-    private final Clock clock;
     private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
     private final GiftCertificateRepository giftCertificateRepository;
@@ -47,12 +44,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto create(final GiftCertificateDto giftCertificateDto) {
         giftCertificateValidator.createValidate(giftCertificateDto);
-        checkExistByName(giftCertificateDto.getName());
         final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
-        rawGiftCertificate.setCreateDate(LocalDateTime.now(clock));
-        rawGiftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
+        rawGiftCertificate.setActive(true);
         setTagId(rawGiftCertificate.getTags());
-        final GiftCertificate newGiftCertificate = giftCertificateRepository.save(rawGiftCertificate);
+        final GiftCertificate newGiftCertificate = createOrUpdateOld(rawGiftCertificate);
         return mapper.modelToDto(newGiftCertificate);
     }
 
@@ -85,8 +80,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         checkExistByName(giftCertificateDto.getName());
         final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
         final GiftCertificate oldGiftCertificate = checkExist(rawGiftCertificate.getId());
-        rawGiftCertificate.setCreateDate(oldGiftCertificate.getCreateDate());
-        rawGiftCertificate.setLastUpdateDate(LocalDateTime.now(clock));
         setTagId(oldGiftCertificate.getTags());
         final GiftCertificate updatedGiftCertificate = giftCertificateRepository.save(rawGiftCertificate);
         return mapper.modelToDto(updatedGiftCertificate);
@@ -96,14 +89,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public void deleteById(final int id) {
         giftCertificateValidator.validateId(id);
-        final GiftCertificate giftCertificate = checkExist(id);
+        final GiftCertificate giftCertificate = checkExistActive(id);
         giftCertificate.setActive(false);
         giftCertificateRepository.save(giftCertificate);
     }
 
     private void setTagId(final Set<Tag> tags) {
         tags.forEach(tag -> {
-            tag.setIsActive(true);
+            tag.setActive(true);
             final Optional<Tag> oldTag = tagRepository.findByName(tag.getName());
             if (oldTag.isPresent()) {
                 tag.setId(oldTag.get().getId());
@@ -117,23 +110,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                                                 final String giftCertificateName,
                                                                 final String giftCertificateDescription,
                                                                 final Pageable pageable) {
-        final Boolean isActive;
-        if (authorityValidator.isAdmin()) {
-            isActive = null;
-        } else {
-            isActive = true;
-        }
+        final Boolean isActive = authorityValidator.isNotAdmin();
         return giftCertificateRepository
                 .findAll(giftCertificateFiltered(tags, giftCertificateName, giftCertificateDescription, isActive),
                         pageable);
     }
 
     private GiftCertificate getGiftCertificateByUserRole(final int id) {
-        if (authorityValidator.isAdmin()) {
-            return checkExist(id);
-        } else {
-            return checkExistIsActive(id);
-        }
+        return authorityValidator.isAdmin() ? checkExist(id) : checkExistActive(id);
     }
 
     private GiftCertificate checkExist(final int id) {
@@ -144,7 +128,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                         HttpStatus.NOT_FOUND, properties.getGift(), id));
     }
 
-    private GiftCertificate checkExistIsActive(final int id) {
+    private GiftCertificate checkExistActive(final int id) {
         return giftCertificateRepository
                 .findByIdAndActive(id, true)
                 .orElseThrow(() -> new ServiceException(
@@ -160,6 +144,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                             rb.getString("giftCertificate.alreadyExists.name"),
                             HttpStatus.CONFLICT, properties.getGift(), name);
                 });
+    }
+
+    private GiftCertificate createOrUpdateOld(final GiftCertificate rawGiftCertificate) {
+        final Optional<GiftCertificate> optionalGiftCertificate
+                = giftCertificateRepository.findByName(rawGiftCertificate.getName());
+        if (optionalGiftCertificate.isPresent() && optionalGiftCertificate.get().getActive()) {
+            throw new ServiceException(
+                    rb.getString("giftCertificate.alreadyExists.name"),
+                    HttpStatus.CONFLICT, properties.getGift(), optionalGiftCertificate.get().getName());
+        }
+        optionalGiftCertificate.ifPresent(oldGiftCertificate -> rawGiftCertificate.setId(oldGiftCertificate.getId()));
+        return giftCertificateRepository.save(rawGiftCertificate);
     }
 }
 

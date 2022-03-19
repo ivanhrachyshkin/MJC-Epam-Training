@@ -28,7 +28,7 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
         final Set<TagDto> dtoTags = giftCertificate
                 .getTags()
                 .stream()
-                .map(tag -> new TagDto(tag.getId(), tag.getName(), tag.getIsActive()))
+                .map(tag -> new TagDto(tag.getId(), tag.getName(), tag.getActive()))
                 .collect(Collectors.toSet());
         dtoGiftCertificate.setDtoTags(dtoTags);
         return dtoGiftCertificate;

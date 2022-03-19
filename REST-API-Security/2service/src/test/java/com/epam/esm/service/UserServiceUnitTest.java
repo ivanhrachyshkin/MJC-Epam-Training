@@ -189,7 +189,8 @@ public class UserServiceUnitTest {
         //When
         final Page<UserDto> actualUsers = userService.readAll(page);
         //Then
-        assertEquals(dtoUsers, actualUsers);
+        assertEquals(dtoUsers.getTotalElements(), actualUsers.getTotalElements());
+        assertEquals(dtoUsers.getTotalPages(), actualUsers.getTotalPages());
         verify(pageValidator, only()).paginationValidate(page);
         verify(userRepository, only()).findAll(page);
         verify(mapper, only()).modelsToDto(users);

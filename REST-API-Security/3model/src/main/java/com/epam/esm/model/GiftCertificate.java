@@ -29,9 +29,9 @@ public class GiftCertificate {
     private Float price;
     @Column(nullable = false)
     private Integer duration;
-    @Column(name = "create_date", nullable = false)
+    @Column(name = "create_date")
     private LocalDateTime createDate;
-    @Column(name = "last_update_date", nullable = false)
+    @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
     @Column(columnDefinition = "boolean default true")
     private Boolean active;
@@ -47,5 +47,13 @@ public class GiftCertificate {
 
     public GiftCertificate(final Integer id) {
         this.id = id;
+    }
+
+    public GiftCertificate(Integer id, String name, String description, Float price, Integer duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
     }
 }

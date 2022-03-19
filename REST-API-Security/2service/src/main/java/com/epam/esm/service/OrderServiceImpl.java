@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 import static com.epam.esm.model.Role.Roles.ROLE_USER;
@@ -112,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
 
     private GiftCertificate checkExistGiftCertificateId(final int giftCertificateId) {
         return giftCertificateRepository
-                .findById(giftCertificateId)
+                .findByIdAndActive(giftCertificateId, true)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("giftCertificate.notFound.id"),
                         HttpStatus.NOT_FOUND, properties.getGift(), giftCertificateId));
@@ -143,7 +142,6 @@ public class OrderServiceImpl implements OrderService {
             sum += oldGiftCertificate.getPrice();
         }
         order.setPrice(sum);
-        order.setDate(LocalDateTime.now(clock));// todo mock method service=spy privatemethod=@visiblefortest
         return order;
     }
 

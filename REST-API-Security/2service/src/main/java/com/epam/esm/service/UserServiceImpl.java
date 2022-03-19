@@ -11,16 +11,6 @@ import com.epam.esm.service.validator.PageValidator;
 import com.epam.esm.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.keycloak.admin.client.CreatedResponseUtil;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -28,18 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.ResourceBundle;
-
-import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private Environment env;
     @Setter
     private ResourceBundle rb;
     private final ExceptionStatusPostfixProperties statusPostfixProperties;
@@ -64,26 +49,6 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Collections.singletonList(userRole));
         final User savedUser = userRepository.save(user);
         return mapper.modelToDto(savedUser);
-    }
-
-    @Override
-    @Transactional
-    public UserDto createKeycloakUser(final UserDto userDto) {
-        userValidator.createValidate(userDto);
-        final User user = mapper.dtoToModel(userDto);
-        final String username = user.getUsername();
-        final String email = user.getEmail();
-        final String password = user.getPassword();
-        final UserRepresentation userRepresentation = setUserParams(username, email, password);
-
-        final Keycloak keycloak = getKeycloak();
-        final RealmResource realmResource = keycloak.realm(env.getProperty("keycloak.realm"));
-        final UsersResource userResource = realmResource.users();
-        final Response response = userResource.create(userRepresentation);
-
-        validateResponse(response);
-        mapUserRole(response, realmResource, userResource);
-        return new UserDto(username, email, password);
     }
 
     @Override
@@ -113,7 +78,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private User checkExist(final int id) {
-        userValidator.validateId(id);
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new ServiceException(
@@ -139,45 +103,5 @@ public class UserServiceImpl implements UserService {
                             rb.getString("user.exists.email"),
                             HttpStatus.NOT_FOUND, statusPostfixProperties.getUser());
                 });
-    }
-
-    private Keycloak getKeycloak() {
-        return KeycloakBuilder.builder()
-                .serverUrl(env.getProperty("keycloak.auth-server-url"))
-                .realm(env.getProperty("my-keycloak.admin-realm"))
-                .clientId(env.getProperty("my-keycloak.admin-resource"))
-                .username(env.getProperty("my-keycloak.admin-username"))
-                .password(env.getProperty("my-keycloak.admin-password"))
-                .build();
-    }
-
-    private void validateResponse(final Response response) {
-        if (response.getStatus() == HttpStatus.CONFLICT.value()) {
-            throw new ServiceException(
-                    rb.getString("user.exist"),
-                    HttpStatus.CONFLICT, statusPostfixProperties.getUser());
-        }
-    }
-
-    private UserRepresentation setUserParams(final String username, final String email, final String password) {
-        final CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(password);
-
-        final UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(username);
-        userRepresentation.setEmail(email);
-        userRepresentation.setCredentials(Collections.singletonList(credential));
-        userRepresentation.setEnabled(true);
-
-        return userRepresentation;
-    }
-
-    private void mapUserRole(final Response response,
-                             final RealmResource realmResource,
-                             final UsersResource userResource) {
-        final String userId = CreatedResponseUtil.getCreatedId(response);
-        final RoleRepresentation userRealmRole = realmResource.roles().get(USER).toRepresentation();
-        userResource.get(userId).roles().realmLevel().add(Collections.singletonList(userRealmRole));
     }
 }

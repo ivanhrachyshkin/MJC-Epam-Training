@@ -23,7 +23,7 @@ public class Tag {
     @Column(unique = true)
     private String name;
     @Column(columnDefinition = "boolean default true")
-    private Boolean isActive;
+    private Boolean active;
     @ManyToMany(mappedBy = "tags")
     private Set<GiftCertificate> giftCertificates = new HashSet<>();
 

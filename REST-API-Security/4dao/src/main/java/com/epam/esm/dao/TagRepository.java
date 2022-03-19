@@ -30,9 +30,9 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
                     " from my_table" +
                     " where count >= ALL (select count from my_table)";
 
-    Page<Tag> findAllByIsActive(Boolean isActive, Pageable pageable);
+    Page<Tag> findAllByActive(Boolean active, Pageable pageable);
 
-    Optional<Tag> findByIdAndIsActive(int id, Boolean isActive);
+    Optional<Tag> findByIdAndActive(int id, Boolean active);
 
     Optional<Tag> findByName(String name);
 

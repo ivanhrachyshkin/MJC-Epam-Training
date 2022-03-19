@@ -32,8 +32,6 @@ public class TagServiceUnitTest {
 
     @Mock
     private TagRepository tagRepository;
-    @InjectMocks
-    private TagServiceImpl tagService;
     @Mock
     private DtoMapper<Tag, TagDto> mapper;
     @Mock
@@ -44,11 +42,17 @@ public class TagServiceUnitTest {
     private AuthorityValidator authorityValidator;
     @Mock
     private ExceptionStatusPostfixProperties properties;
+    @InjectMocks
+    private TagServiceImpl tagService;
 
     @Mock
-    private Tag tag1;
+    private Tag tag;
     @Mock
-    private TagDto tagDto1;
+    private Tag tag2;
+    @Mock
+    private TagDto dtoTag;
+    @Mock
+    private TagDto dtoTag2;
     @Mock
     private Page<Tag> tags;
     @Mock
@@ -68,41 +72,61 @@ public class TagServiceUnitTest {
     }
 
     @Test
-    void shouldReturnCreatedTag_On_Create() {
+    void shouldReturnCreatedTag_On_CreateNew() {
         //Given
-        when(mapper.dtoToModel(tagDto1)).thenReturn(tag1);
-        when(tagRepository.findByName(tag1.getName())).thenReturn(Optional.of(tag1));
-        when(tagRepository.save(tag1)).thenReturn(tag1);
-        when(mapper.modelToDto(tag1)).thenReturn(tagDto1);
+        when(mapper.dtoToModel(dtoTag)).thenReturn(tag);
+        when(tagRepository.findByName(tag.getName())).thenReturn(Optional.empty());
+        when(tagRepository.save(tag)).thenReturn(tag2);
+        when(mapper.modelToDto(tag2)).thenReturn(dtoTag2);
         //When
-        final TagDto actualTag = tagService.create(tagDto1);
+        final TagDto actualTag = tagService.create(dtoTag);
         //Then
-        assertEquals(tagDto1, actualTag);
-        verify(tagValidator, only()).validate(tagDto1);
-        verify(tagRepository, times(1)).findByName(tag1.getName());
-        verify(tagRepository, times(1)).save(tag1);
+        assertEquals(dtoTag2, actualTag);
+        verify(tagValidator, only()).validate(dtoTag);
+        verify(tagRepository, times(1)).findByName(tag.getName());
+        verify(tagRepository, times(1)).save(tag);
         verifyNoMoreInteractions(tagRepository);
-        verify(mapper, times(1)).dtoToModel(tagDto1);
-        verify(mapper, times(1)).modelToDto(tag1);
+        verify(mapper, times(1)).dtoToModel(dtoTag);
+        verify(mapper, times(1)).modelToDto(tag2);
+        verifyNoMoreInteractions(mapper);
+    }
+
+    @Test
+    void shouldReturnCreatedTag_On_CreateOld() {
+        //Given
+        when(mapper.dtoToModel(dtoTag)).thenReturn(tag);
+        when(tagRepository.findByName(tag.getName())).thenReturn(Optional.of(tag));
+        when(tagRepository.save(tag)).thenReturn(tag2);
+        when(mapper.modelToDto(tag2)).thenReturn(dtoTag2);
+        //When
+        final TagDto actualTag = tagService.create(dtoTag);
+        //Then
+        assertEquals(dtoTag2, actualTag);
+        verify(tagValidator, only()).validate(dtoTag);
+        verify(tagRepository, times(1)).findByName(tag.getName());
+        verify(tagRepository, times(1)).save(tag);
+        verifyNoMoreInteractions(tagRepository);
+        verify(mapper, times(1)).dtoToModel(dtoTag);
+        verify(mapper, times(1)).modelToDto(tag2);
         verifyNoMoreInteractions(mapper);
     }
 
     @Test
     void shouldThrowServiceException_On_Create() {
         //Given
-        tag1 = new Tag();
-        tag1.setIsActive(true);
-        final String message = String.format(rb.getString("tag.alreadyExists.name"), tag1.getName());
-        when(mapper.dtoToModel(tagDto1)).thenReturn(tag1);
-        when(tagRepository.findByName(tag1.getName())).thenReturn(Optional.of(tag1));
+        tag = new Tag();
+        tag.setActive(true);
+        final String message = String.format(rb.getString("tag.alreadyExists.name"), tag.getName());
+        when(mapper.dtoToModel(dtoTag)).thenReturn(tag);
+        when(tagRepository.findByName(tag.getName())).thenReturn(Optional.of(tag));
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
-                () -> tagService.create(tagDto1));
+                () -> tagService.create(dtoTag));
         //Then
         assertEquals(message, serviceException.getMessage());
-        verify(mapper, times(1)).dtoToModel(tagDto1);
-        verify(tagValidator, only()).validate(tagDto1);
-        verify(tagRepository, only()).findByName(tag1.getName());
+        verify(mapper, times(1)).dtoToModel(dtoTag);
+        verify(tagValidator, only()).validate(dtoTag);
+        verify(tagRepository, only()).findByName(tag.getName());
     }
 
     @Test
@@ -125,15 +149,16 @@ public class TagServiceUnitTest {
     void shouldReturnTags_On_ReadAll_For_User() {
         //Given
         when(authorityValidator.isAdmin()).thenReturn(false);
-        when(tagRepository.findAllByIsActive(true, page)).thenReturn(tags);
+        when(tagRepository.findAllByActive(true, page)).thenReturn(tags);
         when(mapper.modelsToDto(tags)).thenReturn(dtoTags);
         //When
         final Page<TagDto> actualTags = tagService.readAll(page);
         //Then
-        assertEquals(dtoTags, actualTags);
+        assertEquals(dtoTags.getTotalElements(), actualTags.getTotalElements());
+        assertEquals(dtoTags.getTotalPages(), actualTags.getTotalPages());
         verify(pageValidator, only()).paginationValidate(page);
         verify(authorityValidator, only()).isAdmin();
-        verify(tagRepository, only()).findAllByIsActive(true, page);
+        verify(tagRepository, only()).findAllByActive(true, page);
         verify(mapper, only()).modelsToDto(tags);
     }
 
@@ -141,15 +166,15 @@ public class TagServiceUnitTest {
     void shouldReturnTag_On_ReadOne_For_User() {
         //Given
         when(authorityValidator.isAdmin()).thenReturn(false);
-        when(tagRepository.findByIdAndIsActive(1,true)).thenReturn(Optional.of(tag1));
-        when(mapper.modelToDto(tag1)).thenReturn(tagDto1);
+        when(tagRepository.findByIdAndActive(1,true)).thenReturn(Optional.of(tag));
+        when(mapper.modelToDto(tag)).thenReturn(dtoTag);
         //When
         final TagDto actualTag = tagService.readOne(1);
         //Then
-        assertEquals(tagDto1, actualTag);
+        assertEquals(dtoTag, actualTag);
         verify(authorityValidator, only()).isAdmin();
-        verify(tagRepository, only()).findByIdAndIsActive(1, true);
-        verify(mapper, only()).modelToDto(tag1);
+        verify(tagRepository, only()).findByIdAndActive(1, true);
+        verify(mapper, only()).modelToDto(tag);
     }
 
     @Test
@@ -157,28 +182,28 @@ public class TagServiceUnitTest {
         //Given
         final String message = String.format(rb.getString("tag.notFound.id"), 1);
         when(authorityValidator.isAdmin()).thenReturn(false);
-        when(tagRepository.findByIdAndIsActive(1,true)).thenReturn(Optional.empty());
+        when(tagRepository.findByIdAndActive(1,true)).thenReturn(Optional.empty());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> tagService.readOne(1));
         //Then
         assertEquals(message, serviceException.getMessage());
-        verify(tagRepository, only()).findByIdAndIsActive(1,true);
+        verify(tagRepository, only()).findByIdAndActive(1,true);
     }
 
     @Test
     void shouldReturnTag_On_ReadOne_For_Admin() {
         //Given
         when(authorityValidator.isAdmin()).thenReturn(true);
-        when(tagRepository.findById(1)).thenReturn(Optional.of(tag1));
-        when(mapper.modelToDto(tag1)).thenReturn(tagDto1);
+        when(tagRepository.findById(1)).thenReturn(Optional.of(tag));
+        when(mapper.modelToDto(tag)).thenReturn(dtoTag);
         //When
         final TagDto actualTag = tagService.readOne(1);
         //Then
-        assertEquals(tagDto1, actualTag);
+        assertEquals(dtoTag, actualTag);
         verify(authorityValidator, only()).isAdmin();
         verify(tagRepository, only()).findById(1);
-        verify(mapper, only()).modelToDto(tag1);
+        verify(mapper, only()).modelToDto(tag);
     }
 
     @Test
@@ -203,23 +228,36 @@ public class TagServiceUnitTest {
         //When
         final Page<TagDto> actualTags = tagService.readMostUsed(page);
         //Then
-        assertEquals(dtoTags, actualTags);
+        assertEquals(dtoTags.getTotalElements(), actualTags.getTotalElements());
+        assertEquals(dtoTags.getTotalPages(), actualTags.getTotalPages());
         verify(tagRepository, only()).readMostUsed(page);
         verify(mapper, only()).modelsToDto(tags);
     }
 
     @Test
-    void shouldReturnTag_On_Delete_() {
+    void shouldDelete_On_Delete_() {
         //Given
-        tag1 = new Tag();
-        tag1.setIsActive(false);
-        when(tagRepository.findByIdAndIsActive(1, true)).thenReturn(Optional.of(tag1));
+        when(tagRepository.findByIdAndActive(1, true)).thenReturn(Optional.of(tag));
         //When
         tagService.deleteById(1);
         //Then
         verify(tagValidator, only()).validateId(1);
-        verify(tagRepository, times(1)).findByIdAndIsActive(1, true);
-        verify(tagRepository, times(1)).save(tag1);
+        verify(tagRepository, times(1)).findByIdAndActive(1, true);
+        verify(tagRepository, times(1)).save(tag);
         verifyNoMoreInteractions(tagRepository);
+    }
+
+    @Test
+    void shouldThrowException_On_Delete() {
+        //Given
+        final String message = String.format(rb.getString("tag.notFound.id"), 1);
+        when(tagRepository.findByIdAndActive(1, true)).thenReturn(Optional.empty());
+        //When
+        final ServiceException serviceException = assertThrows(ServiceException.class,
+                () -> tagService.deleteById(1));
+        //Then
+        assertEquals(message, serviceException.getMessage());
+        verify(tagValidator, only()).validateId(1);
+        verify(tagRepository, only()).findByIdAndActive(1, true);
     }
 }

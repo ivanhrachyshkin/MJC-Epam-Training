@@ -14,4 +14,9 @@ public class AuthorityValidator {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getAuthorities().contains(new SimpleGrantedAuthority(ADMIN));
     }
+
+    public boolean isNotAdmin() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !authentication.getAuthorities().contains(new SimpleGrantedAuthority(ADMIN));
+    }
 }

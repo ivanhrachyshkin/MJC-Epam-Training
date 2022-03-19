@@ -44,7 +44,7 @@ public class GiftCertificateSpecification {
                         : criteriaBuilder.and(predicate, giftCertificateDescriptionPredicate);
             }
 
-            if (active != null) {
+            if (active) {
                 final Predicate giftCertificateActivePredicate
                         = criteriaBuilder.equal(root.get("active"), active);
                 predicate = predicate == null
