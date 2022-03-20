@@ -20,7 +20,7 @@ public class TagValidator {
 
     public void validateId(final Integer id) {
         if (id != null && id <= 0) {
-            throwValidationException("id.non");
+            throwValidationException("validator.id.non");
         }
     }
 
@@ -30,7 +30,7 @@ public class TagValidator {
         }
 
         if (tagDto.getId() != null) {
-            throwValidationException("id.should.not.passed");
+            throwValidationException("validator.id.should.not.passed");
         }
 
         final String name = tagDto.getName();

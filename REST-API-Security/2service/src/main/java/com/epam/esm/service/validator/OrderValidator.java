@@ -21,7 +21,7 @@ public class OrderValidator {
 
     public void validateId(final Integer id) {
         if (id != null && id <= 0) {
-            throwValidationException("id.non");
+            throwValidationException("validator.id.non");
         }
     }
 
@@ -30,7 +30,7 @@ public class OrderValidator {
             throwValidationException("validator.order.null.value");
         }
         if (orderDto.getId() != null) {
-            throwValidationException("id.should.not.passed");
+            throwValidationException("validator.id.should.not.passed");
         }
 
         validateGiftCertificate(orderDto);

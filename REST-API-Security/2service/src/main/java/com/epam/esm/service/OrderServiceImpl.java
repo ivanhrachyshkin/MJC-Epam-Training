@@ -10,7 +10,6 @@ import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
-import com.epam.esm.service.validator.AuthenticatedUserProvider;
 import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.OrderValidator;
 import com.epam.esm.service.validator.PageValidator;
@@ -61,51 +60,49 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto readOne(final int id) {
-        orderValidator.validateId(id);
+    public OrderDto readOne(final int orderId) {
+        orderValidator.validateId(orderId);
         final User authUser = userProvider.getUserFromAuthentication();
-        final Order order = getOrderForReadOneByUserRole(id, authUser);
+        final Order order = authorityValidator.isAdmin()
+                ? checkExist(orderId)
+                : checkExistByUserIdAndId(authUser.getId(), orderId);
         return mapper.modelToDto(order);
     }
 
-   @Override
-   @Transactional
-   public Page<OrderDto> readByUserId(final int userId, final Pageable pageable) {
-       orderValidator.validateId(userId);
-       final Page<Order> orders = orderRepository.findOrdersByUserId(userId, pageable);
-       return mapper.modelsToDto(orders);
-   }
+    @Override
+    @Transactional
+    public Page<OrderDto> readByUserId(final int userId, final Pageable pageable) {
+        orderValidator.validateId(userId);
+        final Page<Order> orders = orderRepository.findOrdersByUserId(userId, pageable);
+        return mapper.modelsToDto(orders);
+    }
 
     @Override
     @Transactional
     public OrderDto readOneByUserIdAndOrderId(final int userId, final int orderId) {
         orderValidator.validateId(userId);
         orderValidator.validateId(orderId);
-        final Order order = orderRepository.
+        final Order order = checkExistByUserIdAndId(userId, orderId);
+        return mapper.modelToDto(order);
+    }
+
+    private Order checkExist(final int orderId) {
+        return orderRepository
+                .findById(orderId)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("order.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getOrder(), orderId));
+    }
+
+    private Order checkExistByUserIdAndId(final int userId, final int orderId) {
+        return orderRepository.
                 findOrderByUserIdAndId(userId, orderId)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("order.notFound.user.order"),
                         HttpStatus.NOT_FOUND, properties.getOrder(), userId, orderId));
-        return mapper.modelToDto(order);
     }
 
-    private Order getOrderForReadOneByUserRole(final int id, final User authUser) {
-        if (authorityValidator.isAdmin()) {
-            return orderRepository
-                    .findById(id)
-                    .orElseThrow(() -> new ServiceException(
-                            rb.getString("order.notFound.id"),
-                            HttpStatus.NOT_FOUND, properties.getOrder(), id));
-        } else {
-            return orderRepository
-                    .findOrderByUserIdAndId(authUser.getId(), id)
-                    .orElseThrow(() -> new ServiceException(
-                            rb.getString("order.notFound.id"),
-                            HttpStatus.NOT_FOUND, properties.getOrder(), id));
-        }
-    }
-
-    private User checkExistUser(final int userId) {
+    private User checkExistUserById(final int userId) {
         return userRepository
                 .findById(userId)
                 .orElseThrow(() -> new ServiceException(
@@ -113,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND, properties.getUser(), userId));
     }
 
-    private GiftCertificate checkExistGiftCertificateId(final int giftCertificateId) {
+    private GiftCertificate checkExistGiftCertificateById(final int giftCertificateId) {
         return giftCertificateRepository
                 .findByIdAndActive(giftCertificateId, true)
                 .orElseThrow(() -> new ServiceException(
@@ -122,15 +119,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Page<Order> getOrdersForReadAllByUserRole(final User user, final Pageable pageable) {
-        return authorityValidator.isNotAdmin() ?
-                orderRepository.findOrdersByUserId(user.getId(), pageable)
+        return authorityValidator.isNotAdmin()
+                ? orderRepository.findOrdersByUserId(user.getId(), pageable)
                 : orderRepository.findAll(pageable);
     }
 
     private void validateOrderByRoles(final User user, final OrderDto orderDto) {
         if (authorityValidator.isAdmin()) {
             orderValidator.createValidate(orderDto, true);
-            checkExistUser(orderDto.getUserDto().getId());
+            checkExistUserById(orderDto.getUserDto().getId());
         } else {
             orderValidator.createValidate(orderDto, false);
             orderDto.setUserDto(new UserDto(user.getId()));
@@ -140,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
     private Order prepareOrderForCreation(final Order order) {
         float sum = 0;
         for (GiftCertificate giftCertificate : order.getGiftCertificates()) {
-            final GiftCertificate oldGiftCertificate = checkExistGiftCertificateId(giftCertificate.getId());
+            final GiftCertificate oldGiftCertificate = checkExistGiftCertificateById(giftCertificate.getId());
             sum += oldGiftCertificate.getPrice();
         }
         order.setPrice(sum);

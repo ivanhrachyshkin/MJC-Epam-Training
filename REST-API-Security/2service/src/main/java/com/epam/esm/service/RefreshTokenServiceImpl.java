@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class RefreshTokenServiceImpl {
+public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Setter
     private ResourceBundle rb;
@@ -28,24 +28,26 @@ public class RefreshTokenServiceImpl {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
 
-    public RefreshTokenDto findByToken(String token) {
+    @Override
+    public RefreshTokenDto findByToken(final String token) {
         final RefreshToken refreshToken = refreshTokenRepository
                 .findByToken(token)
-                .orElseThrow(() -> new ServiceException("token not found",
+                .orElseThrow(() -> new ServiceException(rb.getString("token.not.found"),
                         HttpStatus.NOT_FOUND, properties.getAuth()));
         final RefreshToken verifiedToken = verifyExpiration(refreshToken);
         return mapper.modelToDto(verifiedToken);
     }
 
+    @Override
     @Transactional
     public RefreshTokenDto createRefreshToken(final int userId, final long refreshTokenDurationMs) {
-        RefreshToken refreshToken = new RefreshToken();
+        final RefreshToken refreshToken = new RefreshToken();
         final User user = checkExistUserById(userId);
         refreshToken.setUser(user);
         refreshToken.setExpiryDate(LocalDateTime.now().plusSeconds(refreshTokenDurationMs));
         refreshToken.setToken(UUID.randomUUID().toString());
-        refreshToken = refreshTokenRepository.save(refreshToken);
-        return mapper.modelToDto(refreshToken);
+        final RefreshToken createdRefreshToken = refreshTokenRepository.save(refreshToken);
+        return mapper.modelToDto(createdRefreshToken);
     }
 
     private User checkExistUserById(final int userId) {
@@ -56,10 +58,10 @@ public class RefreshTokenServiceImpl {
                         HttpStatus.NOT_FOUND, properties.getUser(), userId));
     }
 
-    private RefreshToken verifyExpiration(RefreshToken token) {
+    private RefreshToken verifyExpiration(final RefreshToken token) {
         if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
             refreshTokenRepository.delete(token);
-            throw new ServiceException("Refresh token was expired. Please make a new signin request",
+            throw new ServiceException(rb.getString("refreshToken.expired.new"),
                     HttpStatus.UNAUTHORIZED, properties.getAuth());
         }
         return token;

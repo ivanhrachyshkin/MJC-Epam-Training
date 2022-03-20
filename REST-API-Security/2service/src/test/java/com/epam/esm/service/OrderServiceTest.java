@@ -10,7 +10,6 @@ import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
-import com.epam.esm.service.validator.AuthenticatedUserProvider;
 import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.OrderValidator;
 import com.epam.esm.service.validator.PageValidator;
@@ -333,7 +332,7 @@ public class OrderServiceTest {
         when(userProvider.getUserFromAuthentication()).thenReturn(authUser);
         when(authorityValidator.isAdmin()).thenReturn(false);
         when(orderRepository.findOrderByUserIdAndId(authUser.getId(), 1)).thenReturn(Optional.empty());
-        final String message = String.format(rb.getString("order.notFound.id"), 1);
+        final String message = String.format(rb.getString("order.notFound.user.order"),authUser.getId(), 1);
         //When
         final ServiceException serviceException
                 = assertThrows(ServiceException.class, () -> orderService.readOne(1));

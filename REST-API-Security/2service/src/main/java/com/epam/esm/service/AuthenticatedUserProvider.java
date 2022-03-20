@@ -1,4 +1,4 @@
-package com.epam.esm.service.validator;
+package com.epam.esm.service;
 
 import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.User;
@@ -26,7 +26,7 @@ public class AuthenticatedUserProvider {
         final String name = authentication.getName();
         return userRepository
                 .findByUsername(name).orElseThrow(() ->
-                        new ValidationException(
+                        new ServiceException(
                                 rb.getString("user.exists.name"),
                                 HttpStatus.NOT_FOUND, properties.getUser()));
     }

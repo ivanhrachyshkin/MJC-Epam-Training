@@ -22,7 +22,7 @@ public class UserValidator {
 
     public void validateId(final Integer id) {
         if (id != null && id <= 0)
-            throwValidationException("id.non");
+            throwValidationException("validator.id.non");
     }
 
     public void createValidate(final UserDto userDto) {
@@ -30,7 +30,7 @@ public class UserValidator {
             throwValidationException("validator.user.null");
         }
         if (userDto.getId() != null) {
-            throwValidationException("id.should.not.passed");
+            throwValidationException("validator.id.should.not.passed");
         }
         final Map<Object, String> fieldsWithRbKeys = getFieldWithRbKey(userDto);
         fieldsWithRbKeys.forEach(this::validateNullOrEmpty);

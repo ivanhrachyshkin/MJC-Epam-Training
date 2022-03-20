@@ -1,9 +1,6 @@
 package com.epam.esm.view.interceptor;
 
-import com.epam.esm.service.GiftCertificateServiceImpl;
-import com.epam.esm.service.OrderServiceImpl;
-import com.epam.esm.service.TagServiceImpl;
-import com.epam.esm.service.UserServiceImpl;
+import com.epam.esm.service.*;
 import com.epam.esm.service.validator.*;
 import com.epam.esm.view.security.jwt.JwtTokenProvider;
 import com.epam.esm.view.security.payload.requestvalidator.RequestValidator;

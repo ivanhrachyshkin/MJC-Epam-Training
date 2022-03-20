@@ -75,8 +75,8 @@ public class TagServiceImpl implements TagService {
     }
 
     private Page<Tag> getTagsByUserRole(final Pageable pageable) {
-        return authorityValidator.isAdmin() ?
-                tagRepository.findAll(pageable)
+        return authorityValidator.isAdmin()
+                ? tagRepository.findAll(pageable)
                 : tagRepository.findAllByActive(true, pageable);
     }
 

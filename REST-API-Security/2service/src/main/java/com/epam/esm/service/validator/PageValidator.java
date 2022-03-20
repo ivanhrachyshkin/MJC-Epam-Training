@@ -20,11 +20,11 @@ public class PageValidator {
     public void paginationValidate(final Pageable pageable) {
 
         if (pageable.getPageNumber() < 0) {
-            throwValidationException("invalid.pagination");
+            throwValidationException("validator.invalid.pagination");
         }
 
         if (pageable.getPageSize() < 1) {
-            throwValidationException("invalid.pagination");
+            throwValidationException("validator.invalid.pagination");
         }
     }
 

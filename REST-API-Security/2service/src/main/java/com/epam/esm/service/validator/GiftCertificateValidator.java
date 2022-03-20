@@ -25,13 +25,13 @@ public class GiftCertificateValidator {
 
     public void validateId(final Integer id) {
         if (id != null && id <= 0) {
-            throwValidationException("id.non");
+            throwValidationException("validator.id.non");
         }
     }
 
     public void createValidate(final GiftCertificateDto giftCertificateDto) {
         if (giftCertificateDto.getId() != null) {
-            throwValidationException("id.should.not.passed");
+            throwValidationException("validator.id.should.not.passed");
         }
         final Map<Object, String> fieldsWithRbKeys = getFieldWithRbKey(giftCertificateDto);
         fieldsWithRbKeys.forEach(this::validateNullOrEmpty);
@@ -39,7 +39,7 @@ public class GiftCertificateValidator {
 
     public void updateValidate(final GiftCertificateDto giftCertificateDto) {
         if (giftCertificateDto.getId() != null) {
-            throwValidationException("id.should.passed");
+            throwValidationException("validator.id.should.passed");
         }
         final Map<Object, String> fieldsWithRbKeys = getFieldWithRbKey(giftCertificateDto);
         fieldsWithRbKeys.forEach(this::validateNotNullAndEmpty);
