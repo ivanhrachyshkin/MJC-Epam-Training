@@ -10,9 +10,9 @@ public interface OrderService {
 
     Page<OrderDto> readAll(Pageable pageable);
 
-    Page<OrderDto> readAllByUserId(int userId, Pageable pageable);
-
     OrderDto readOne(int id);
 
     OrderDto readOneByUserIdAndOrderId(int userId, int orderId);
+
+    Page<OrderDto> readByUserId(int userId, Pageable pageable);
 }

@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceUnitTest {
+public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -84,9 +84,9 @@ public class UserServiceUnitTest {
         when(userRepository.save(user)).thenReturn(user);
         when(mapper.modelToDto(user)).thenReturn(userDto);
         //When
-        final UserDto actualUser = userService.create(userDto);
+        final UserDto actualDtoUser = userService.create(userDto);
         //Then
-        assertEquals(userDto, actualUser);
+        assertEquals(userDto, actualDtoUser);
         verify(userValidator, only()).createValidate(userDto);
         verify(userRepository, times(1)).findByUsername(userDto.getUsername());
         verify(userRepository, times(1)).findByEmail(userDto.getEmail());
@@ -135,9 +135,9 @@ public class UserServiceUnitTest {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(mapper.modelToDto(user)).thenReturn(userDto);
         //When
-        final UserDto actualUser = userService.readOne(1);
+        final UserDto actualDtoUser = userService.readOne(1);
         //Then
-        assertEquals(userDto, actualUser);
+        assertEquals(userDto, actualDtoUser);
         verify(userRepository, only()).findById(1);
         verify(mapper, only()).modelToDto(user);
     }
@@ -161,9 +161,9 @@ public class UserServiceUnitTest {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
         when(mapper.modelToDto(user)).thenReturn(userDto);
         //When
-        final UserDto actualUser = userService.readOneByName(user.getUsername());
+        final UserDto actualDtoUser = userService.readOneByName(user.getUsername());
         //Then
-        assertEquals(userDto, actualUser);
+        assertEquals(userDto, actualDtoUser);
         verify(userRepository, only()).findByUsername(user.getUsername());
         verify(mapper, only()).modelToDto(user);
     }
@@ -187,10 +187,11 @@ public class UserServiceUnitTest {
         when(userRepository.findAll(page)).thenReturn(users);
         when(mapper.modelsToDto(users)).thenReturn(dtoUsers);
         //When
-        final Page<UserDto> actualUsers = userService.readAll(page);
+        final Page<UserDto> actualDtoUsers = userService.readAll(page);
         //Then
-        assertEquals(dtoUsers.getTotalElements(), actualUsers.getTotalElements());
-        assertEquals(dtoUsers.getTotalPages(), actualUsers.getTotalPages());
+        assertEquals(dtoUsers, actualDtoUsers);
+        assertEquals(dtoUsers.getTotalElements(), actualDtoUsers.getTotalElements());
+        assertEquals(dtoUsers.getTotalPages(), actualDtoUsers.getTotalPages());
         verify(pageValidator, only()).paginationValidate(page);
         verify(userRepository, only()).findAll(page);
         verify(mapper, only()).modelsToDto(users);

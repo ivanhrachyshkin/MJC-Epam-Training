@@ -24,9 +24,8 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     @Override
     public GiftCertificateDto modelToDto(final GiftCertificate giftCertificate) {
         final GiftCertificateDto dtoGiftCertificate = modelMapper.map(giftCertificate, GiftCertificateDto.class);
-        emptyTagsIfNull(giftCertificate);
-        final Set<TagDto> dtoTags = giftCertificate
-                .getTags()
+        final Set<Tag> tags = getOrSetEmptyTags(giftCertificate);
+        final Set<TagDto> dtoTags = tags
                 .stream()
                 .map(tag -> new TagDto(tag.getId(), tag.getName(), tag.getActive()))
                 .collect(Collectors.toSet());
@@ -37,9 +36,8 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
     @Override
     public GiftCertificate dtoToModel(final GiftCertificateDto giftCertificateDto) {
         final GiftCertificate giftCertificate = modelMapper.map(giftCertificateDto, GiftCertificate.class);
-        emptyTagsIfNull(giftCertificate);
-        final Set<Tag> tags = giftCertificate
-                .getTags()
+        Set<TagDto> dtoTags = getOrSetEmptyTagsDto(giftCertificateDto);
+        final Set<Tag> tags = dtoTags
                 .stream()
                 .map(tagDto -> modelMapper.map(tagDto, Tag.class))
                 .collect(Collectors.toSet());
@@ -57,17 +55,11 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
         return new PageImpl<>(collect, giftCertificates.getPageable(), giftCertificates.getTotalElements());
     }
 
-    @Override
-    public List<GiftCertificate> dtoToModels(List<GiftCertificateDto> dtoGiftCertificates) {
-        return dtoGiftCertificates
-                .stream()
-                .map(this::dtoToModel)
-                .collect(Collectors.toList());
+    private Set<Tag> getOrSetEmptyTags(final GiftCertificate giftCertificate) {
+        return giftCertificate.getTags() == null ? Collections.emptySet() : giftCertificate.getTags();
     }
 
-    private void emptyTagsIfNull(final GiftCertificate giftCertificate) {
-        if (giftCertificate.getTags() == null) {
-            giftCertificate.setTags(Collections.emptySet());
-        }
+    private Set<TagDto> getOrSetEmptyTagsDto(final GiftCertificateDto giftCertificateDto) {
+        return giftCertificateDto.getDtoTags() == null ? Collections.emptySet() : giftCertificateDto.getDtoTags();
     }
 }

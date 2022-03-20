@@ -10,24 +10,19 @@ import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
+import com.epam.esm.service.validator.AuthenticatedUserProvider;
 import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.OrderValidator;
 import com.epam.esm.service.validator.PageValidator;
-import com.epam.esm.service.validator.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
 import java.util.ResourceBundle;
-
-import static com.epam.esm.model.Role.Roles.ROLE_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +30,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Setter
     private ResourceBundle rb;
-    private final Clock clock;
     private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<Order, OrderDto> mapper;
     private final OrderRepository orderRepository;
@@ -44,12 +38,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderValidator orderValidator;
     private final PageValidator paginationValidator;
     private final AuthorityValidator authorityValidator;
+    private final AuthenticatedUserProvider userProvider;
 
     @Override
     @Transactional
     public OrderDto create(final OrderDto orderDto) {
-        final User user = getUserFromAuthentication();
-        validateOrderByRoles(user, orderDto);
+        final User authUser = userProvider.getUserFromAuthentication();
+        validateOrderByRoles(authUser, orderDto);
         final Order order = mapper.dtoToModel(orderDto);
         final Order createdOrder = orderRepository.save(prepareOrderForCreation(order));
         return mapper.modelToDto(createdOrder);
@@ -59,16 +54,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Page<OrderDto> readAll(final Pageable pageable) {
         paginationValidator.paginationValidate(pageable);
-        final User principal = getUserFromAuthentication();
-        final Page<Order> orders = getOrdersForReadAllByUserRole(principal, pageable);
-        return mapper.modelsToDto(orders);
-    }
-
-    @Override
-    @Transactional
-    public Page<OrderDto> readAllByUserId(final int userId, final Pageable pageable) {
-        paginationValidator.paginationValidate(pageable);
-        final Page<Order> orders = orderRepository.findOrdersByUserId(userId, pageable);
+        final User authUser = userProvider.getUserFromAuthentication();
+        final Page<Order> orders = getOrdersForReadAllByUserRole(authUser, pageable);
         return mapper.modelsToDto(orders);
     }
 
@@ -76,29 +63,46 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDto readOne(final int id) {
         orderValidator.validateId(id);
-        final Order order = checkExist(id);
+        final User authUser = userProvider.getUserFromAuthentication();
+        final Order order = getOrderForReadOneByUserRole(id, authUser);
         return mapper.modelToDto(order);
     }
 
+   @Override
+   @Transactional
+   public Page<OrderDto> readByUserId(final int userId, final Pageable pageable) {
+       orderValidator.validateId(userId);
+       final Page<Order> orders = orderRepository.findOrdersByUserId(userId, pageable);
+       return mapper.modelsToDto(orders);
+   }
+
     @Override
+    @Transactional
     public OrderDto readOneByUserIdAndOrderId(final int userId, final int orderId) {
         orderValidator.validateId(userId);
         orderValidator.validateId(orderId);
         final Order order = orderRepository.
-                findOrdersByUserIdAndId(userId, orderId)
+                findOrderByUserIdAndId(userId, orderId)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("order.notFound.user.order"),
                         HttpStatus.NOT_FOUND, properties.getOrder(), userId, orderId));
         return mapper.modelToDto(order);
     }
 
-    private Order checkExist(final int id) {
-        orderValidator.validateId(id);
-        return orderRepository
-                .findById(id)
-                .orElseThrow(() -> new ServiceException(
-                        rb.getString("order.notFound.id"),
-                        HttpStatus.NOT_FOUND, properties.getOrder(), id));
+    private Order getOrderForReadOneByUserRole(final int id, final User authUser) {
+        if (authorityValidator.isAdmin()) {
+            return orderRepository
+                    .findById(id)
+                    .orElseThrow(() -> new ServiceException(
+                            rb.getString("order.notFound.id"),
+                            HttpStatus.NOT_FOUND, properties.getOrder(), id));
+        } else {
+            return orderRepository
+                    .findOrderByUserIdAndId(authUser.getId(), id)
+                    .orElseThrow(() -> new ServiceException(
+                            rb.getString("order.notFound.id"),
+                            HttpStatus.NOT_FOUND, properties.getOrder(), id));
+        }
     }
 
     private User checkExistUser(final int userId) {
@@ -118,11 +122,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Page<Order> getOrdersForReadAllByUserRole(final User user, final Pageable pageable) {
-        if (ROLE_USER.equals(user.getRoles().get(0).getRoleName())) {
-            return orderRepository.findOrdersByUserId(user.getId(), pageable);
-        } else {
-            return orderRepository.findAll(pageable);
-        }
+        return authorityValidator.isNotAdmin() ?
+                orderRepository.findOrdersByUserId(user.getId(), pageable)
+                : orderRepository.findAll(pageable);
     }
 
     private void validateOrderByRoles(final User user, final OrderDto orderDto) {
@@ -143,15 +145,5 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setPrice(sum);
         return order;
-    }
-
-    private User getUserFromAuthentication() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final String name = authentication.getName();
-        return userRepository
-                .findByUsername(name).orElseThrow(() ->
-                        new ValidationException(
-                                rb.getString("user.exists.name"),
-                                HttpStatus.NOT_FOUND, properties.getUser()));
     }
 }

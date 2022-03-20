@@ -38,13 +38,4 @@ public class TagDtoMapper implements DtoMapper<Tag, TagDto> {
 
         return new PageImpl<>(collect, tags.getPageable(), tags.getTotalElements());
     }
-
-    @Override
-    public List<Tag> dtoToModels(List<TagDto> dtoTags) {
-        return dtoTags
-                .stream()
-                .map(tagDto -> modelMapper.map(tagDto, Tag.class))
-                .collect(Collectors.toList());
-    }
-
 }

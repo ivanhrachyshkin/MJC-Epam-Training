@@ -25,14 +25,14 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
     @Override
     public OrderDto modelToDto(final Order order) {
         final OrderDto orderDto = modelMapper.map(order, OrderDto.class);
-        final Set<GiftCertificateDto> giftCertificateDtos = order
+        final Set<GiftCertificateDto> dtoGiftCertificates = order
                 .getGiftCertificates()
                 .stream()
                 .map(giftCertificate ->
                         modelMapper.map(giftCertificate, GiftCertificateDto.class))
                 .collect(Collectors.toSet());
         orderDto.setUserDto(new UserDto(order.getUser().getId()));
-        orderDto.setDtoGiftCertificates(giftCertificateDtos);
+        orderDto.setDtoGiftCertificates(dtoGiftCertificates);
         return orderDto;
     }
 
@@ -40,7 +40,7 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
     public Order dtoToModel(final OrderDto orderDto) {
         final Order order = modelMapper.map(orderDto, Order.class);
         final User user = modelMapper.map(orderDto.getUserDto(), User.class);
-        Set<GiftCertificate> giftCertificates = orderDto
+        final Set<GiftCertificate> giftCertificates = orderDto
                 .getDtoGiftCertificates()
                 .stream()
                 .map(giftCertificateDto ->
@@ -57,15 +57,6 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
                 .stream()
                 .map(this::modelToDto)
                 .collect(Collectors.toList());
-
         return new PageImpl<>(collect, orders.getPageable(), orders.getTotalElements());
-    }
-
-    @Override
-    public List<Order> dtoToModels(List<OrderDto> dtoOrders) {
-        return dtoOrders
-                .stream()
-                .map(this::dtoToModel)
-                .collect(Collectors.toList());
     }
 }

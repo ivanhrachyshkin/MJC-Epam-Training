@@ -62,7 +62,7 @@ public class OrderController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
-    @Secured({ADMIN})
+    @Secured({USER,ADMIN})
     @GetMapping(value = "/{id}")
     public OrderDto readOne(@PathVariable final int id) {
         final OrderDto orderDto = orderService.readOne(id);
@@ -72,21 +72,6 @@ public class OrderController {
                 .getDtoGiftCertificates()
                 .forEach(hateoasCreator::linkGiftCertificateDto);
         return orderDto;
-    }
-
-    @Secured({ADMIN})
-    @GetMapping(value = "/user/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public PagedModel<OrderDto> readForUser(@PathVariable final int userId,
-                                            @PageableDefault(page = 0, size = 10) final Pageable pageable) {
-        final Page<OrderDto> dtoOrders = orderService.readAllByUserId(userId, pageable);
-        dtoOrders.forEach(orderDto -> {
-            hateoasCreator.linkOrderDtoOne(orderDto);
-            orderDto
-                    .getDtoGiftCertificates()
-                    .forEach(hateoasCreator::linkGiftCertificateDto);
-        });
-        return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
     private void setLocationHeader(final OrderDto orderDto) {

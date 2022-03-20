@@ -31,6 +31,7 @@ public class Interceptor implements HandlerInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
     private final PageValidator paginationValidator;
     private final RequestValidator requestValidator;
+    private final AuthenticatedUserProvider userProvider;
 
     @Override
     public boolean preHandle(final HttpServletRequest request,
@@ -49,6 +50,7 @@ public class Interceptor implements HandlerInterceptor {
         paginationValidator.setRb(resourceBundle);
         jwtTokenProvider.setRb(resourceBundle);
         requestValidator.setRb(resourceBundle);
+        userProvider.setRb(resourceBundle);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

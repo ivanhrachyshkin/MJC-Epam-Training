@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TagServiceUnitTest {
+public class TagServiceTest {
 
     @Mock
     private TagRepository tagRepository;
@@ -79,9 +79,9 @@ public class TagServiceUnitTest {
         when(tagRepository.save(tag)).thenReturn(tag2);
         when(mapper.modelToDto(tag2)).thenReturn(dtoTag2);
         //When
-        final TagDto actualTag = tagService.create(dtoTag);
+        final TagDto actualDtoTag = tagService.create(dtoTag);
         //Then
-        assertEquals(dtoTag2, actualTag);
+        assertEquals(dtoTag2, actualDtoTag);
         verify(tagValidator, only()).validate(dtoTag);
         verify(tagRepository, times(1)).findByName(tag.getName());
         verify(tagRepository, times(1)).save(tag);
@@ -99,9 +99,9 @@ public class TagServiceUnitTest {
         when(tagRepository.save(tag)).thenReturn(tag2);
         when(mapper.modelToDto(tag2)).thenReturn(dtoTag2);
         //When
-        final TagDto actualTag = tagService.create(dtoTag);
+        final TagDto actualDtoTag = tagService.create(dtoTag);
         //Then
-        assertEquals(dtoTag2, actualTag);
+        assertEquals(dtoTag2, actualDtoTag);
         verify(tagValidator, only()).validate(dtoTag);
         verify(tagRepository, times(1)).findByName(tag.getName());
         verify(tagRepository, times(1)).save(tag);
@@ -114,8 +114,7 @@ public class TagServiceUnitTest {
     @Test
     void shouldThrowServiceException_On_Create() {
         //Given
-        tag = new Tag();
-        tag.setActive(true);
+        when(tag.getActive()).thenReturn(true);
         final String message = String.format(rb.getString("tag.alreadyExists.name"), tag.getName());
         when(mapper.dtoToModel(dtoTag)).thenReturn(tag);
         when(tagRepository.findByName(tag.getName())).thenReturn(Optional.of(tag));
@@ -136,9 +135,11 @@ public class TagServiceUnitTest {
         when(tagRepository.findAll(page)).thenReturn(tags);
         when(mapper.modelsToDto(tags)).thenReturn(dtoTags);
         //When
-        final Page<TagDto> actualTags = tagService.readAll(page);
+        final Page<TagDto> actualDtoTags = tagService.readAll(page);
         //Then
-        assertEquals(dtoTags, actualTags);
+        assertEquals(dtoTags, actualDtoTags);
+        assertEquals(dtoTags.getTotalElements(), actualDtoTags.getTotalElements());
+        assertEquals(dtoTags.getTotalPages(), actualDtoTags.getTotalPages());
         verify(pageValidator, only()).paginationValidate(page);
         verify(authorityValidator, only()).isAdmin();
         verify(tagRepository, only()).findAll(page);
@@ -152,10 +153,11 @@ public class TagServiceUnitTest {
         when(tagRepository.findAllByActive(true, page)).thenReturn(tags);
         when(mapper.modelsToDto(tags)).thenReturn(dtoTags);
         //When
-        final Page<TagDto> actualTags = tagService.readAll(page);
+        final Page<TagDto> actualDtoTags = tagService.readAll(page);
         //Then
-        assertEquals(dtoTags.getTotalElements(), actualTags.getTotalElements());
-        assertEquals(dtoTags.getTotalPages(), actualTags.getTotalPages());
+        assertEquals(dtoTags, actualDtoTags);
+        assertEquals(dtoTags.getTotalElements(), actualDtoTags.getTotalElements());
+        assertEquals(dtoTags.getTotalPages(), actualDtoTags.getTotalPages());
         verify(pageValidator, only()).paginationValidate(page);
         verify(authorityValidator, only()).isAdmin();
         verify(tagRepository, only()).findAllByActive(true, page);
@@ -166,12 +168,12 @@ public class TagServiceUnitTest {
     void shouldReturnTag_On_ReadOne_For_User() {
         //Given
         when(authorityValidator.isAdmin()).thenReturn(false);
-        when(tagRepository.findByIdAndActive(1,true)).thenReturn(Optional.of(tag));
+        when(tagRepository.findByIdAndActive(1, true)).thenReturn(Optional.of(tag));
         when(mapper.modelToDto(tag)).thenReturn(dtoTag);
         //When
-        final TagDto actualTag = tagService.readOne(1);
+        final TagDto actualDtoTag = tagService.readOne(1);
         //Then
-        assertEquals(dtoTag, actualTag);
+        assertEquals(dtoTag, actualDtoTag);
         verify(authorityValidator, only()).isAdmin();
         verify(tagRepository, only()).findByIdAndActive(1, true);
         verify(mapper, only()).modelToDto(tag);
@@ -182,13 +184,13 @@ public class TagServiceUnitTest {
         //Given
         final String message = String.format(rb.getString("tag.notFound.id"), 1);
         when(authorityValidator.isAdmin()).thenReturn(false);
-        when(tagRepository.findByIdAndActive(1,true)).thenReturn(Optional.empty());
+        when(tagRepository.findByIdAndActive(1, true)).thenReturn(Optional.empty());
         //When
         final ServiceException serviceException = assertThrows(ServiceException.class,
                 () -> tagService.readOne(1));
         //Then
         assertEquals(message, serviceException.getMessage());
-        verify(tagRepository, only()).findByIdAndActive(1,true);
+        verify(tagRepository, only()).findByIdAndActive(1, true);
     }
 
     @Test
@@ -198,9 +200,9 @@ public class TagServiceUnitTest {
         when(tagRepository.findById(1)).thenReturn(Optional.of(tag));
         when(mapper.modelToDto(tag)).thenReturn(dtoTag);
         //When
-        final TagDto actualTag = tagService.readOne(1);
+        final TagDto actualDtoTag = tagService.readOne(1);
         //Then
-        assertEquals(dtoTag, actualTag);
+        assertEquals(dtoTag, actualDtoTag);
         verify(authorityValidator, only()).isAdmin();
         verify(tagRepository, only()).findById(1);
         verify(mapper, only()).modelToDto(tag);
@@ -226,10 +228,11 @@ public class TagServiceUnitTest {
         when(tagRepository.readMostUsed(page)).thenReturn(tags);
         when(mapper.modelsToDto(tags)).thenReturn(dtoTags);
         //When
-        final Page<TagDto> actualTags = tagService.readMostUsed(page);
+        final Page<TagDto> actualDtoTags = tagService.readMostUsed(page);
         //Then
-        assertEquals(dtoTags.getTotalElements(), actualTags.getTotalElements());
-        assertEquals(dtoTags.getTotalPages(), actualTags.getTotalPages());
+        assertEquals(dtoTags, actualDtoTags);
+        assertEquals(dtoTags.getTotalElements(), actualDtoTags.getTotalElements());
+        assertEquals(dtoTags.getTotalPages(), actualDtoTags.getTotalPages());
         verify(tagRepository, only()).readMostUsed(page);
         verify(mapper, only()).modelsToDto(tags);
     }

@@ -44,9 +44,4 @@ public class RefreshTokenDtoMapper implements DtoMapper<RefreshToken, RefreshTok
     public Page<RefreshTokenDto> modelsToDto(Page<RefreshToken> m) {
         return null;
     }
-
-    @Override
-    public List<RefreshToken> dtoToModels(List<RefreshTokenDto> r) {
-        return null;
-    }
 }

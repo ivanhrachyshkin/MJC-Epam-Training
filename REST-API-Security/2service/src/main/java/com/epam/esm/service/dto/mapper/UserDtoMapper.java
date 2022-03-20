@@ -1,6 +1,7 @@
 package com.epam.esm.service.dto.mapper;
 
 import com.epam.esm.model.Order;
+import com.epam.esm.model.Role;
 import com.epam.esm.model.User;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.RoleDto;
@@ -25,12 +26,14 @@ public class UserDtoMapper implements DtoMapper<User, UserDto> {
     @Override
     public UserDto modelToDto(final User user) {
         final UserDto dtoUser = modelMapper.map(user, UserDto.class);
-        final Set<OrderDto> dtoOrders = user.getOrders()
-                        .stream()
-                        .map(order -> new OrderDto(order.getId()))
-                        .collect(Collectors.toSet());
+        final Set<Order> orders = getOrSetEmptyOrders(user);
+        final Set<OrderDto> dtoOrders = orders
+                .stream()
+                .map(order -> new OrderDto(order.getId()))
+                .collect(Collectors.toSet());
         dtoUser.setDtoOrders(dtoOrders);
-        final List<RoleDto> dtoRoles = user.getRoles()
+        final List<Role> roles = getOrSetEmptyRoles(user);
+        final List<RoleDto> dtoRoles = roles
                 .stream()
                 .map(role -> modelMapper.map(role, RoleDto.class))
                 .collect(Collectors.toList());
@@ -38,40 +41,26 @@ public class UserDtoMapper implements DtoMapper<User, UserDto> {
         return dtoUser;
     }
 
+
     @Override
     public User dtoToModel(final UserDto userDto) {
-        final User user = modelMapper.map(userDto, User.class);
-        emptyOrdersIfNull(user);
-        final Set<Order> orders = user
-                .getOrders()
-                .stream()
-                .map(orderDto -> modelMapper.map(orderDto, Order.class))
-                .collect(Collectors.toSet());
-        user.setOrders(orders);
-        return user;
+        return modelMapper.map(userDto, User.class);
     }
 
     @Override
-    public Page<UserDto> modelsToDto(Page<User> users) {
+    public Page<UserDto> modelsToDto(final Page<User> users) {
         List<UserDto> collect = users
                 .stream()
                 .map(this::modelToDto)
                 .collect(Collectors.toList());
-
         return new PageImpl<>(collect, users.getPageable(), users.getTotalElements());
     }
 
-    @Override
-    public List<User> dtoToModels(List<UserDto> dtoUsers) {
-        return dtoUsers
-                .stream()
-                .map(this::dtoToModel)
-                .collect(Collectors.toList());
+    private Set<Order> getOrSetEmptyOrders(final User user) {
+        return user.getOrders() == null ? Collections.emptySet() : user.getOrders();
     }
 
-    private void emptyOrdersIfNull(final User user) {
-        if (user.getOrders() == null) {
-            user.setOrders(Collections.emptySet());
-        }
+    private List<Role> getOrSetEmptyRoles(final User user) {
+        return user.getRoles() == null ? Collections.emptyList() : user.getRoles();
     }
 }
