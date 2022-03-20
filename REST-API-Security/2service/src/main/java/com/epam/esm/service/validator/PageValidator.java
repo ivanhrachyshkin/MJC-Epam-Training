@@ -3,6 +3,7 @@ package com.epam.esm.service.validator;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -19,12 +20,16 @@ public class PageValidator {
 
     public void paginationValidate(final Pageable pageable) {
 
+        if (ObjectUtils.isEmpty(pageable)) {
+            throwValidationException("validator.null.pagination");
+        }
+
         if (pageable.getPageNumber() < 0) {
-            throwValidationException("validator.invalid.pagination");
+            throwValidationException("validator.negative.pagination");
         }
 
         if (pageable.getPageSize() < 1) {
-            throwValidationException("validator.invalid.pagination");
+            throwValidationException("validator.negative.pagination");
         }
     }
 

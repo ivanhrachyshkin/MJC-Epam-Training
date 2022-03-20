@@ -25,7 +25,7 @@ public class TagValidator {
     }
 
     public void validate(final TagDto tagDto) {
-        if (tagDto == null) {
+        if (ObjectUtils.isEmpty(tagDto)) {
             throwValidationException("validator.tag.null");
         }
 
@@ -33,9 +33,12 @@ public class TagValidator {
             throwValidationException("validator.id.should.not.passed");
         }
 
-        final String name = tagDto.getName();
-        if (ObjectUtils.isEmpty(name)) {
+        if (ObjectUtils.isEmpty(tagDto.getName())) {
             throwValidationException("validator.tag.name.required");
+        }
+
+        if (tagDto.getIsActive() != null) {
+            throwValidationException("validator.active.should.not.passed");
         }
     }
 

@@ -35,6 +35,11 @@ public class AuthenticatedUserProviderTest {
     private AuthenticatedUserProvider userProvider;
 
     @Mock
+    private SecurityContext securityContext;
+    @Mock
+    private Authentication authentication;
+
+    @Mock
     private User user;
 
     private ResourceBundle rb;
@@ -51,23 +56,20 @@ public class AuthenticatedUserProviderTest {
     @Test
     void shouldReturnToken_On_FindByToken() {
         //Given
-        final SecurityContext securityContext = mock(SecurityContext.class);
-        final Authentication authentication = mock(Authentication.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-        when(authentication.getName()).thenReturn("");
-        when(userRepository.findByUsername("")).thenReturn(Optional.of(user));
+        when(authentication.getName()).thenReturn("name");
+        when(userRepository.findByUsername("name")).thenReturn(Optional.of(user));
         //When
         final User actualUser = userProvider.getUserFromAuthentication();
         //Then
         assertEquals(user, actualUser);
+        verify(userRepository, only()).findByUsername("name");
     }
 
    @Test
    void shouldThrowException_On_FindByToken() {
        //Given
-       final SecurityContext securityContext = mock(SecurityContext.class);
-       final Authentication authentication = mock(Authentication.class);
        when(securityContext.getAuthentication()).thenReturn(authentication);
        SecurityContextHolder.setContext(securityContext);
        when(authentication.getName()).thenReturn("name");
