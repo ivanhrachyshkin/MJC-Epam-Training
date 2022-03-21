@@ -32,10 +32,10 @@ allprojects {
 }
 
 dependencies {
-    implementation project(':1view')
-    implementation project(':2service')
-    implementation project(':3model')
-    implementation project(':4dao')
+    implementation project(':view')
+    implementation project(':service')
+    implementation project(':model')
+    implementation project(':dao')
 }
 
 

@@ -1,6 +1,6 @@
 rootProject.name = 'REST-API-Security'
 
-include '4dao', '3model', '2service', '1view'
+include 'dao', 'model', 'service', 'view'
 
 enableFeaturePreview('VERSION_CATALOGS')
 
