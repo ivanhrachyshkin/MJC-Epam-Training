@@ -10,7 +10,6 @@ import com.epam.esm.view.controller.TagController;
 import com.epam.esm.view.controller.UserController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Component;
@@ -48,10 +47,7 @@ public class HateoasCreator {
     }
 
     public PagedModel<GiftCertificateDto> linkGiftCertificateDtos(Page<GiftCertificateDto> giftCertificateDtos) {
-        return pagedResourcesAssemblerGift.toModel(giftCertificateDtos,
-                this::linkGiftCertificateDtoOne, linkTo(methodOn(GiftCertificateController.class)
-                .readAll(null, null, Pageable.unpaged()))
-                .withSelfRel());
+        return pagedResourcesAssemblerGift.toModel(giftCertificateDtos, this::linkGiftCertificateDtoOne);
     }
 
     public TagDto linkTagDto(final TagDto tagDto) {
@@ -73,9 +69,7 @@ public class HateoasCreator {
     }
 
     public PagedModel<TagDto> linkTagDtos(Page<TagDto> dtoTags) {
-        return pagedResourcesAssemblerTag.toModel(dtoTags, this::linkTagDtoOne, linkTo(methodOn(TagController.class)
-                .readAll(Pageable.unpaged()))
-                .withSelfRel());
+        return pagedResourcesAssemblerTag.toModel(dtoTags, this::linkTagDtoOne);
     }
 
     public UserDto linkUserDto(final UserDto userDto) {
@@ -86,20 +80,15 @@ public class HateoasCreator {
     }
 
     public PagedModel<UserDto> linkUserDtos(Page<UserDto> dtoUsers) {
-        return pagedResourcesAssemblerUser.toModel(dtoUsers, this::linkUserDto, linkTo(methodOn(UserController.class)
-                .readAll(Pageable.unpaged()))
-                .withSelfRel());
+        return pagedResourcesAssemblerUser.toModel(dtoUsers, this::linkUserDto);
     }
 
     public PagedModel<OrderDto> linkOrderDtos(Page<OrderDto> dtoOrders) {
-        return pagedResourcesAssemblerOrder.toModel(dtoOrders,
-                this::linkOrderDtoOne, linkTo(methodOn(OrderController.class)
-                .readAll(Pageable.unpaged()))
-                .withSelfRel());
+        return pagedResourcesAssemblerOrder.toModel(dtoOrders, this::linkOrderDtoOne);
     }
 
     public OrderDto linkOrderDtoOne(final OrderDto orderDto) {
-      return  orderDto
+        return orderDto
                 .add(linkTo(methodOn(OrderController.class)
                         .create(orderDto)).withRel("method").withType("POST"))
                 .add(linkTo(methodOn(OrderController.class)

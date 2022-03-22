@@ -35,6 +35,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto create(final TagDto tagDto) {
+        tagDto.trim();
         tagValidator.validate(tagDto);
         final Tag rawTag = mapper.dtoToModel(tagDto);
         rawTag.setActive(true);

@@ -43,6 +43,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto create(final GiftCertificateDto giftCertificateDto) {
+        giftCertificateDto.trim();
         giftCertificateValidator.isValidateCreateElseUpdate(giftCertificateDto, true);
         final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
         rawGiftCertificate.setActive(true);
@@ -54,9 +55,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto update(final GiftCertificateDto giftCertificateDto) {
+        giftCertificateDto.trim();
         giftCertificateValidator.isValidateCreateElseUpdate(giftCertificateDto, false);
         checkExist(giftCertificateDto.getId());
-        checkExistByName(giftCertificateDto.getName());// todo active
+        checkExistByName(giftCertificateDto.getName());
         final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
         setTagId(rawGiftCertificate.getTags());
         final GiftCertificate updatedGiftCertificate = giftCertificateRepository.save(rawGiftCertificate);

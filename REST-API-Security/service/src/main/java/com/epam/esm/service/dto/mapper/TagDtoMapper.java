@@ -38,4 +38,5 @@ public class TagDtoMapper implements DtoMapper<Tag, TagDto> {
 
         return new PageImpl<>(collect, tags.getPageable(), tags.getTotalElements());
     }
+
 }

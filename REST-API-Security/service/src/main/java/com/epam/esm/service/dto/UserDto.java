@@ -1,5 +1,6 @@
 package com.epam.esm.service.dto;
 
+import com.epam.esm.service.Trimmable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDto extends RepresentationModel<UserDto> {
+public class UserDto extends RepresentationModel<UserDto> implements Trimmable {
 
     private Integer id;
     private String username;

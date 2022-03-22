@@ -64,7 +64,7 @@ public class TagController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable final int id) {
         tagService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();//todo return deleted
     }
 
     private void setLocationHeader(final TagDto tagDto) {

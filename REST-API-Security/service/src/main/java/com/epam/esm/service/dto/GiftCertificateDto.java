@@ -1,6 +1,8 @@
 package com.epam.esm.service.dto;
 
+import com.epam.esm.service.Trimmable;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +16,8 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> {
+@JsonIgnoreProperties(value = "_links")
+public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> implements Trimmable {
 
     private Integer id;
     private String name;

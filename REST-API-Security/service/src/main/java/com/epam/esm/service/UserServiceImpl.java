@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto create(final UserDto userDto) {
+        userDto.trim();
         userValidator.createValidate(userDto);
         checkExistName(userDto.getUsername());
         checkExistEmail(userDto.getEmail());

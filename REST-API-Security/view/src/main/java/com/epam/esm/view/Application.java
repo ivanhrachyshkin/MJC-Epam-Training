@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication(scanBasePackages = {"com.epam.esm.dao", "com.epam.esm.model", "com.epam.esm.view", "com.epam.esm.service"})
+@SpringBootApplication(scanBasePackages = {"com.epam.esm.dao", "com.epam.esm.model", "com.epam.esm.view",
+        "com.epam.esm.service"})
 @EnableJpaRepositories("com.epam.esm.dao")
 @EntityScan("com.epam.esm.model")
 @EnableConfigurationProperties
