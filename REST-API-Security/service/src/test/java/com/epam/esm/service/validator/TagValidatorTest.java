@@ -1,5 +1,6 @@
 package com.epam.esm.service.validator;
 
+import com.epam.esm.service.AssertionsProvider;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.TagDto;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
@@ -16,11 +18,12 @@ import java.io.InputStream;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TagValidatorTest {
+class TagValidatorTest extends AssertionsProvider<TagDto> {
 
     @Mock
     private ExceptionStatusPostfixProperties properties;
@@ -42,36 +45,28 @@ class TagValidatorTest {
     }
 
     @Test
-    void shouldThrowException_On_ValidateId() {
-        //When
-        final int id = -1;
-        final ValidationException validationException
-                = assertThrows(
-                ValidationException.class, () -> tagValidator.validateId(id));
-        //Then
-        assertEquals(rb.getString("validator.id.non"), validationException.getMessage());
-    }
-
-    @Test
-    void shouldThrowException_For_Null() {
+    void shouldThrowException_ForValidateId() {
         //Given
-        dtoTag = null;
+        final ValidationException expectedException
+                = getException(rb.getString("validator.id.non"));
         //When
-        final ValidationException validationException
-                = assertThrows(ValidationException.class, () -> tagValidator.validate(dtoTag));
+        final ValidationException actualException
+                = assertThrows(ValidationException.class, () -> tagValidator.validateId(-1));
         //Then
-        assertEquals(rb.getString("validator.tag.null"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @Test
     void shouldThrowException_For_IdPassed() {
         //Given
         when(dtoTag.getId()).thenReturn(1);
+        final ValidationException expectedException
+                = getException(rb.getString("validator.id.should.not.passed"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(ValidationException.class, () -> tagValidator.validate(dtoTag));
         //Then
-        assertEquals(rb.getString("validator.id.should.not.passed"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @Test
@@ -79,11 +74,13 @@ class TagValidatorTest {
         //Given
         when(dtoTag.getId()).thenReturn(null);
         when(dtoTag.getName()).thenReturn(null);
+        final ValidationException expectedException
+                = getException(rb.getString("validator.tag.name.required"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(ValidationException.class, () -> tagValidator.validate(dtoTag));
         //Then
-        assertEquals(rb.getString("validator.tag.name.required"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @Test
@@ -91,11 +88,13 @@ class TagValidatorTest {
         //Given
         when(dtoTag.getId()).thenReturn(null);
         when(dtoTag.getName()).thenReturn(StringUtils.EMPTY);
+        final ValidationException expectedException
+                = getException(rb.getString("validator.tag.name.required"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(ValidationException.class, () -> tagValidator.validate(dtoTag));
         //Then
-        assertEquals(rb.getString("validator.tag.name.required"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @Test
@@ -104,10 +103,16 @@ class TagValidatorTest {
         when(dtoTag.getId()).thenReturn(null);
         when(dtoTag.getName()).thenReturn("name");
         when(dtoTag.getActive()).thenReturn(true);
+        final ValidationException expectedException
+                = getException(rb.getString("validator.active.should.not.passed"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(ValidationException.class, () -> tagValidator.validate(dtoTag));
         //Then
-        assertEquals(rb.getString("validator.active.should.not.passed"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
+    }
+
+    private ValidationException getException(final String message) {
+        return new ValidationException(message, HttpStatus.BAD_REQUEST, properties.getPagination());
     }
 }

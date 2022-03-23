@@ -4,17 +4,43 @@ INSERT INTO tags (name)
 VALUES ('tag2');
 INSERT INTO tags (name, active)
 VALUES ('tag3', false);
+INSERT INTO tags (name)
+VALUES ('tag4');
+INSERT INTO tags (name)
+VALUES ('tag5');
+INSERT INTO tags (name)
+VALUES ('tag6');
+INSERT INTO tags (name)
+VALUES ('tag7');
+INSERT INTO tags (name, active)
+VALUES ('tag8', false);
 
-INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date)
-VALUES ('gift1', 'd1', 1.0, 1, '2010-01-01 01:01:01.111', '2010-01-01 01:01:01.111');
-INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date)
-VALUES ('gift2', 'd2', 2.0, 2, '2020-02-02 02:02:02.222', '2020-02-02 02:02:02.222');
+INSERT INTO gift_certificates (name, description, price, duration)
+VALUES ('gift1', 'd1', 1.0, 1);
+INSERT INTO gift_certificates (name, description, price, duration)
+VALUES ('gift2', 'd2', 2.0, 2);
+INSERT INTO gift_certificates (name, description, price, duration, active)
+VALUES ('gift3', 'd3', 3.0, 3, false);
+INSERT INTO gift_certificates (name, description, price, duration)
+VALUES ('gift4', 'd4', 4.0, 4);
+INSERT INTO gift_certificates (name, description, price, duration)
+VALUES ('gift5', 'd5', 5.0, 5);
+INSERT INTO gift_certificates (name, description, price, duration)
+VALUES ('gift6', 'd6', 6.0, 6);
+INSERT INTO gift_certificates (name, description, price, duration)
+VALUES ('gift7', 'd7', 7.0, 7);
 
 INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
-VALUES (1,1);
-
+VALUES (1, 1);
 INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
-VALUES (1,2);
-
+VALUES (2, 1);
 INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
-VALUES (2,1);
+VALUES (3, 1);
+INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
+VALUES (4, 2);
+INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
+VALUES (5, 2);
+INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
+VALUES (6, 2);
+INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
+VALUES (7, 2);

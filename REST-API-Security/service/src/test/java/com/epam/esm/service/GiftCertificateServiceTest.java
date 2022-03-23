@@ -2,7 +2,6 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateRepository;
 import com.epam.esm.dao.GiftCertificateSpecification;
-import com.epam.esm.dao.TagRepository;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
@@ -20,8 +19,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -33,12 +35,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GiftCertificateServiceTest {
+public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertificateDto> {
 
     @Mock
     private GiftCertificateRepository giftCertificateRepository;
     @Mock
-    private TagRepository tagRepository;
+    private TagServiceImpl tagService;
     @Mock
     private DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
     @Mock
@@ -51,9 +53,10 @@ public class GiftCertificateServiceTest {
     private AuthorityValidator authorityValidator;
     @Mock
     private ExceptionStatusPostfixProperties properties;
+    @Mock
+    private HttpServletRequest request;
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
-
 
     @Mock
     private GiftCertificate inputGiftCertificate;
@@ -70,8 +73,6 @@ public class GiftCertificateServiceTest {
 
     @Mock
     private Tag inputTag;
-    @Mock
-    private Tag outputTag;
 
     @Mock
     private Pageable page;
@@ -94,8 +95,8 @@ public class GiftCertificateServiceTest {
     void shouldReturnCreatedGiftCertificate_On_CreateNewGiftCertificateWithNewTag() {
         //Given
         when(inputGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
+        when(request.getMethod()).thenReturn(HttpMethod.POST.name());
         when(mapper.dtoToModel(dtoInputGiftCertificate)).thenReturn(inputGiftCertificate);
-        when(tagRepository.findByName(inputTag.getName())).thenReturn(Optional.empty());
         when(giftCertificateRepository.findByName(inputGiftCertificate.getName())).thenReturn(Optional.empty());
         when(giftCertificateRepository.save(inputGiftCertificate)).thenReturn(outputGiftCertificate);
         when(mapper.modelToDto(outputGiftCertificate)).thenReturn(dtoOutputGiftCertificate);
@@ -103,15 +104,13 @@ public class GiftCertificateServiceTest {
         final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.create(dtoInputGiftCertificate);
         //Then
         assertEquals(dtoOutputGiftCertificate, actualDtoGiftCertificate);
-        verify(giftCertificateValidator, only()).isValidateCreateElseUpdate(dtoInputGiftCertificate, true);
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.POST.name());
         verify(mapper, times(1)).dtoToModel(dtoInputGiftCertificate);
-        verify(tagRepository, times(1)).findByName(inputTag.getName());
-        verify(tagRepository, times(1)).save(inputTag);
+        verify(tagService, only()).prepareTagsForGiftCertificate(inputGiftCertificate.getTags());
         verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
         verify(giftCertificateRepository, times(1)).save(inputGiftCertificate);
         verify(mapper, times(1)).modelToDto(outputGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
-        verifyNoMoreInteractions(tagRepository);
         verifyNoMoreInteractions(mapper);
     }
 
@@ -119,8 +118,8 @@ public class GiftCertificateServiceTest {
     void shouldReturnCreatedGiftCertificate_On_CreateNewGiftCertificateWithOldTag() {
         //Given
         when(inputGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
+        when(request.getMethod()).thenReturn(HttpMethod.POST.name());
         when(mapper.dtoToModel(dtoInputGiftCertificate)).thenReturn(inputGiftCertificate);
-        when(tagRepository.findByName(inputTag.getName())).thenReturn(Optional.of(inputTag));
         when(giftCertificateRepository.findByName(inputGiftCertificate.getName())).thenReturn(Optional.empty());
         when(giftCertificateRepository.save(inputGiftCertificate)).thenReturn(outputGiftCertificate);
         when(mapper.modelToDto(outputGiftCertificate)).thenReturn(dtoOutputGiftCertificate);
@@ -128,40 +127,38 @@ public class GiftCertificateServiceTest {
         final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.create(dtoInputGiftCertificate);
         //Then
         assertEquals(dtoOutputGiftCertificate, actualDtoGiftCertificate);
-        verify(giftCertificateValidator, only()).isValidateCreateElseUpdate(dtoInputGiftCertificate, true);
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.POST.name());
         verify(mapper, times(1)).dtoToModel(dtoInputGiftCertificate);
-        verify(tagRepository, times(1)).findByName(inputTag.getName());
+        verify(tagService, only()).prepareTagsForGiftCertificate(inputGiftCertificate.getTags());
         verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
         verify(giftCertificateRepository, times(1)).save(inputGiftCertificate);
         verify(mapper, times(1)).modelToDto(outputGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
-        verifyNoMoreInteractions(tagRepository);
         verifyNoMoreInteractions(mapper);
     }
 
     @Test
     void shouldThrowServiceException_On_Create() {
         //Given
-        final String message
-                = String.format(rb.getString("giftCertificate.alreadyExists.name"), inputGiftCertificate.getName());
         when(inputGiftCertificate.getActive()).thenReturn(true);
         when(inputGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
+        when(request.getMethod()).thenReturn(HttpMethod.POST.name());
         when(mapper.dtoToModel(dtoInputGiftCertificate)).thenReturn(inputGiftCertificate);
-        when(tagRepository.findByName(inputTag.getName())).thenReturn(Optional.of(outputTag));
         when(giftCertificateRepository.findByName(inputGiftCertificate.getName())).thenReturn(Optional.of(inputGiftCertificate));
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("giftCertificate.alreadyExists.name"),
+                HttpStatus.CONFLICT, properties.getGift(), inputGiftCertificate.getName());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> giftCertificateService.create(dtoInputGiftCertificate));
         //Then
-        assertEquals(message, serviceException.getMessage());
-        verify(giftCertificateValidator, only()).isValidateCreateElseUpdate(dtoInputGiftCertificate, true);
+        assertServiceExceptions(expectedException, actualException);
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.POST.name());
         verify(mapper, only()).dtoToModel(dtoInputGiftCertificate);
-        verify(tagRepository, only()).findByName(inputTag.getName());
+        verify(tagService, only()).prepareTagsForGiftCertificate(inputGiftCertificate.getTags());
         verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
         verifyNoMoreInteractions(giftCertificateRepository);
-        verifyNoMoreInteractions(tagRepository);
     }
-
 
     @Test
     void shouldReturnGiftCertificates_On_ReadAll_For_Admin() {
@@ -179,7 +176,7 @@ public class GiftCertificateServiceTest {
         final Page<GiftCertificateDto> actualDtoGiftCertificates
                 = giftCertificateService.readAll(Collections.emptyList(), container, page);
         //Then
-        assertEquals(dtoOutputGiftCertificates, actualDtoGiftCertificates);
+        assertPages(dtoOutputGiftCertificates, actualDtoGiftCertificates);
         verify(giftCertificateValidator, only()).readAllValidate(Collections.emptyList(), container);
         verify(pageValidator, only()).paginationValidate(page);
         verify(mapper, only()).modelsToDto(outputGiftCertificates);
@@ -201,7 +198,7 @@ public class GiftCertificateServiceTest {
         final Page<GiftCertificateDto> actualDtoGiftCertificates
                 = giftCertificateService.readAll(Collections.emptyList(), container, page);
         //Then
-        assertEquals(dtoOutputGiftCertificates, actualDtoGiftCertificates);
+        assertPages(dtoOutputGiftCertificates, actualDtoGiftCertificates);
         verify(giftCertificateValidator, only()).readAllValidate(Collections.emptyList(), container);
         verify(pageValidator, only()).paginationValidate(page);
         verify(mapper, only()).modelsToDto(outputGiftCertificates);
@@ -226,14 +223,16 @@ public class GiftCertificateServiceTest {
     @Test
     void shouldThrowException_On_ReadOne_For_User() {
         //Given
-        final String message = String.format(rb.getString("giftCertificate.notFound.id"), 1);
         when(authorityValidator.isAdmin()).thenReturn(false);
         when(giftCertificateRepository.findByIdAndActive(1, true)).thenReturn(Optional.empty());
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("giftCertificate.notFound.id"),
+                HttpStatus.NOT_FOUND, properties.getGift(), 1);
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> giftCertificateService.readOne(1));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(giftCertificateRepository, only()).findByIdAndActive(1, true);
     }
 
@@ -255,14 +254,16 @@ public class GiftCertificateServiceTest {
     @Test
     void shouldThrowException_On_ReadOne_For_Admin() {
         //Given
-        final String message = String.format(rb.getString("giftCertificate.notFound.id"), 1);
         when(authorityValidator.isAdmin()).thenReturn(true);
         when(giftCertificateRepository.findById(1)).thenReturn(Optional.empty());
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("giftCertificate.notFound.id"),
+                HttpStatus.NOT_FOUND, properties.getGift(), 1);
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> giftCertificateService.readOne(1));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(giftCertificateRepository, only()).findById(1);
     }
 
@@ -271,42 +272,43 @@ public class GiftCertificateServiceTest {
         //Given
         when(inputGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
         when(giftCertificateRepository.findByName(inputGiftCertificate.getName())).thenReturn(Optional.empty());
+        when(request.getMethod()).thenReturn(HttpMethod.PATCH.name());
         when(mapper.dtoToModel(dtoInputGiftCertificate)).thenReturn(inputGiftCertificate);
         when(giftCertificateRepository.findById(inputGiftCertificate.getId())).thenReturn(Optional.of(inputGiftCertificate));
-        when(tagRepository.findByName(inputTag.getName())).thenReturn(Optional.of(inputTag));
         when(giftCertificateRepository.save(inputGiftCertificate)).thenReturn(outputGiftCertificate);
         when(mapper.modelToDto(outputGiftCertificate)).thenReturn(dtoOutputGiftCertificate);
         //When
         final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.update(dtoInputGiftCertificate);
         //Then
         assertEquals(dtoOutputGiftCertificate, actualDtoGiftCertificate);
-        verify(giftCertificateValidator, only()).isValidateCreateElseUpdate(dtoInputGiftCertificate, false);
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.PATCH.name());
         verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
         verify(mapper, times(1)).dtoToModel(dtoInputGiftCertificate);
         verify(giftCertificateRepository, times(1)).findById(inputGiftCertificate.getId());
-        verify(tagRepository, only()).findByName(inputTag.getName());
+        verify(tagService, only()).prepareTagsForGiftCertificate(inputGiftCertificate.getTags());
         verify(giftCertificateRepository, times(1)).save(inputGiftCertificate);
         verify(mapper, times(1)).modelToDto(outputGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
-        verifyNoMoreInteractions(tagRepository);
         verifyNoMoreInteractions(mapper);
     }
 
     @Test
     void shouldThrowServiceException_On_Update() {
         //Given
-        final String message
-                = String.format(rb.getString("giftCertificate.alreadyExists.name"), inputGiftCertificate.getName());
+        when(request.getMethod()).thenReturn(HttpMethod.PATCH.name());
         when(giftCertificateRepository.findById(inputGiftCertificate.getId()))
                 .thenReturn(Optional.of(inputGiftCertificate));
         when(giftCertificateRepository.findByName(inputGiftCertificate.getName()))
                 .thenReturn(Optional.of(inputGiftCertificate));
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("giftCertificate.alreadyExists.name"),
+                HttpStatus.CONFLICT, properties.getGift(), inputGiftCertificate.getName());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> giftCertificateService.update(dtoInputGiftCertificate));
         //Then
-        assertEquals(message, serviceException.getMessage());
-        verify(giftCertificateValidator, only()).isValidateCreateElseUpdate(dtoInputGiftCertificate, false);
+        assertServiceExceptions(expectedException, actualException);
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.PATCH.name());
         verify(giftCertificateRepository, times(1)).findById(inputGiftCertificate.getId());
         verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
         verifyNoMoreInteractions(giftCertificateRepository);
@@ -329,13 +331,15 @@ public class GiftCertificateServiceTest {
     @Test
     void shouldThrowException_On_Delete() {
         //Given
-        final String message = String.format(rb.getString("giftCertificate.notFound.id"), 1);
         when(giftCertificateRepository.findByIdAndActive(1, true)).thenReturn(Optional.empty());
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("giftCertificate.notFound.id"),
+                HttpStatus.NOT_FOUND, properties.getGift(), 1);
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> giftCertificateService.deleteById(1));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(giftCertificateValidator, only()).validateId(1);
         verify(giftCertificateRepository, only()).findByIdAndActive(1, true);
     }

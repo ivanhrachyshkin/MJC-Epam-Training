@@ -1,5 +1,6 @@
 package com.epam.esm.service.validator;
 
+import com.epam.esm.service.AssertionsProvider;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.UserDto;
 import org.apache.commons.lang3.StringUtils;
@@ -10,8 +11,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
@@ -20,13 +21,12 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-class UserValidatorTest {
+class UserValidatorTest extends AssertionsProvider<UserDto> {
 
-    @Mock
-    private ExceptionStatusPostfixProperties properties;
     @InjectMocks
     private UserValidator userValidator;
 
@@ -37,21 +37,37 @@ class UserValidatorTest {
         return new PropertyResourceBundle(contentStream);
     }
 
+    private static ExceptionStatusPostfixProperties getProperties() {
+        return new ExceptionStatusPostfixProperties();
+    }
+
+    private static ValidationException getException(final String message) {
+        return new ValidationException(message, HttpStatus.BAD_REQUEST, getProperties().getUser());
+    }
+
     static Stream<Arguments> createValidateUserProvider() throws IOException {
+        final ResourceBundle rb = getRb();
         return Stream.of(
-                Arguments.arguments(getRb().getString("validator.id.should.not.passed"),
+                Arguments.arguments(
+                        getException(rb.getString("validator.id.should.not.passed")),
                         1, null, null, null),
-                Arguments.arguments(getRb().getString("validator.user.name.required"),
+                Arguments.arguments(
+                        getException(rb.getString("validator.user.name.required")),
                         null, null, null, null),
-                Arguments.arguments(getRb().getString("validator.user.name.required"),
+                Arguments.arguments(
+                        getException(rb.getString("validator.user.name.required")),
                         null, StringUtils.EMPTY, null, null),
-                Arguments.arguments(getRb().getString("validator.user.email.required"),
+                Arguments.arguments(
+                        getException(rb.getString("validator.user.email.required")),
                         null, "username", null, null),
-                Arguments.arguments(getRb().getString("validator.user.email.required"),
+                Arguments.arguments(
+                        getException(rb.getString("validator.user.email.required")),
                         null, "username", StringUtils.EMPTY, null),
-                Arguments.arguments(getRb().getString("validator.user.password.required"),
+                Arguments.arguments(
+                        getException(rb.getString("validator.user.password.required")),
                         null, "username", "email", null),
-                Arguments.arguments(getRb().getString("validator.user.password.required"),
+                Arguments.arguments(
+                        getException(rb.getString("validator.user.password.required")),
                         null, "username", "email", StringUtils.EMPTY)
         );
     }
@@ -59,23 +75,24 @@ class UserValidatorTest {
     @BeforeEach
     void setUp() throws IOException {
         ReflectionTestUtils.setField(userValidator, "rb", getRb());
+        ReflectionTestUtils.setField(userValidator, "properties", getProperties());
     }
 
     @Test
     void shouldThrowException_ForValidateId() throws IOException {
         //Given
-        final int id = -1;
+        final ValidationException expectedException = getException(getRb().getString("validator.id.non"));
         //When
-        final ValidationException validationException
-                = assertThrows(ValidationException.class, () -> userValidator.validateId(id));
+        final ValidationException actualException
+                = assertThrows(ValidationException.class, () -> userValidator.validateId(-1));
         //Then
-        assertEquals(getRb().getString("validator.id.non"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
 
     @ParameterizedTest
     @MethodSource("createValidateUserProvider")
-    void shouldThrowException_On_CreateGiftCertificateValidator(final String expected,
+    void shouldThrowException_On_CreateGiftCertificateValidator(final ValidationException expectedException,
                                                                 final Integer id,
                                                                 final String username,
                                                                 final String email,
@@ -83,10 +100,10 @@ class UserValidatorTest {
         //Given
         final UserDto userDto = getUserDto(id, username, email, password);
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(ValidationException.class, () -> userValidator.createValidate(userDto));
         //Then
-        assertEquals(expected, validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     private UserDto getUserDto(final Integer id,

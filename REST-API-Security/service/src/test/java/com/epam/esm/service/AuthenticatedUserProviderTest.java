@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,8 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-
-public class AuthenticatedUserProviderTest {
+public class AuthenticatedUserProviderTest extends AssertionsProvider {
 
     @Mock
     private UserRepository userRepository;
@@ -44,7 +44,7 @@ public class AuthenticatedUserProviderTest {
     private ResourceBundle rb;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUpRb() throws IOException {
         final InputStream contentStream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("message.properties");
         assertNotNull(contentStream);
@@ -52,12 +52,16 @@ public class AuthenticatedUserProviderTest {
         ReflectionTestUtils.setField(userProvider, "rb", rb);
     }
 
-    @Test
-    void shouldReturnToken_On_FindByToken() {
-        //Given
+    @BeforeEach
+    public void setUpContext() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getName()).thenReturn("name");
+    }
+
+    @Test
+    void shouldReturnToken_On_FindByToken() {
+        //Given
         when(userRepository.findByUsername("name")).thenReturn(Optional.of(user));
         //When
         final User actualUser = userProvider.getUserFromAuthentication();
@@ -69,17 +73,15 @@ public class AuthenticatedUserProviderTest {
    @Test
    void shouldThrowException_On_FindByToken() {
        //Given
-       when(securityContext.getAuthentication()).thenReturn(authentication);
-       SecurityContextHolder.setContext(securityContext);
-       when(authentication.getName()).thenReturn("name");
        when(userRepository.findByUsername("name")).thenReturn(Optional.empty());
-       final String message
-               = String.format(rb.getString("user.exists.name"));
+       final ServiceException expectedException =  new ServiceException(
+               rb.getString("user.exists.name"),
+               HttpStatus.NOT_FOUND, properties.getUser());
        //When
-       final ServiceException serviceException = assertThrows(ServiceException.class,
+       final ServiceException actualException = assertThrows(ServiceException.class,
                () -> userProvider.getUserFromAuthentication());
        //Then
-       assertEquals(message, serviceException.getMessage());
        verify(userRepository, only()).findByUsername("name");
+       assertServiceExceptions(expectedException, actualException);
    }
 }

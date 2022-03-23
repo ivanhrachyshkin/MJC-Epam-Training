@@ -3,6 +3,7 @@ package com.epam.esm.service.dto.mapper;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.Role;
 import com.epam.esm.model.User;
+import com.epam.esm.service.AssertionsProvider;
 import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserDtoMapperTest {
+class UserDtoMapperTest extends AssertionsProvider<UserDto> {
 
     @Mock
     private ModelMapper mapper;
@@ -85,16 +86,14 @@ class UserDtoMapperTest {
         //Given
         when(user.getRoles()).thenReturn(Collections.singletonList(role));
         final Page<User> users = new PageImpl<>(Collections.singletonList(user));
-        final Page<UserDto> dtoUsers = new PageImpl<>(Collections.singletonList(dtoUser));
+        final Page<UserDto> expectedDtoUsers = new PageImpl<>(Collections.singletonList(dtoUser));
 
         when(mapper.map(user, UserDto.class)).thenReturn(dtoUser);
         when(mapper.map(role, RoleDto.class)).thenReturn(dtoRole);
         //When
         final Page<UserDto> actualDtoUsers = userDtoMapper.modelsToDto(users);
         //Then
-        assertEquals(dtoUsers, actualDtoUsers);
-        assertEquals(dtoUsers.getTotalElements(), actualDtoUsers.getTotalElements());
-        assertEquals(dtoUsers.getTotalPages(), actualDtoUsers.getTotalPages());
+        assertPages(expectedDtoUsers, actualDtoUsers);
         verify(mapper, times(1)).map(user, UserDto.class);
         verify(mapper, times(1)).map(role, RoleDto.class);
         verifyNoMoreInteractions(mapper);

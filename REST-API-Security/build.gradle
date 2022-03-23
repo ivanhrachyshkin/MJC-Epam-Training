@@ -20,6 +20,7 @@ allprojects {
         implementation libs.lombok
         annotationProcessor libs.lombok
         implementation libs.commons.lang3
+        testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2'
     }
 
     test {

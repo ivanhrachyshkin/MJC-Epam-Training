@@ -28,4 +28,13 @@ public class TagDto extends RepresentationModel<TagDto> implements Trimmable {
         this.name = name;
         this.active = active;
     }
+
+    public TagDto(String name, Boolean active) {
+        this.name = name;
+        this.active = active;
+    }
+
+    public TagDto(String name) {
+        this.name = name;
+    }
 }

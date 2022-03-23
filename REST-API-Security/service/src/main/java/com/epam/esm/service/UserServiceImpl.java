@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         return mapper.modelToDto(user);
     }
 
-    private User checkExist(final int id) {
+    public User checkExist(final int id) {
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new ServiceException(

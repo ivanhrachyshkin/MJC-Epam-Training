@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class TagServiceImpl implements TagService {
         tagValidator.validate(tagDto);
         final Tag rawTag = mapper.dtoToModel(tagDto);
         rawTag.setActive(true);
-        final Tag newTag = createOrUpdateOld(rawTag);
+        final Tag newTag = createOrActiveOld(rawTag);
         return mapper.modelToDto(newTag);
     }
 
@@ -75,6 +76,18 @@ public class TagServiceImpl implements TagService {
         tagRepository.save(tag);
     }
 
+    public void prepareTagsForGiftCertificate(final Set<Tag> rawTags) {
+        rawTags.forEach(tag -> {
+            tag.setActive(true);
+            final Optional<Tag> oldTag = tagRepository.findByName(tag.getName());
+            if (oldTag.isPresent()) {
+                tag.setId(oldTag.get().getId());
+            } else {
+                tagRepository.save(tag);
+            }
+        });
+    }
+
     private Page<Tag> getTagsByUserRole(final Pageable pageable) {
         return authorityValidator.isAdmin()
                 ? tagRepository.findAll(pageable)
@@ -101,7 +114,7 @@ public class TagServiceImpl implements TagService {
                         HttpStatus.NOT_FOUND, properties.getTag(), id));
     }
 
-    private Tag createOrUpdateOld(final Tag rawTag) {
+    private Tag createOrActiveOld(final Tag rawTag) {
         final Optional<Tag> optionalTag = tagRepository.findByName(rawTag.getName());
         if (optionalTag.isPresent() && optionalTag.get().getActive()) {
             throw new ServiceException(

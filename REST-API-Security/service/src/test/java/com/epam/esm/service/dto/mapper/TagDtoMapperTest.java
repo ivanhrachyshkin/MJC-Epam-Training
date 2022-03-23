@@ -1,6 +1,7 @@
 package com.epam.esm.service.dto.mapper;
 
 import com.epam.esm.model.Tag;
+import com.epam.esm.service.AssertionsProvider;
 import com.epam.esm.service.dto.TagDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class TagDtoMapperTest {
+class TagDtoMapperTest extends AssertionsProvider<TagDto> {
 
     @Mock
     private ModelMapper mapper;
@@ -61,11 +62,8 @@ class TagDtoMapperTest {
         //When
         final Page<TagDto> actualDtoTags = tagDtoMapper.modelsToDto(tags);
         //Then
-        assertEquals(expectedDtoTags, actualDtoTags);
-        assertEquals(expectedDtoTags.getTotalElements(), actualDtoTags.getTotalElements());
-        assertEquals(expectedDtoTags.getTotalPages(), actualDtoTags.getTotalPages());
+        assertPages(expectedDtoTags, actualDtoTags);
         verify(mapper, times(1)).map(tag, TagDto.class);
         verifyNoMoreInteractions(mapper);
-
     }
 }

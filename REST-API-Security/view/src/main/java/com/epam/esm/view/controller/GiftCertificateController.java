@@ -49,7 +49,7 @@ public class GiftCertificateController {
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<GiftCertificateDto> readAll(@RequestParam(required = false) final List<String> tags,
                                                   final GiftCertificateRequestParamsContainer container,
-                                                  @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+                                                  @PageableDefault(page = 0, size = 5) final Pageable pageable) {
         final Page<GiftCertificateDto> dtoGiftCertificates
                 = giftCertificateService.readAll(tags, container, pageable);
         dtoGiftCertificates.forEach(giftCertificateDto -> {

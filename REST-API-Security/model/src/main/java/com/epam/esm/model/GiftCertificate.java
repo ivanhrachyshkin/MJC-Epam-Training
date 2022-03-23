@@ -3,9 +3,10 @@ package com.epam.esm.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "gift_certificates")
+@EntityListeners(AuditingEntityListener.class)
 @Audited
 @NoArgsConstructor
 @Getter
@@ -31,11 +33,11 @@ public class GiftCertificate {
     private Float price;
     @Column(nullable = false)
     private Integer duration;
-    @CreationTimestamp
-    @Column(name = "create_date", nullable = false, updatable = false)
+    @Column(name = "create_date", updatable = false)
+    @CreatedDate
     private LocalDateTime createDate;
+    @Column(name = "last_update_date")
     @UpdateTimestamp
-    @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
     @Column(columnDefinition = "boolean default true")
     private Boolean active;

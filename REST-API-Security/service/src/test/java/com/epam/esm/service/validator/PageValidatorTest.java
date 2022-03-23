@@ -1,5 +1,6 @@
 package com.epam.esm.service.validator;
 
+import com.epam.esm.service.AssertionsProvider;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
@@ -15,11 +17,12 @@ import java.io.InputStream;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PageValidatorTest {
+class PageValidatorTest extends AssertionsProvider {
 
     @Mock
     private ExceptionStatusPostfixProperties properties;
@@ -44,35 +47,42 @@ class PageValidatorTest {
     void shouldThrowException_For_Null() {
         //Given
         pageable = null;
+        final ValidationException expectedException = getException(rb.getString("validator.null.pagination"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(
                 ValidationException.class, () -> paginationValidator.paginationValidate(pageable));
         //Then
-        assertEquals(rb.getString("validator.null.pagination"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @Test
     void shouldThrowException_For_NegativePageSize() {
         //Given
         when(pageable.getPageSize()).thenReturn(-1);
+        final ValidationException expectedException = getException(rb.getString("validator.negative.pagination"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(
                 ValidationException.class, () -> paginationValidator.paginationValidate(pageable));
         //Then
-        assertEquals(rb.getString("validator.negative.pagination"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @Test
     void shouldThrowException_For_NegativePageNumber() {
         //Given
         when(pageable.getPageNumber()).thenReturn(-1);
+        final ValidationException expectedException = getException(rb.getString("validator.negative.pagination"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(
                 ValidationException.class, () -> paginationValidator.paginationValidate(pageable));
         //Then
-        assertEquals(rb.getString("validator.negative.pagination"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
+    }
+
+    private ValidationException getException(final String message) {
+        return new ValidationException(message, HttpStatus.BAD_REQUEST, properties.getPagination());
     }
 }

@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TagServiceTest {
+public class TagServiceTest extends AssertionsProvider<TagDto> {
 
     @Mock
     private TagRepository tagRepository;
@@ -115,14 +116,16 @@ public class TagServiceTest {
     void shouldThrowServiceException_On_Create() {
         //Given
         when(inputTag.getActive()).thenReturn(true);
-        final String message = String.format(rb.getString("tag.alreadyExists.name"), inputTag.getName());
         when(mapper.dtoToModel(inputDtoTag)).thenReturn(inputTag);
         when(tagRepository.findByName(inputTag.getName())).thenReturn(Optional.of(inputTag));
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("tag.alreadyExists.name"),
+                HttpStatus.CONFLICT, properties.getTag(), inputTag.getName());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> tagService.create(inputDtoTag));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(mapper, times(1)).dtoToModel(inputDtoTag);
         verify(tagValidator, only()).validate(inputDtoTag);
         verify(tagRepository, only()).findByName(inputTag.getName());
@@ -137,7 +140,7 @@ public class TagServiceTest {
         //When
         final Page<TagDto> actualDtoTags = tagService.readAll(page);
         //Then
-        assertEquals(dtoTags, actualDtoTags);
+        assertPages(dtoTags, actualDtoTags);
         assertEquals(dtoTags.getTotalElements(), actualDtoTags.getTotalElements());
         assertEquals(dtoTags.getTotalPages(), actualDtoTags.getTotalPages());
         verify(pageValidator, only()).paginationValidate(page);
@@ -155,7 +158,7 @@ public class TagServiceTest {
         //When
         final Page<TagDto> actualDtoTags = tagService.readAll(page);
         //Then
-        assertEquals(dtoTags, actualDtoTags);
+        assertPages(dtoTags, actualDtoTags);
         assertEquals(dtoTags.getTotalElements(), actualDtoTags.getTotalElements());
         assertEquals(dtoTags.getTotalPages(), actualDtoTags.getTotalPages());
         verify(pageValidator, only()).paginationValidate(page);
@@ -182,14 +185,16 @@ public class TagServiceTest {
     @Test
     void shouldThrowException_On_ReadOne_For_User() {
         //Given
-        final String message = String.format(rb.getString("tag.notFound.id"), 1);
         when(authorityValidator.isAdmin()).thenReturn(false);
         when(tagRepository.findByIdAndActive(1, true)).thenReturn(Optional.empty());
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("tag.notFound.id"),
+                HttpStatus.NOT_FOUND, properties.getTag(), 1);
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> tagService.readOne(1));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(tagRepository, only()).findByIdAndActive(1, true);
     }
 
@@ -211,14 +216,16 @@ public class TagServiceTest {
     @Test
     void shouldThrowException_On_ReadOne_For_Admin() {
         //Given
-        final String message = String.format(rb.getString("tag.notFound.id"), 1);
         when(authorityValidator.isAdmin()).thenReturn(true);
         when(tagRepository.findById(1)).thenReturn(Optional.empty());
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("tag.notFound.id"),
+                HttpStatus.NOT_FOUND, properties.getTag(), 1);
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> tagService.readOne(1));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(tagRepository, only()).findById(1);
     }
 
@@ -230,7 +237,7 @@ public class TagServiceTest {
         //When
         final Page<TagDto> actualDtoTags = tagService.readMostUsed(page);
         //Then
-        assertEquals(dtoTags, actualDtoTags);
+        assertPages(dtoTags, actualDtoTags);
         assertEquals(dtoTags.getTotalElements(), actualDtoTags.getTotalElements());
         assertEquals(dtoTags.getTotalPages(), actualDtoTags.getTotalPages());
         verify(tagRepository, only()).readMostUsed(page);
@@ -253,13 +260,15 @@ public class TagServiceTest {
     @Test
     void shouldThrowException_On_Delete() {
         //Given
-        final String message = String.format(rb.getString("tag.notFound.id"), 1);
         when(tagRepository.findByIdAndActive(1, true)).thenReturn(Optional.empty());
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("tag.notFound.id"),
+                HttpStatus.NOT_FOUND, properties.getTag(), 1);
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> tagService.deleteById(1));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(tagValidator, only()).validateId(1);
         verify(tagRepository, only()).findByIdAndActive(1, true);
     }

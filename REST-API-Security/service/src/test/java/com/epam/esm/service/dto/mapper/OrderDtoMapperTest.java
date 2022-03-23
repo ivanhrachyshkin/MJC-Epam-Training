@@ -3,6 +3,7 @@ package com.epam.esm.service.dto.mapper;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.User;
+import com.epam.esm.service.AssertionsProvider;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class OrderDtoMapperTest {
+class OrderDtoMapperTest extends AssertionsProvider<OrderDto> {
 
     @Mock
     private ModelMapper mapper;
@@ -88,9 +89,7 @@ class OrderDtoMapperTest {
         //When
         final Page<OrderDto> actualDtoOrders = orderDtoMapper.modelsToDto(orders);
         //Then
-        assertEquals(expectedDtoOrders, actualDtoOrders);
-        assertEquals(expectedDtoOrders.getTotalElements(), actualDtoOrders.getTotalElements());
-        assertEquals(expectedDtoOrders.getTotalPages(), actualDtoOrders.getTotalPages());
+        assertPages(expectedDtoOrders, actualDtoOrders);
         verify(mapper, times(1)).map(order, OrderDto.class);
         verify(mapper, times(1)).map(giftCertificate, GiftCertificateDto.class);
         verifyNoMoreInteractions(mapper);

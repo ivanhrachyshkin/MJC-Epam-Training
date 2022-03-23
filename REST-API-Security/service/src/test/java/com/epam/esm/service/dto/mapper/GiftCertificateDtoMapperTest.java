@@ -2,6 +2,7 @@ package com.epam.esm.service.dto.mapper;
 
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
+import com.epam.esm.service.AssertionsProvider;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GiftCertificateDtoMapperTest {
+class GiftCertificateDtoMapperTest extends AssertionsProvider<GiftCertificateDto> {
 
     @Mock
     private ModelMapper mapper;
@@ -100,9 +101,7 @@ class GiftCertificateDtoMapperTest {
         final Page<GiftCertificateDto> actualDtoGiftCertificates
                 = giftCertificateDtoMapper.modelsToDto(giftCertificates);
         //Then
-        assertEquals(expectedDtoGiftCertificates, actualDtoGiftCertificates);
-        assertEquals(expectedDtoGiftCertificates.getTotalElements(), actualDtoGiftCertificates.getTotalElements());
-        assertEquals(expectedDtoGiftCertificates.getTotalPages(), actualDtoGiftCertificates.getTotalPages());
+        assertPages(expectedDtoGiftCertificates, actualDtoGiftCertificates);
         verify(mapper, only()).map(giftCertificate, GiftCertificateDto.class);
     }
 }

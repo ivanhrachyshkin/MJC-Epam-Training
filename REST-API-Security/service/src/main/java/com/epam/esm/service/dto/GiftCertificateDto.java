@@ -34,4 +34,39 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     public GiftCertificateDto(final Integer id) {
         this.id = id;
     }
+
+    public GiftCertificateDto(Integer id, String name, String description, Float price, Integer duration, Boolean active) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.active = active;
+    }
+
+    public GiftCertificateDto(String name, String description, Float price, Integer duration, Boolean active) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.active = active;
+    }
+
+    public GiftCertificateDto(Integer id, String name, String description, Float price, Integer duration, Boolean active, Set<TagDto> dtoTags) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.active = active;
+        this.dtoTags = dtoTags;
+    }
+
+    public GiftCertificateDto(String name, String description, Float price, Integer duration, Set<TagDto> dtoTags) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.dtoTags = dtoTags;
+    }
 }

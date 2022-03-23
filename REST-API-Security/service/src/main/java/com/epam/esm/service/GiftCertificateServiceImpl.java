@@ -2,7 +2,6 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateRepository;
 import com.epam.esm.dao.GiftCertificateSpecification;
-import com.epam.esm.dao.TagRepository;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
@@ -20,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -31,23 +31,25 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Setter
     private ResourceBundle rb;
+    private final TagServiceImpl tagService;
     private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
     private final GiftCertificateRepository giftCertificateRepository;
-    private final TagRepository tagRepository;
     private final GiftCertificateValidator giftCertificateValidator;
     private final PageValidator paginationValidator;
     private final AuthorityValidator authorityValidator;
     private final GiftCertificateSpecification specification;
+    private final HttpServletRequest request;
 
     @Override
     @Transactional
     public GiftCertificateDto create(final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.trim();
-        giftCertificateValidator.isValidateCreateElseUpdate(giftCertificateDto, true);
+        giftCertificateValidator.validateCreateOrUpdate(giftCertificateDto, request.getMethod());
         final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
         rawGiftCertificate.setActive(true);
-        setTagId(rawGiftCertificate.getTags());
+        final Set<Tag> rawTags = rawGiftCertificate.getTags();
+        tagService.prepareTagsForGiftCertificate(rawTags);
         final GiftCertificate newGiftCertificate = createOrUpdateOld(rawGiftCertificate);
         return mapper.modelToDto(newGiftCertificate);
     }
@@ -56,11 +58,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto update(final GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.trim();
-        giftCertificateValidator.isValidateCreateElseUpdate(giftCertificateDto, false);
+        giftCertificateValidator.validateCreateOrUpdate(giftCertificateDto, request.getMethod());
         checkExist(giftCertificateDto.getId());
         checkExistByName(giftCertificateDto.getName());
         final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
-        setTagId(rawGiftCertificate.getTags());
+        final Set<Tag> rawTags = rawGiftCertificate.getTags();
+        tagService.prepareTagsForGiftCertificate(rawTags);
         final GiftCertificate updatedGiftCertificate = giftCertificateRepository.save(rawGiftCertificate);
         return mapper.modelToDto(updatedGiftCertificate);
     }
@@ -96,17 +99,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateRepository.save(giftCertificate);
     }
 
-    private void setTagId(final Set<Tag> tags) {
-        tags.forEach(tag -> {
-            tag.setActive(true);
-            final Optional<Tag> oldTag = tagRepository.findByName(tag.getName());
-            if (oldTag.isPresent()) {
-                tag.setId(oldTag.get().getId());
-            } else {
-                tagRepository.save(tag);
-            }
-        });
+    public GiftCertificate checkExistActive(final int id) {
+        return giftCertificateRepository
+                .findByIdAndActive(id, true)
+                .orElseThrow(() -> new ServiceException(
+                        rb.getString("giftCertificate.notFound.id"),
+                        HttpStatus.NOT_FOUND, properties.getGift(), id));
     }
+
 
     private Page<GiftCertificate> getGiftCertificatesByUserRole(final List<String> tags,
                                                                 final String giftCertificateName,
@@ -125,14 +125,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private GiftCertificate checkExist(final int id) {
         return giftCertificateRepository
                 .findById(id)
-                .orElseThrow(() -> new ServiceException(
-                        rb.getString("giftCertificate.notFound.id"),
-                        HttpStatus.NOT_FOUND, properties.getGift(), id));
-    }
-
-    private GiftCertificate checkExistActive(final int id) {
-        return giftCertificateRepository
-                .findByIdAndActive(id, true)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("giftCertificate.notFound.id"),
                         HttpStatus.NOT_FOUND, properties.getGift(), id));

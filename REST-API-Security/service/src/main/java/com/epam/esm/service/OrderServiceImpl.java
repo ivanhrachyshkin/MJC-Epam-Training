@@ -1,8 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dao.GiftCertificateRepository;
 import com.epam.esm.dao.OrderRepository;
-import com.epam.esm.dao.UserRepository;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.User;
@@ -29,11 +27,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Setter
     private ResourceBundle rb;
+    private final UserServiceImpl userService;
+    private final GiftCertificateServiceImpl giftCertificateService;
     private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<Order, OrderDto> mapper;
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
-    private final GiftCertificateRepository giftCertificateRepository;
     private final OrderValidator orderValidator;
     private final PageValidator paginationValidator;
     private final AuthorityValidator authorityValidator;
@@ -102,22 +100,6 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND, properties.getOrder(), userId, orderId));
     }
 
-    private User checkExistUserById(final int userId) {
-        return userRepository
-                .findById(userId)
-                .orElseThrow(() -> new ServiceException(
-                        rb.getString("user.notFound.id"),
-                        HttpStatus.NOT_FOUND, properties.getUser(), userId));
-    }
-
-    private GiftCertificate checkExistGiftCertificateById(final int giftCertificateId) {
-        return giftCertificateRepository
-                .findByIdAndActive(giftCertificateId, true)
-                .orElseThrow(() -> new ServiceException(
-                        rb.getString("giftCertificate.notFound.id"),
-                        HttpStatus.NOT_FOUND, properties.getGift(), giftCertificateId));
-    }
-
     private Page<Order> getOrdersForReadAllByUserRole(final User user, final Pageable pageable) {
         return authorityValidator.isNotAdmin()
                 ? orderRepository.findOrdersByUserId(user.getId(), pageable)
@@ -127,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
     private void validateOrderByRoles(final User user, final OrderDto orderDto) {
         if (authorityValidator.isAdmin()) {
             orderValidator.createValidate(orderDto, true);
-            checkExistUserById(orderDto.getUserDto().getId());
+            userService.checkExist(orderDto.getUserDto().getId());
         } else {
             orderValidator.createValidate(orderDto, false);
             orderDto.setUserDto(new UserDto(user.getId()));
@@ -137,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
     private Order prepareOrderForCreation(final Order order) {
         float sum = 0;
         for (GiftCertificate giftCertificate : order.getGiftCertificates()) {
-            final GiftCertificate oldGiftCertificate = checkExistGiftCertificateById(giftCertificate.getId());
+            final GiftCertificate oldGiftCertificate = giftCertificateService.checkExistActive(giftCertificate.getId());
             sum += oldGiftCertificate.getPrice();
         }
         order.setPrice(sum);

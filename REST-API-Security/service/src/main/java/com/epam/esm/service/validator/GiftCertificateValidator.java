@@ -7,6 +7,7 @@ import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +30,12 @@ public class GiftCertificateValidator {
         }
     }
 
-    public void isValidateCreateElseUpdate(final GiftCertificateDto giftCertificateDto, final Boolean value) {
+    public void validateCreateOrUpdate(final GiftCertificateDto giftCertificateDto, final String method) {
         validateNullOrEmpty(giftCertificateDto, "validator.giftCertificate.null");
-        if (value) {
+        if (method.matches(HttpMethod.POST.name())) {
             createValidate(giftCertificateDto);
-        } else {
+        }
+        if(method.matches(HttpMethod.PATCH.name())) {
             updateValidate(giftCertificateDto);
         }
         validateShouldNotBePassedFields(giftCertificateDto);

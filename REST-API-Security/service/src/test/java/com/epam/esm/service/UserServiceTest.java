@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class UserServiceTest extends AssertionsProvider<UserDto> {
 
     @Mock
     private UserRepository userRepository;
@@ -101,13 +102,15 @@ public class UserServiceTest {
     @Test
     void shouldThrowExceptionUsernameExist_On_Create() {
         //Given
-        final String message = String.format(rb.getString("user.exists.name"), userDto.getUsername());
         when(userRepository.findByUsername(userDto.getUsername())).thenReturn(Optional.of(user));
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("user.exists.name"),
+                HttpStatus.NOT_FOUND, properties.getUser());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> userService.create(userDto));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(userValidator, only()).createValidate(userDto);
         verify(userRepository, only()).findByUsername(userDto.getUsername());
     }
@@ -115,14 +118,16 @@ public class UserServiceTest {
     @Test
     void shouldThrowExceptionEmailExist_On_Create() {
         //Given
-        final String message = String.format(rb.getString("user.exists.email"), userDto.getUsername());
         when(userRepository.findByUsername(userDto.getUsername())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(userDto.getEmail())).thenReturn(Optional.of(user));
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("user.exists.email"),
+                HttpStatus.NOT_FOUND, properties.getUser(), user.getUsername());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> userService.create(userDto));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(userValidator, only()).createValidate(userDto);
         verify(userRepository, times(1)).findByUsername(userDto.getUsername());
         verify(userRepository, times(1)).findByEmail(userDto.getEmail());
@@ -145,13 +150,15 @@ public class UserServiceTest {
     @Test
     void shouldThrowException_On_ReadOne() {
         //Given
-        final String message = String.format(rb.getString("user.notFound.id"), 1);
         when(userRepository.findById(1)).thenReturn(Optional.empty());
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("user.notFound.id"),
+                HttpStatus.NOT_FOUND, properties.getUser(), 1);
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> userService.readOne(1));
         //Then
-        assertEquals(message, serviceException.getMessage());
+        assertServiceExceptions(expectedException, actualException);
         verify(userRepository, only()).findById(1);
     }
 
@@ -171,14 +178,16 @@ public class UserServiceTest {
     @Test
     void shouldThrowException_On_ReadOneByName() {
         //Given
-        final String message = String.format(rb.getString("user.notFound.name"), user.getUsername());
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
+        final ServiceException expectedException = new ServiceException(
+                rb.getString("user.notFound.name"),
+                HttpStatus.NOT_FOUND, properties.getUser(), user.getUsername());
         //When
-        final ServiceException serviceException = assertThrows(ServiceException.class,
+        final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> userService.readOneByName(user.getUsername()));
         //Then
-        assertEquals(message, serviceException.getMessage());
-        verify(userRepository, only()).findByUsername(user.getUsername());;
+        assertServiceExceptions(expectedException, actualException);
+        verify(userRepository, only()).findByUsername(user.getUsername());
     }
 
     @Test
@@ -189,9 +198,7 @@ public class UserServiceTest {
         //When
         final Page<UserDto> actualDtoUsers = userService.readAll(page);
         //Then
-        assertEquals(dtoUsers, actualDtoUsers);
-        assertEquals(dtoUsers.getTotalElements(), actualDtoUsers.getTotalElements());
-        assertEquals(dtoUsers.getTotalPages(), actualDtoUsers.getTotalPages());
+        assertPages(dtoUsers, actualDtoUsers);
         verify(pageValidator, only()).paginationValidate(page);
         verify(userRepository, only()).findAll(page);
         verify(mapper, only()).modelsToDto(users);

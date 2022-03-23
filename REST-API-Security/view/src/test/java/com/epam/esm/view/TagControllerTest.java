@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class TagControllerTest {
+public class TagControllerTest extends ResponseProvider {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,195 +49,245 @@ public class TagControllerTest {
     }
 
     @Test
-    public void shouldReturnDtoTag_On_ReadByIdEndPoint_ForActiveTag_Anonymous() throws Exception {
+    public void shouldReturnTag_On_ReadByIdEndPoint_ForActiveTag_Anonymous() throws Exception {
         //Given
         final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
         //When
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/tags/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
-        final String responseContent = response.getContentAsString();
-        System.out.println(responseContent);
-        final TagDto actualTagDto = objectMapper.readValue(responseContent, TagDto.class);
+        final String response = getResponseOkForGetMethod("/tags/1", mockMvc);
+        final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
         //Then
-        assertEquals(expectedDtoTag, actualTagDto);
+        assertEquals(expectedDtoTag, outDtoTag);
     }
 
     @Test
     public void shouldThrowException_On_ReadByIdEndPoint_ForNotPersistedTag_Anonymous() throws Exception {
+        //Given
+        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 10);
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.get("/tags/10"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn().getResponse().getContentAsString();
+        final String response = getResponseNotFoundForGetMethod("/tags/10", mockMvc);
         //Then
-        assertThat(contentAsString).contains(String.format(rb.getString("tag.notFound.id"), 10));
+        assertThat(response).contains(expectedExceptionMessage);
     }
 
     @Test
     public void shouldThrowException_On_ReadByIdEndPoint_ForDisabledTag_Anonymous() throws Exception {
+        //Given
+        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 3);
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.get("/tags/3"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn().getResponse().getContentAsString();
+        final String response = getResponseNotFoundForGetMethod("/tags/3", mockMvc);
         //Then
-        assertThat(contentAsString).contains(String.format(rb.getString("tag.notFound.id"), 3));
+        assertThat(response).contains(expectedExceptionMessage);
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_USER")
-    public void shouldReturnDtoTag_On_ReadByIdEndPoint_For_ActiveTag_User() throws Exception {
+    public void shouldReturnTag_On_ReadByIdEndPoint_For_ActiveTag_User() throws Exception {
         //Given
         final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
         //When
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/tags/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
-        final String responseContent = response.getContentAsString();
-        final TagDto actualTagDto = objectMapper.readValue(responseContent, TagDto.class);
+        final String response = getResponseOkForGetMethod("/tags/1", mockMvc);
+        final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
         //Then
-        assertEquals(expectedDtoTag, actualTagDto);
+        assertEquals(expectedDtoTag, outDtoTag);
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldThrowException_On_ReadByIdEndPoint_ForNotPersistedTag_User() throws Exception {
+        //Given
+        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 10);
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.get("/tags/10"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn().getResponse().getContentAsString();
+        final String response = getResponseNotFoundForGetMethod("/tags/10", mockMvc);
         //Then
-        assertThat(contentAsString).contains(String.format(rb.getString("tag.notFound.id"), 10));
+        assertThat(response).contains(expectedExceptionMessage);
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldThrowException_On_ReadByIdEndPoint_ForDisabledTag_User() throws Exception {
+        //Given
+        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 3);
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.get("/tags/3"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn().getResponse().getContentAsString();
+        final String response = getResponseNotFoundForGetMethod("/tags/3", mockMvc);
         //Then
-        assertThat(contentAsString).contains(String.format(rb.getString("tag.notFound.id"), 3));
+        assertThat(response).contains(expectedExceptionMessage);
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
-    public void shouldReturnDtoTag_On_ReadByIdEndPoint_For_ActiveTag_Admin() throws Exception {
+    public void shouldReturnTag_On_ReadByIdEndPoint_For_ActiveTag_Admin() throws Exception {
         //Given
         final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
         //When
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/tags/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
-        final String responseContent = response.getContentAsString();
-        final TagDto actualTagDto = objectMapper.readValue(responseContent, TagDto.class);
+        final String response = getResponseOkForGetMethod("/tags/1", mockMvc);
+        final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
         //Then
-        assertEquals(expectedDtoTag, actualTagDto);
+        assertEquals(expectedDtoTag, outDtoTag);
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
-    public void shouldReturnDtoTag_On_ReadByIdEndPoint_For_DisableTag_Admin() throws Exception {
+    public void shouldReturnTag_On_ReadByIdEndPoint_For_DisableTag_Admin() throws Exception {
         //Given
         final TagDto expectedDtoTag = new TagDto(3, "tag3", false);
         //When
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/tags/3"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
-        final String responseContent = response.getContentAsString();
-        final TagDto actualTagDto = objectMapper.readValue(responseContent, TagDto.class);
+        final String response = getResponseOkForGetMethod("/tags/3", mockMvc);
+        final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
         //Then
-        assertEquals(expectedDtoTag, actualTagDto);
+        assertEquals(expectedDtoTag, outDtoTag);
     }
 
     @Test
-    public void shouldReturnActiveDtoTags_On_ReadEndPoint_Anonymous() throws Exception {
-        //Given
-        final List<TagDto> expectedDtoTags = Arrays.asList(
-                new TagDto(1, "tag1", true),
-                new TagDto(2, "tag2", true));
-        //When
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/tags"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
-        final PagedModelDeserializer<TagDto> deserializedResponse
-                = objectMapper.readValue(
-                response.getContentAsString(), new TypeReference<PagedModelDeserializer<TagDto>>() {
-                });
-        final List<TagDto> actualDtoTags = deserializedResponse.getContent();
-        //Then
-        assertEquals(expectedDtoTags, actualDtoTags);
-        assertEquals(expectedDtoTags.size(), actualDtoTags.size());
-    }
-
-    @Test
-    @WithMockUser(authorities = "ROLE_USER")
-    public void shouldReturnActiveDtoTags_On_ReadEndPoint_User() throws Exception {
-        //Given
-        final List<TagDto> expectedDtoTags = Arrays.asList(
-                new TagDto(1, "tag1", true),
-                new TagDto(2, "tag2", true));
-        //When
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/tags"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
-        final PagedModelDeserializer<TagDto> deserializedResponse
-                = objectMapper.readValue(
-                response.getContentAsString(), new TypeReference<PagedModelDeserializer<TagDto>>() {
-                });
-        final List<TagDto> actualDtoTags = deserializedResponse.getContent();
-        //Then
-        assertEquals(expectedDtoTags, actualDtoTags);
-        assertEquals(expectedDtoTags.size(), actualDtoTags.size());
-    }
-
-    @Test
-    @WithMockUser(authorities = "ROLE_ADMIN")
-    public void shouldReturnAllDtoTags_On_ReadEndPoint_Admin() throws Exception {
+    public void shouldReturnActiveTags_On_ReadEndPoint_Anonymous() throws Exception {
         //Given
         final List<TagDto> expectedDtoTags = Arrays.asList(
                 new TagDto(1, "tag1", true),
                 new TagDto(2, "tag2", true),
-                new TagDto(3, "tag3", false));
+                new TagDto(4, "tag4", true),
+                new TagDto(5, "tag5", true),
+                new TagDto(6, "tag6", true));
         //When
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/tags"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
-        final PagedModelDeserializer<TagDto> deserializedResponse
-                = objectMapper.readValue(
-                response.getContentAsString(), new TypeReference<PagedModelDeserializer<TagDto>>() {
-                });
-        final List<TagDto> actualDtoTags = deserializedResponse.getContent();
+        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags");
         //Then
-        assertEquals(expectedDtoTags, actualDtoTags);
-        assertEquals(expectedDtoTags.size(), actualDtoTags.size());
+        assertEquals(expectedDtoTags, outDtoTags);
+        assertEquals(expectedDtoTags.size(), outDtoTags.size());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_USER")
+    public void shouldReturnActiveTags_On_ReadEndPoint_User() throws Exception {
+        //Given
+        final List<TagDto> expectedDtoTags = Arrays.asList(
+                new TagDto(1, "tag1", true),
+                new TagDto(2, "tag2", true),
+                new TagDto(4, "tag4", true),
+                new TagDto(5, "tag5", true),
+                new TagDto(6, "tag6", true));
+        //When
+        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags");
+        //Then
+        assertEquals(expectedDtoTags, outDtoTags);
+        assertEquals(expectedDtoTags.size(), outDtoTags.size());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldReturnAllTags_On_ReadEndPoint_Admin() throws Exception {
+        //Given
+        final List<TagDto> expectedDtoTags = Arrays.asList(
+                new TagDto(1, "tag1", true),
+                new TagDto(2, "tag2", true),
+                new TagDto(3, "tag3", false),
+                new TagDto(4, "tag4", true),
+                new TagDto(5, "tag5", true));
+        //When
+        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags");
+        //Then
+        assertEquals(expectedDtoTags, outDtoTags);
+        assertEquals(expectedDtoTags.size(), outDtoTags.size());
     }
 
     @Test
     public void shouldThrowException_On_DeleteEndPoint_Anonymous() throws Exception {
+        //Given
+        final String expectedExceptionMessage = UNAUTHORIZED_MESSAGE;
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.delete("/tags/1"))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized()).andReturn().getResponse().getContentAsString();
+        final String response = getResponseUnauthorizedForDeleteMethod("/tags/7", mockMvc);
         //Then
-        //assertThat(contentAsString).contains(String.format(rb.getString("tag.notFound.id"), 3)); // todo exception message
+        assertThat(response).contains(expectedExceptionMessage);
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldThrowException_On_DeleteEndPoint_User() throws Exception {
+        //Given
+        final String expectedExceptionMessage = ACCESS_DENIED_MESSAGE;
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.delete("/tags/1"))
-                .andExpect(MockMvcResultMatchers.status().isForbidden()).andReturn().getResponse().getContentAsString();
+        final String response = getResponseForbiddenForDeleteMethod("/tags/7", mockMvc);
         //Then
-        //assertThat(contentAsString).contains(String.format(rb.getString("tag.notFound.id"), 3)); // todo exception message
+        assertThat(response).contains(expectedExceptionMessage);
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
-    public void shouldReturnDeleted_On_DeleteEndPoint_ForActiveTag_Admin() throws Exception {
+    public void shouldReturnDeletedTag_On_DeleteEndPoint_ForActiveTag_Admin() throws Exception {
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.delete("/tags/1"))
+        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.delete("/tags/7"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent()).andReturn().getResponse().getContentAsString();
         //Then
-        //assertThat(contentAsString).contains(String.format(rb.getString("tag.notFound.id"), 3)); // todo return tag
+        // todo return tag
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_DeleteEndPoint_For_DisabledTag_Admin() throws Exception {
+        //Given
+        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 3);
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.delete("/tags/3"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn().getResponse().getContentAsString();
+        final String response = getResponseNotFoundForDeleteMethod("/tags/3", mockMvc);
         //Then
-        assertThat(contentAsString).contains(String.format(rb.getString("tag.notFound.id"), 3));
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    @Test
+    public void shouldThrowException_On_CreateEndPoint_For_NewTag_Anonymous() throws Exception {
+        final String expectedExceptionMessage = UNAUTHORIZED_MESSAGE;
+        //When
+        final String response = getResponseUnauthorizedForPostMethod("/tags", mockMvc);
+        //Then
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_USER")
+    public void shouldThrowException_On_CreateEndPoint_For_NewTag_User() throws Exception {
+        //Given
+        final String expectedExceptionMessage = ACCESS_DENIED_MESSAGE;
+        //When
+        final String response = getResponseForbiddenForPostMethod("/tags", mockMvc);
+        //Then
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldReturn_On_CreateEndPoint_For_NewTag_Admin() throws Exception {
+        //Given
+        final TagDto inDtoTag = new TagDto("tag9");
+        final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
+        //When
+        final String outDtoTagAsString
+                = getResponseCreatedForPostMethodForObjectAsString("/tags", inDtoTagAsString, mockMvc);
+        final TagDto outDtoTag = objectMapper.readValue(outDtoTagAsString, TagDto.class);
+        //Then
+        assertThat(outDtoTag.getId()).isNotNull();
+        assertEquals(inDtoTag.getName(), outDtoTag.getName());
+        assertThat(outDtoTag.getActive()).isEqualTo(true);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldReturnTag_On_CreateEndPoint_For_DisableTag_Admin() throws Exception {
+        //Given
+        final TagDto inDtoTag = new TagDto("tag8");
+        final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
+        //When
+        final String outDtoTagAsString
+                = getResponseCreatedForPostMethodForObjectAsString("/tags", inDtoTagAsString, mockMvc);
+        final TagDto outDtoTag = objectMapper.readValue(outDtoTagAsString, TagDto.class);
+        //Then
+        assertThat(outDtoTag.getId()).isNotNull();
+        assertEquals(inDtoTag.getName(), outDtoTag.getName());
+        assertThat(outDtoTag.getActive()).isEqualTo(true);
+    }
+
+    private List<TagDto> getOutTagsForGetMethod(final String url) throws Exception {
+        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
+        final PagedModelDeserializer<TagDto> deserializedResponse
+                = objectMapper.readValue(
+                response.getContentAsString(), new TypeReference<PagedModelDeserializer<TagDto>>() {
+                });
+        return deserializedResponse.getContent();
     }
 }

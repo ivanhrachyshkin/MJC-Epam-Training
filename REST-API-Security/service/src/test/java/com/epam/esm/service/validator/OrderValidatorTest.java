@@ -1,5 +1,6 @@
 package com.epam.esm.service.validator;
 
+import com.epam.esm.service.AssertionsProvider;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.OrderDto;
@@ -13,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
@@ -22,17 +24,15 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class OrderValidatorTest {
+class OrderValidatorTest extends AssertionsProvider<OrderDto> {
 
-    @Mock
-    private ExceptionStatusPostfixProperties properties;
     @InjectMocks
     private OrderValidator orderValidator;
-
     @Mock
     private OrderDto dtoOrder;
 
@@ -43,52 +43,68 @@ class OrderValidatorTest {
         return new PropertyResourceBundle(contentStream);
     }
 
+    private static ExceptionStatusPostfixProperties getProperties() {
+        return new ExceptionStatusPostfixProperties();
+    }
+
+    private static ValidationException getException(final String message) {
+        return new ValidationException(message, HttpStatus.BAD_REQUEST, getProperties().getGift());
+    }
+
     static Stream<Arguments> createOrderValidatorDataProviderAdminRole() throws IOException {
+        final ResourceBundle rb = getRb();
         return Stream.of(
-                Arguments.arguments(getRb().getString("validator.id.should.not.passed"), 1, 1, 1),
-                Arguments.arguments(getRb().getString("validator.order.giftId.required"), null, 1, null),
-                Arguments.arguments(getRb().getString("validator.order.giftId.negative"), null, 1, -1),
-                Arguments.arguments(getRb().getString("validator.order.userId.required"), null, null, 1),
-                Arguments.arguments(getRb().getString("validator.order.userId.negative"), null, -1, 1)
+                Arguments.arguments(
+                        getException(rb.getString("validator.id.should.not.passed")),
+                        1, 1, 1),
+                Arguments.arguments(
+                        getException(rb.getString("validator.order.giftId.required")),
+                        null, 1, null),
+                Arguments.arguments(
+                        getException(rb.getString("validator.order.giftId.negative")),
+                        null, 1, -1),
+                Arguments.arguments(
+                        getException(rb.getString("validator.order.userId.required")),
+                        null, null, 1),
+                Arguments.arguments(
+                        getException(rb.getString("validator.order.userId.negative")),
+                        null, -1, 1)
         );
     }
 
     static Stream<Arguments> createOrderValidatorDataProviderUserRole() throws IOException {
+        final ResourceBundle rb = getRb();
         return Stream.of(
-                Arguments.arguments(getRb().getString("validator.id.should.not.passed"), 1, 1, 1),
-                Arguments.arguments(getRb().getString("validator.order.giftId.required"), null, null, null),
-                Arguments.arguments(getRb().getString("validator.order.giftId.negative"), null, null, -1),
-                Arguments.arguments(getRb().getString("validator.order.userId.should.not.pass"), null, 1, 1)
+                Arguments.arguments(
+                        getException(rb.getString("validator.id.should.not.passed")),
+                        1, 1, 1),
+                Arguments.arguments(
+                        getException(rb.getString("validator.order.giftId.required")),
+                        null, null, null),
+                Arguments.arguments(
+                        getException(rb.getString("validator.order.giftId.negative")),
+                        null, null, -1),
+                Arguments.arguments(
+                        getException(rb.getString("validator.order.userId.should.not.pass")),
+                        null, 1, 1)
         );
     }
 
     @BeforeEach
     void setUp() throws IOException {
         ReflectionTestUtils.setField(orderValidator, "rb", getRb());
+        ReflectionTestUtils.setField(orderValidator, "properties", getProperties());
     }
 
     @Test
-    void shouldThrowException_On_ValidateId() throws IOException {
+    void shouldThrowException_ForValidateId() throws IOException {
         //Given
-        final int id = -1;
+        final ValidationException expectedException = getException(getRb().getString("validator.id.non"));
         //When
-        final ValidationException validationException
-                = assertThrows(
-                ValidationException.class, () -> orderValidator.validateId(id));
+        final ValidationException actualException
+                = assertThrows(ValidationException.class, () -> orderValidator.validateId(-1));
         //Then
-        assertEquals(getRb().getString("validator.id.non"), validationException.getMessage());
-    }
-
-    @Test
-    void shouldThrowException_ForNull() throws IOException {
-        //Given
-        dtoOrder = null;
-        //When
-        final ValidationException validationException
-                = assertThrows(
-                ValidationException.class, () -> orderValidator.createValidate(dtoOrder, true));
-        //Then
-        assertEquals(getRb().getString("validator.order.null.value"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @Test
@@ -96,59 +112,63 @@ class OrderValidatorTest {
         //Given
         when(dtoOrder.getId()).thenReturn(null);
         when(dtoOrder.getDtoGiftCertificates()).thenReturn(null);
+        final ValidationException expectedException
+                = getException(getRb().getString("validator.order.giftId.required"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(
                 ValidationException.class, () -> orderValidator.createValidate(dtoOrder, true));
         //Then
-        assertEquals(getRb().getString("validator.order.giftId.required"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @Test
-    void shouldThrowException_ForEmptylGiftCertificates() throws IOException {
+    void shouldThrowException_ForEmptyGiftCertificates() throws IOException {
         //Given
         when(dtoOrder.getId()).thenReturn(null);
         when(dtoOrder.getDtoGiftCertificates()).thenReturn(Collections.EMPTY_SET);
+        final ValidationException expectedException
+                = getException(getRb().getString("validator.order.giftId.required"));
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(
                 ValidationException.class, () -> orderValidator.createValidate(dtoOrder, true));
         //Then
-        assertEquals(getRb().getString("validator.order.giftId.required"), validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @ParameterizedTest
     @MethodSource("createOrderValidatorDataProviderAdminRole")
     void shouldThrowException_On_CreateGiftCertificate_ForAdmin(
-            final String expected,
+            final ValidationException expectedException,
             final Integer orderId,
             final Integer userId,
             final Integer giftId) {
         //Given
         final OrderDto orderDto = getOrderDto(orderId, userId, giftId);
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(
                 ValidationException.class, () -> orderValidator.createValidate(orderDto, true));
         //Then
-        assertEquals(expected, validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
     @ParameterizedTest
     @MethodSource("createOrderValidatorDataProviderUserRole")
     void shouldThrowException_On_CreateGiftCertificate_ForUser(
-            final String expected,
+            final ValidationException expectedException,
             final Integer orderId,
             final Integer userId,
             final Integer giftId) {
         //Given
         final OrderDto orderDto = getOrderDto(orderId, userId, giftId);
         //When
-        final ValidationException validationException
+        final ValidationException actualException
                 = assertThrows(
                 ValidationException.class, () -> orderValidator.createValidate(orderDto, false));
         //Then
-        assertEquals(expected, validationException.getMessage());
+        assertValidationExceptions(expectedException, actualException);
     }
 
 
