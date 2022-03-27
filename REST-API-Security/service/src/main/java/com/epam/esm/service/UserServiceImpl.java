@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
                 .ifPresent(user -> {
                     throw new ServiceException(
                             rb.getString("user.exists.name"),
-                            HttpStatus.NOT_FOUND, statusPostfixProperties.getUser());
+                            HttpStatus.CONFLICT, statusPostfixProperties.getUser());
                 });
     }
 
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
                 .ifPresent(user -> {
                     throw new ServiceException(
                             rb.getString("user.exists.email"),
-                            HttpStatus.NOT_FOUND, statusPostfixProperties.getUser());
+                            HttpStatus.CONFLICT, statusPostfixProperties.getUser());
                 });
     }
 }

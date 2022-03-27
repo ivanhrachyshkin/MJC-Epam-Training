@@ -105,7 +105,7 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
         when(userRepository.findByUsername(userDto.getUsername())).thenReturn(Optional.of(user));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("user.exists.name"),
-                HttpStatus.NOT_FOUND, properties.getUser());
+                HttpStatus.CONFLICT, properties.getUser());
         //When
         final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> userService.create(userDto));
@@ -122,7 +122,7 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
         when(userRepository.findByEmail(userDto.getEmail())).thenReturn(Optional.of(user));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("user.exists.email"),
-                HttpStatus.NOT_FOUND, properties.getUser(), user.getUsername());
+                HttpStatus.CONFLICT, properties.getUser(), user.getUsername());
         //When
         final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> userService.create(userDto));

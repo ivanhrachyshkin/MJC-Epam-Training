@@ -14,6 +14,8 @@ INSERT INTO tags (name)
 VALUES ('tag7');
 INSERT INTO tags (name, active)
 VALUES ('tag8', false);
+INSERT INTO tags (name, active)
+VALUES ('tag10', false);
 
 INSERT INTO gift_certificates (name, description, price, duration)
 VALUES ('gift1', 'd1', 1.0, 1);
@@ -44,3 +46,19 @@ INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
 VALUES (6, 2);
 INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
 VALUES (7, 2);
+
+INSERT INTO users (username, email, password)
+VALUES ('username1', 'email1', 'password1');
+INSERT INTO users (username, email, password)
+VALUES ('username2', 'email2', 'password2');
+INSERT INTO users (username, email, password)
+VALUES ('username3', 'email3', 'password3');
+INSERT INTO users (username, email, password)
+VALUES ('username4', 'email4', 'password4');
+INSERT INTO users (username, email, password)
+VALUES ('username5', 'email5', 'password5');
+
+INSERT INTO roles (role_name)
+VALUES ('ROLE_ADMIN');
+INSERT INTO roles (role_name)
+VALUES ('ROLE_USER');

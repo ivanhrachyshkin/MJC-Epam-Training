@@ -47,6 +47,7 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         objectMapper.findAndRegisterModules();
     }
 
+    //Read one method tests
     @Test
     public void shouldReturnGiftCertificate_On_ReadByIdEndPoint_ForActiveGiftCertificate_Anonymous() throws Exception {
         //Given
@@ -54,28 +55,38 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
                 1, "gift1", "d1", 1.0F, 1, true, Collections.singleton(dtoTag));
         //When
-        final String response = getResponseOkForGetMethod("/gifts/1", mockMvc);
+        final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outDtoGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
         //Then
         assertEquals(expectedDtoGiftCertificate, outDtoGiftCertificate);
     }
 
     @Test
-    public void shouldThrowException_On_ReadByIdEndPoint_ForNotPersistedGiftCertificate_Anonymous() throws Exception {
+    public void shouldThrowException_On_ReadByIdEndPoint_For_DisabledGiftCertificate_Anonymous() throws Exception {
         //Given
-        final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 10);
+        final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 3);
         //When
-        final String response = getResponseNotFoundForGetMethod("/gifts/10", mockMvc);
+        final String response = getNotFoundForGetMethod("/gifts/3", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
 
     @Test
-    public void shouldThrowException_On_ReadByIdEndPoint_ForDisabledGiftCertificate_Anonymous() throws Exception {
+    public void shouldThrowException_On_ReadByIdEndPoint_ForNotPersistedGiftCertificate_Anonymous() throws Exception {
         //Given
-        final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 3);
+        final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 100);
         //When
-        final String response = getResponseNotFoundForGetMethod("/gifts/3", mockMvc);
+        final String response = getNotFoundForGetMethod("/gifts/100", mockMvc);
+        //Then
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    @Test
+    public void shouldThrowExceptionInvalid_On_ReadByIdEndPoint_Anonymous() throws Exception {
+        //Given
+        final String expectedExceptionMessage = rb.getString("invalid.input");
+        //When
+        final String response = getBadRequestForGetMethod("/gifts/a", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -88,7 +99,7 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
                 1, "gift1", "d1", 1.0F, 1, true, Collections.singleton(dtoTag));
         //When
-        final String response = getResponseOkForGetMethod("/gifts/1", mockMvc);
+        final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outDtoGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
         //Then
         assertEquals(expectedDtoGiftCertificate, outDtoGiftCertificate);
@@ -98,9 +109,9 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldThrowException_On_ReadByIdEndPoint_ForNotPersistedGiftCertificate_User() throws Exception {
         //Given
-        final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 10);
+        final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 100);
         //When
-        final String response = getResponseNotFoundForGetMethod("/gifts/10", mockMvc);
+        final String response = getNotFoundForGetMethod("/gifts/100", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -111,7 +122,7 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         //Given
         final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 3);
         //When
-        final String response = getResponseNotFoundForGetMethod("/gifts/3", mockMvc);
+        final String response = getNotFoundForGetMethod("/gifts/3", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -124,7 +135,7 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
                 1, "gift1", "d1", 1.0F, 1, true, Collections.singleton(dtoTag));
         //When
-        final String response = getResponseOkForGetMethod("/gifts/1", mockMvc);
+        final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outGiftCertificateDto = objectMapper.readValue(response, GiftCertificateDto.class);
         //Then
         assertEquals(expectedDtoGiftCertificate, outGiftCertificateDto);
@@ -138,12 +149,24 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
                 3, "gift3", "d3", 3.0F, 3, false, Collections.singleton(dtoTag));
         //When
-        final String response = getResponseOkForGetMethod("/gifts/3", mockMvc);
+        final String response = getOkForGetMethod("/gifts/3", mockMvc);
         final GiftCertificateDto outGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
         //Then
         assertEquals(expectedDtoGiftCertificate, outGiftCertificate);
     }
 
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldThrowException_On_ReadByIdEndPoint_For_NotPersistedGiftCertificate_Admin() throws Exception {
+        //Given
+        final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 100);
+        //When
+        final String response = getNotFoundForGetMethod("/gifts/100", mockMvc);
+        //Then
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    //Read all method test
     @Test
     public void shouldReturnActiveGiftCertificates_On_ReadEndPoint_Anonymous() throws Exception {
         //Given
@@ -162,16 +185,6 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         //Then
         assertEquals(expectedDtoGiftCertificates, outGiftCertificates);
         assertEquals(expectedDtoGiftCertificates.size(), outGiftCertificates.size());
-    }
-
-    private List<GiftCertificateDto> getOutGiftCertificatesForGetMethod(final String url) throws Exception {
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/gifts"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
-        final PagedModelDeserializer<GiftCertificateDto> deserializedResponse
-                = objectMapper.readValue(
-                response.getContentAsString(), new TypeReference<PagedModelDeserializer<GiftCertificateDto>>() {
-                });
-        return deserializedResponse.getContent();
     }
 
     @Test
@@ -216,11 +229,12 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         assertEquals(expectedDtoGiftCertificates.size(), outGiftCertificates.size());
     }
 
+    //Delete method tests
     @Test
     public void shouldThrowException_On_DeleteEndPoint_Anonymous() throws Exception {
         final String expectedExceptionMessage = UNAUTHORIZED_MESSAGE;
         //When
-        final String response = getResponseUnauthorizedForDeleteMethod("/gifts/7", mockMvc);
+        final String response = getUnauthorizedForDeleteMethod("/gifts/7", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -231,7 +245,7 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         //Given
         final String expectedExceptionMessage = ACCESS_DENIED_MESSAGE;
         //When
-        final String response = getResponseForbiddenForDeleteMethod("/gifts/7", mockMvc);
+        final String response = getForbiddenForDeleteMethod("/gifts/7", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -252,7 +266,7 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         //Given
         final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 3);
         //When
-        final String response = getResponseNotFoundForDeleteMethod("/gifts/3", mockMvc);
+        final String response = getNotFoundForDeleteMethod("/gifts/3", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -261,7 +275,7 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     public void shouldThrowException_On_CreateEndPoint_For_GiftCertificate_Anonymous() throws Exception {
         final String expectedExceptionMessage = UNAUTHORIZED_MESSAGE;
         //When
-        final String response = getResponseUnauthorizedForPostMethod("/gifts", mockMvc);
+        final String response = getUnauthorizedForPostMethod("/gifts", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -271,52 +285,95 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     public void shouldThrowException_On_CreateEndPoint_For_GiftCertificate_User() throws Exception {
         final String expectedExceptionMessage = ACCESS_DENIED_MESSAGE;
         //When
-        final String response = getResponseForbiddenForPostMethod("/gifts", mockMvc);
+        final String response = getForbiddenForPostMethod("/gifts", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
 
+    //Create method tests
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
-    public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificateWithOldTag_Admin() throws Exception {
+    public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_NewTag_Admin() throws Exception {
         //Given
-        final Set<TagDto> inDtoTags = Collections.singleton(new TagDto("tag1"));
+        final TagDto inTagDto = new TagDto("tagNew");
         final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                "gift9", "d9", 9.0F, 9, inDtoTags);
-        final Set<TagDto> outDtoTags = Collections.singleton(new TagDto(1, "tag1", true));
+                "gift8", "d8", 8.0F, 8, Collections.singleton(inTagDto));
         //When
         final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
         final String outDtoGiftCertificateAsString
-                = getResponseCreatedForPostMethodForObjectAsString("/gifts", innDtoGiftCertificateAsString, mockMvc);
+                = getCreatedForPostMethodForObjectAsString("/gifts", innDtoGiftCertificateAsString, mockMvc);
         final GiftCertificateDto outDtoGiftCertificate
                 = objectMapper.readValue(outDtoGiftCertificateAsString, GiftCertificateDto.class);
         //Then
-        assertThat(outDtoGiftCertificate.getId()).isNotNull();
-        assertEquals(inDtoGiftCertificate.getName(), outDtoGiftCertificate.getName());
-        assertEquals(inDtoGiftCertificate.getDescription(), outDtoGiftCertificate.getDescription());
-        assertEquals(inDtoGiftCertificate.getPrice(), outDtoGiftCertificate.getPrice());
-        assertEquals(inDtoGiftCertificate.getDuration(), outDtoGiftCertificate.getDuration());
-        assertThat(outDtoGiftCertificate.getCreateDate()).isNotNull();
-        assertThat(outDtoGiftCertificate.getLastUpdateDate()).isNotNull();
-        assertEquals(outDtoTags, outDtoGiftCertificate.getDtoTags());
-        assertThat(outDtoGiftCertificate.getActive()).isEqualTo(true);
+        assertGiftCertificates(inDtoGiftCertificate, outDtoGiftCertificate);
+        assertTags(inDtoGiftCertificate.getDtoTags(), outDtoGiftCertificate.getDtoTags());
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
-    public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificateWithNewTag_Admin() throws Exception {
+    public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_OldActiveTag_Admin() throws Exception {
         //Given
-        final TagDto inTagDto = new TagDto("tagNew");
+        final Set<TagDto> inDtoTags = Collections.singleton(new TagDto("tag1"));
+        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
+                "gift9", "d9", 9.0F, 9, inDtoTags);
+        //When
+        final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
+        final String outDtoGiftCertificateAsString
+                = getCreatedForPostMethodForObjectAsString("/gifts", innDtoGiftCertificateAsString, mockMvc);
+        final GiftCertificateDto outDtoGiftCertificate
+                = objectMapper.readValue(outDtoGiftCertificateAsString, GiftCertificateDto.class);
+        //Then
+        assertGiftCertificates(inDtoGiftCertificate, outDtoGiftCertificate);
+        assertTags(inDtoGiftCertificate.getDtoTags(), outDtoGiftCertificate.getDtoTags());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_OldDisabledTag_Admin() throws Exception {
+        //Given
+        final TagDto inTagDto = new TagDto("tag10");
         final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
                 "gift10", "d10", 10.0F, 10, Collections.singleton(inTagDto));
         //When
         final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
         final String outDtoGiftCertificateAsString
-                = getResponseCreatedForPostMethodForObjectAsString("/gifts", innDtoGiftCertificateAsString, mockMvc);
+                = getCreatedForPostMethodForObjectAsString("/gifts", innDtoGiftCertificateAsString, mockMvc);
         final GiftCertificateDto outDtoGiftCertificate
                 = objectMapper.readValue(outDtoGiftCertificateAsString, GiftCertificateDto.class);
-        final Set<TagDto> outDtoTags = outDtoGiftCertificate.getDtoTags();
         //Then
+        assertGiftCertificates(inDtoGiftCertificate, outDtoGiftCertificate);
+        assertTags(inDtoGiftCertificate.getDtoTags(), outDtoGiftCertificate.getDtoTags());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldThrowException_On_CreateEndPoint_With_ExistsGiftCertificateName_Admin() throws Exception {
+        //Given
+        final TagDto inTagDto = new TagDto("tag1");
+        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
+                "gift1", "d10", 10.0F, 10, Collections.singleton(inTagDto));
+        final String expectedMessage = String.format(
+                rb.getString("giftCertificate.alreadyExists.name"), inDtoGiftCertificate.getName());
+        //When
+        final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
+        final String response
+                = getConflictForPostMethod("/gifts", innDtoGiftCertificateAsString, mockMvc);
+        //Then
+        assertThat(response).contains(expectedMessage);
+    }
+
+    private List<GiftCertificateDto> getOutGiftCertificatesForGetMethod(final String url) throws Exception {
+        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/gifts"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
+        final PagedModelDeserializer<GiftCertificateDto> deserializedResponse
+                = objectMapper.readValue(
+                response.getContentAsString(), new TypeReference<PagedModelDeserializer<GiftCertificateDto>>() {
+                });
+        return deserializedResponse.getContent();
+    }
+
+    private void assertGiftCertificates(final GiftCertificateDto inDtoGiftCertificate,
+                                        final GiftCertificateDto outDtoGiftCertificate) {
         assertThat(outDtoGiftCertificate.getId()).isNotNull();
         assertEquals(inDtoGiftCertificate.getName(), outDtoGiftCertificate.getName());
         assertEquals(inDtoGiftCertificate.getDescription(), outDtoGiftCertificate.getDescription());
@@ -325,30 +382,14 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         assertThat(outDtoGiftCertificate.getCreateDate()).isNotNull();
         assertThat(outDtoGiftCertificate.getLastUpdateDate()).isNotNull();
         assertThat(outDtoGiftCertificate.getActive()).isTrue();
-
-        outDtoTags.forEach(outDtoTag -> {
-                    assertThat(outDtoTag.getId()).isNotNull();
-                    assertEquals(outDtoTag.getName(), inTagDto.getName());
-                    assertThat(outDtoTag.getActive()).isTrue();
-                }
-        );
     }
-//
-//    @Test
-//    @WithMockUser(authorities = "ROLE_ADMIN")
-//    public void shouldReturn_On_CreateEndPoint_For_DisableTag_Admin() throws Exception {
-//        //When
-//        final TagDto dtoTag = new TagDto();
-//        dtoTag.setName("tag8");
-//        final String jsonDtoGiftCertificate = objectMapper.writeValueAsString(dtoTag);
-//        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.post("/tags")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(jsonDtoGiftCertificate))
-//                .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn().getResponse().getContentAsString();
-//        final TagDto createdDtoTag = objectMapper.readValue(contentAsString, TagDto.class);
-//        //Then
-//        assertThat(createdDtoTag.getId()).isNotNull();
-//        assertEquals(dtoTag.getName(), createdDtoTag.getName());
-//        assertThat(createdDtoTag.getActive()).isEqualTo(true);
-//    }
+
+    private void assertTags(final Set<TagDto> inDtoTags, final Set<TagDto> outDtoTags) {
+        assertEquals(inDtoTags.size(), outDtoTags.size());
+        outDtoTags.forEach(tagDto -> {
+            assertThat(tagDto.getId()).isNotNull();
+            assertThat(tagDto.getName()).isNotNull();
+            assertThat(tagDto.getActive()).isTrue();
+        });
+    }
 }

@@ -47,7 +47,6 @@ public class OrderController {
        return createdOrderDto;
     }
 
-    @Profile("jwt")
     @Secured({USER, ADMIN})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

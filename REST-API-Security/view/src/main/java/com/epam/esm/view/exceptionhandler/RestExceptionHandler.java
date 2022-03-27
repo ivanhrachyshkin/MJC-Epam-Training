@@ -2,6 +2,7 @@ package com.epam.esm.view.exceptionhandler;
 
 import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.validator.ValidationException;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ResourceBundle;
+
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Setter
+    private ResourceBundle rb;
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ApiError> handleServiceException(final ServiceException e) {
@@ -36,7 +42,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                              final HttpHeaders headers,
                                                              final HttpStatus status,
                                                              final WebRequest request) {
-        final ApiError error = new ApiError(status.value() + StringUtils.EMPTY, e.getMessage());
+        final ApiError error = new ApiError(
+                status.value() + StringUtils.EMPTY, rb.getString("invalid.input"));
         return super.handleExceptionInternal(e, error, headers, status, request);
     }
 }

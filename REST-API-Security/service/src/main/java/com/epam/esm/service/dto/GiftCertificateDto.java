@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(value = "_links")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> implements Trimmable {
 
     private Integer id;
@@ -35,7 +35,12 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
         this.id = id;
     }
 
-    public GiftCertificateDto(Integer id, String name, String description, Float price, Integer duration, Boolean active) {
+    public GiftCertificateDto(Integer id,
+                              String name,
+                              String description,
+                              Float price,
+                              Integer duration,
+                              Boolean active) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,7 +49,11 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
         this.active = active;
     }
 
-    public GiftCertificateDto(String name, String description, Float price, Integer duration, Boolean active) {
+    public GiftCertificateDto(String name,
+                              String description,
+                              Float price,
+                              Integer duration,
+                              Boolean active) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -52,7 +61,12 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
         this.active = active;
     }
 
-    public GiftCertificateDto(Integer id, String name, String description, Float price, Integer duration, Boolean active, Set<TagDto> dtoTags) {
+    public GiftCertificateDto(Integer id,
+                              String name,
+                              String description,
+                              Float price, Integer duration,
+                              Boolean active,
+                              Set<TagDto> dtoTags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -62,7 +76,10 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
         this.dtoTags = dtoTags;
     }
 
-    public GiftCertificateDto(String name, String description, Float price, Integer duration, Set<TagDto> dtoTags) {
+    public GiftCertificateDto(String name,
+                              String description,
+                              Float price, Integer duration,
+                              Set<TagDto> dtoTags) {
         this.name = name;
         this.description = description;
         this.price = price;

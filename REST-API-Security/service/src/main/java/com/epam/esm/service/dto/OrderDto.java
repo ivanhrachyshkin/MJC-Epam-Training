@@ -1,6 +1,7 @@
 package com.epam.esm.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderDto extends RepresentationModel<OrderDto> {
 
     private Integer id;
@@ -25,5 +27,10 @@ public class OrderDto extends RepresentationModel<OrderDto> {
 
     public OrderDto(final Integer id) {
         this.id = id;
+    }
+
+    public OrderDto(final UserDto userDto, final Set<GiftCertificateDto> dtoGiftCertificates) {
+        this.userDto = userDto;
+        this.dtoGiftCertificates = dtoGiftCertificates;
     }
 }

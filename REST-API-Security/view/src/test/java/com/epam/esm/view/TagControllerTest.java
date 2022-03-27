@@ -48,12 +48,13 @@ public class TagControllerTest extends ResponseProvider {
         objectMapper = new ObjectMapper();
     }
 
+    //Read one method test
     @Test
     public void shouldReturnTag_On_ReadByIdEndPoint_ForActiveTag_Anonymous() throws Exception {
         //Given
         final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
         //When
-        final String response = getResponseOkForGetMethod("/tags/1", mockMvc);
+        final String response = getOkForGetMethod("/tags/1", mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
         //Then
         assertEquals(expectedDtoTag, outDtoTag);
@@ -62,9 +63,19 @@ public class TagControllerTest extends ResponseProvider {
     @Test
     public void shouldThrowException_On_ReadByIdEndPoint_ForNotPersistedTag_Anonymous() throws Exception {
         //Given
-        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 10);
+        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 100);
         //When
-        final String response = getResponseNotFoundForGetMethod("/tags/10", mockMvc);
+        final String response = getNotFoundForGetMethod("/tags/100", mockMvc);
+        //Then
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    @Test
+    public void shouldThrowExceptionInvalid_On_ReadByIdEndPoint_ForNotPersistedTag_Anonymous() throws Exception {
+        //Given
+        final String expectedExceptionMessage = rb.getString("invalid.input");
+        //When
+        final String response = getBadRequestForGetMethod("/tags/a", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -74,7 +85,7 @@ public class TagControllerTest extends ResponseProvider {
         //Given
         final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 3);
         //When
-        final String response = getResponseNotFoundForGetMethod("/tags/3", mockMvc);
+        final String response = getNotFoundForGetMethod("/tags/3", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -85,7 +96,7 @@ public class TagControllerTest extends ResponseProvider {
         //Given
         final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
         //When
-        final String response = getResponseOkForGetMethod("/tags/1", mockMvc);
+        final String response = getOkForGetMethod("/tags/1", mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
         //Then
         assertEquals(expectedDtoTag, outDtoTag);
@@ -95,9 +106,9 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldThrowException_On_ReadByIdEndPoint_ForNotPersistedTag_User() throws Exception {
         //Given
-        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 10);
+        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 100);
         //When
-        final String response = getResponseNotFoundForGetMethod("/tags/10", mockMvc);
+        final String response = getNotFoundForGetMethod("/tags/100", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -108,7 +119,18 @@ public class TagControllerTest extends ResponseProvider {
         //Given
         final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 3);
         //When
-        final String response = getResponseNotFoundForGetMethod("/tags/3", mockMvc);
+        final String response = getNotFoundForGetMethod("/tags/3", mockMvc);
+        //Then
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_USER")
+    public void shouldThrowExceptionInvalid_On_ReadByIdEndPoint_ForNotPersistedTag_User() throws Exception {
+        //Given
+        final String expectedExceptionMessage = rb.getString("invalid.input");
+        //When
+        final String response = getBadRequestForGetMethod("/tags/a", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -119,7 +141,7 @@ public class TagControllerTest extends ResponseProvider {
         //Given
         final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
         //When
-        final String response = getResponseOkForGetMethod("/tags/1", mockMvc);
+        final String response = getOkForGetMethod("/tags/1", mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
         //Then
         assertEquals(expectedDtoTag, outDtoTag);
@@ -131,12 +153,35 @@ public class TagControllerTest extends ResponseProvider {
         //Given
         final TagDto expectedDtoTag = new TagDto(3, "tag3", false);
         //When
-        final String response = getResponseOkForGetMethod("/tags/3", mockMvc);
+        final String response = getOkForGetMethod("/tags/3", mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
         //Then
         assertEquals(expectedDtoTag, outDtoTag);
     }
 
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldThrowException_On_ReadByIdEndPoint_ForNotPersistedTag_Admin() throws Exception {
+        //Given
+        final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 100);
+        //When
+        final String response = getNotFoundForGetMethod("/tags/100", mockMvc);
+        //Then
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldThrowExceptionInvalid_On_ReadByIdEndPoint_ForNotPersistedTag_Admin() throws Exception {
+        //Given
+        final String expectedExceptionMessage = rb.getString("invalid.input");
+        //When
+        final String response = getBadRequestForGetMethod("/tags/a", mockMvc);
+        //Then
+        assertThat(response).contains(expectedExceptionMessage);
+    }
+
+    //Read all method test
     @Test
     public void shouldReturnActiveTags_On_ReadEndPoint_Anonymous() throws Exception {
         //Given
@@ -187,12 +232,13 @@ public class TagControllerTest extends ResponseProvider {
         assertEquals(expectedDtoTags.size(), outDtoTags.size());
     }
 
+    //Delete method test
     @Test
     public void shouldThrowException_On_DeleteEndPoint_Anonymous() throws Exception {
         //Given
         final String expectedExceptionMessage = UNAUTHORIZED_MESSAGE;
         //When
-        final String response = getResponseUnauthorizedForDeleteMethod("/tags/7", mockMvc);
+        final String response = getUnauthorizedForDeleteMethod("/tags/7", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -203,7 +249,7 @@ public class TagControllerTest extends ResponseProvider {
         //Given
         final String expectedExceptionMessage = ACCESS_DENIED_MESSAGE;
         //When
-        final String response = getResponseForbiddenForDeleteMethod("/tags/7", mockMvc);
+        final String response = getForbiddenForDeleteMethod("/tags/7", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -224,27 +270,28 @@ public class TagControllerTest extends ResponseProvider {
         //Given
         final String expectedExceptionMessage = String.format(rb.getString("tag.notFound.id"), 3);
         //When
-        final String response = getResponseNotFoundForDeleteMethod("/tags/3", mockMvc);
+        final String response = getNotFoundForDeleteMethod("/tags/3", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
 
+    //Create method tests
     @Test
-    public void shouldThrowException_On_CreateEndPoint_For_NewTag_Anonymous() throws Exception {
+    public void shouldThrowException_On_CreateEndPoint_Anonymous() throws Exception {
         final String expectedExceptionMessage = UNAUTHORIZED_MESSAGE;
         //When
-        final String response = getResponseUnauthorizedForPostMethod("/tags", mockMvc);
+        final String response = getUnauthorizedForPostMethod("/tags", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
 
     @Test
     @WithMockUser(authorities = "ROLE_USER")
-    public void shouldThrowException_On_CreateEndPoint_For_NewTag_User() throws Exception {
+    public void shouldThrowException_On_CreateEndPoint_User() throws Exception {
         //Given
         final String expectedExceptionMessage = ACCESS_DENIED_MESSAGE;
         //When
-        final String response = getResponseForbiddenForPostMethod("/tags", mockMvc);
+        final String response = getForbiddenForPostMethod("/tags", mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -257,12 +304,68 @@ public class TagControllerTest extends ResponseProvider {
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         //When
         final String outDtoTagAsString
-                = getResponseCreatedForPostMethodForObjectAsString("/tags", inDtoTagAsString, mockMvc);
+                = getCreatedForPostMethodForObjectAsString("/tags", inDtoTagAsString, mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(outDtoTagAsString, TagDto.class);
         //Then
         assertThat(outDtoTag.getId()).isNotNull();
         assertEquals(inDtoTag.getName(), outDtoTag.getName());
         assertThat(outDtoTag.getActive()).isEqualTo(true);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldThrowException_On_CreateEndPoint_For_ExistTagName_Admin() throws Exception {
+        //Given
+        final TagDto inDtoTag = new TagDto("tag1");
+        final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
+        final String expectedMessage = String.format(rb.getString("tag.alreadyExists.name"), inDtoTag.getName());
+        //When
+        final String outDtoTagAsString
+                = getConflictForPostMethod("/tags", inDtoTagAsString, mockMvc);
+        //Then
+        assertThat(outDtoTagAsString).contains(expectedMessage);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldThrowException_On_CreateEndPoint_With_Id_Admin() throws Exception {
+        //Given
+        final TagDto inDtoTag = new TagDto(1);
+        final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
+        final String expectedMessage = rb.getString("validator.id.should.not.passed");
+        //When
+        final String response
+                = getBadRequestForPostMethod("/tags", inDtoTagAsString, mockMvc);
+        //Then
+        assertThat(response).contains(expectedMessage);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldThrowException_On_CreateEndPoint_With_EmptyName_Admin() throws Exception {
+        //Given
+        final TagDto inDtoTag = new TagDto("");
+        final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
+        final String expectedMessage = rb.getString("validator.tag.name.required");
+        //When
+        final String response
+                = getBadRequestForPostMethod("/tags", inDtoTagAsString, mockMvc);
+        //Then
+        assertThat(response).contains(expectedMessage);
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void shouldThrowException_On_CreateEndPoint_With_Active_Admin() throws Exception {
+        //Given
+        final TagDto inDtoTag = new TagDto("n", true);
+        final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
+        final String expectedMessage = rb.getString("validator.active.should.not.passed");
+        //When
+        final String response
+                = getBadRequestForPostMethod("/tags", inDtoTagAsString, mockMvc);
+        //Then
+        assertThat(response).contains(expectedMessage);
     }
 
     @Test
@@ -273,7 +376,7 @@ public class TagControllerTest extends ResponseProvider {
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         //When
         final String outDtoTagAsString
-                = getResponseCreatedForPostMethodForObjectAsString("/tags", inDtoTagAsString, mockMvc);
+                = getCreatedForPostMethodForObjectAsString("/tags", inDtoTagAsString, mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(outDtoTagAsString, TagDto.class);
         //Then
         assertThat(outDtoTag.getId()).isNotNull();

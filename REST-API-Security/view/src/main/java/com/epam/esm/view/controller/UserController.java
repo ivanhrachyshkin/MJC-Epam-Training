@@ -46,7 +46,7 @@ public class UserController {
     @Secured({ADMIN})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PagedModel<UserDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+    public PagedModel<UserDto> readAll(@PageableDefault(page = 0, size = 5) final Pageable pageable) {
         final Page<UserDto> dtoUsers = userService.readAll(pageable);
         dtoUsers.forEach(userDto -> userDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto));
         return hateoasCreator.linkUserDtos(dtoUsers);
@@ -68,7 +68,7 @@ public class UserController {
     @GetMapping(value = "/{userId}/orders")
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<OrderDto> readOrdersByUserId(@PathVariable final int userId,
-                                                   @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+                                                   @PageableDefault(page = 0, size = 5) final Pageable pageable) {
         final Page<OrderDto> dtoOrders = orderService.readByUserId(userId, pageable);
         dtoOrders.forEach(orderDto -> {
             hateoasCreator.linkUserDto(orderDto.getUserDto());
