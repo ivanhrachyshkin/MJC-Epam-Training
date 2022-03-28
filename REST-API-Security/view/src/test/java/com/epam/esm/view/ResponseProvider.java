@@ -86,4 +86,13 @@ public abstract class ResponseProvider {
                         .content(objectAsString))
                 .andExpect(MockMvcResultMatchers.status().isConflict()).andReturn().getResponse().getContentAsString();
     }
+
+    public String getNotFoundForPostMethod(final String url,
+                                           final String objectAsString,
+                                           final MockMvc mockMvc) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectAsString))
+                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn().getResponse().getContentAsString();
+    }
 }

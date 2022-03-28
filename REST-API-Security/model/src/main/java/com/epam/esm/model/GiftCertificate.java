@@ -54,12 +54,4 @@ public class GiftCertificate {
     public GiftCertificate(final Integer id) {
         this.id = id;
     }
-
-    public GiftCertificate(Integer id, String name, String description, Float price, Integer duration) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-    }
 }

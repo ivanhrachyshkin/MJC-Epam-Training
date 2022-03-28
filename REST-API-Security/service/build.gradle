@@ -6,6 +6,8 @@ dependencies {
     implementation libs.spring.boot.starter.data.jpa
     implementation libs.spring.boot.starter.security
     implementation libs.modelmapper
+    implementation libs.keycloak.spring.boot.starter
+    implementation libs.keycloak.admin.client
     implementation project(':model')
     implementation project(':dao')
 }

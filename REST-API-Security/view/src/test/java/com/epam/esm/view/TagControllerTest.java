@@ -36,7 +36,6 @@ public class TagControllerTest extends ResponseProvider {
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
-
     private ResourceBundle rb;
 
     @BeforeEach
@@ -192,7 +191,7 @@ public class TagControllerTest extends ResponseProvider {
                 new TagDto(5, "tag5", true),
                 new TagDto(6, "tag6", true));
         //When
-        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags");
+        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags?page=0&size=5");
         //Then
         assertEquals(expectedDtoTags, outDtoTags);
         assertEquals(expectedDtoTags.size(), outDtoTags.size());
@@ -209,7 +208,7 @@ public class TagControllerTest extends ResponseProvider {
                 new TagDto(5, "tag5", true),
                 new TagDto(6, "tag6", true));
         //When
-        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags");
+        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags?page=0&size=5");
         //Then
         assertEquals(expectedDtoTags, outDtoTags);
         assertEquals(expectedDtoTags.size(), outDtoTags.size());
@@ -226,7 +225,7 @@ public class TagControllerTest extends ResponseProvider {
                 new TagDto(4, "tag4", true),
                 new TagDto(5, "tag5", true));
         //When
-        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags");
+        final List<TagDto> outDtoTags = getOutTagsForGetMethod("/tags?page=0&size=5");
         //Then
         assertEquals(expectedDtoTags, outDtoTags);
         assertEquals(expectedDtoTags.size(), outDtoTags.size());
@@ -300,7 +299,8 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturn_On_CreateEndPoint_For_NewTag_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto("tag9");
+        final TagDto inDtoTag = new TagDto();
+        inDtoTag.setName("tag9");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         //When
         final String outDtoTagAsString
@@ -316,7 +316,8 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_For_ExistTagName_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto("tag1");
+        final TagDto inDtoTag = new TagDto();
+        inDtoTag.setName("tag1");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         final String expectedMessage = String.format(rb.getString("tag.alreadyExists.name"), inDtoTag.getName());
         //When
@@ -330,7 +331,8 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_With_Id_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto(1);
+        final TagDto inDtoTag = new TagDto();
+        inDtoTag.setId(1);
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         final String expectedMessage = rb.getString("validator.id.should.not.passed");
         //When
@@ -344,7 +346,8 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_With_EmptyName_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto("");
+        final TagDto inDtoTag = new TagDto();
+        inDtoTag.setName("");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         final String expectedMessage = rb.getString("validator.tag.name.required");
         //When
@@ -358,7 +361,9 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_With_Active_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto("n", true);
+        final TagDto inDtoTag = new TagDto();
+        inDtoTag.setName("name");
+        inDtoTag.setActive(true);
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         final String expectedMessage = rb.getString("validator.active.should.not.passed");
         //When
@@ -372,7 +377,8 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnTag_On_CreateEndPoint_For_DisableTag_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto("tag8");
+        final TagDto inDtoTag = new TagDto();
+        inDtoTag.setName("tag8");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         //When
         final String outDtoTagAsString

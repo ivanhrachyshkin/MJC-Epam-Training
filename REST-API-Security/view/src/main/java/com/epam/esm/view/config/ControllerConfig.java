@@ -9,10 +9,13 @@ import com.epam.esm.view.interceptor.Interceptor;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.keycloak.adapters.KeycloakConfigResolver;
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -42,6 +45,12 @@ public class ControllerConfig implements WebMvcConfigurer {
         SimpleModule module = new SimpleModule("jackson-page-with-jsonview", Version.unknownVersion());
         module.addSerializer(PagedModel.class, new PagedModelSerializer());
         return module;
+    }
+
+    @Profile("keycloak")
+    @Bean
+    public KeycloakConfigResolver keycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
     }
 
     @Override

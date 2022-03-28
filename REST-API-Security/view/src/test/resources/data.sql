@@ -31,6 +31,8 @@ INSERT INTO gift_certificates (name, description, price, duration)
 VALUES ('gift6', 'd6', 6.0, 6);
 INSERT INTO gift_certificates (name, description, price, duration)
 VALUES ('gift7', 'd7', 7.0, 7);
+INSERT INTO gift_certificates (name, description, price, duration)
+VALUES ('gift8', 'd8', 8.0, 8);
 
 INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
 VALUES (1, 1);
@@ -46,6 +48,8 @@ INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
 VALUES (6, 2);
 INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
 VALUES (7, 2);
+INSERT INTO gift_certificate_tags (gift_certificate_id, tag_id)
+VALUES (8, 2);
 
 INSERT INTO users (username, email, password)
 VALUES ('username1', 'email1', 'password1');
@@ -57,6 +61,14 @@ INSERT INTO users (username, email, password)
 VALUES ('username4', 'email4', 'password4');
 INSERT INTO users (username, email, password)
 VALUES ('username5', 'email5', 'password5');
+INSERT INTO users (username, email, password)
+VALUES ('username6', 'email6', 'password6');
+
+INSERT INTO orders (price, user_id)
+VALUES (1.0, 6);
+
+INSERT INTO order_gifts (order_id, gift_certificate_id)
+VALUES (1, 8);
 
 INSERT INTO roles (role_name)
 VALUES ('ROLE_ADMIN');

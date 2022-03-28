@@ -13,4 +13,6 @@ public interface UserService {
     UserDto readOneByName(String name);
 
     UserDto readOne(int id);
+
+    UserDto createKeycloakUser(UserDto userDto);
 }

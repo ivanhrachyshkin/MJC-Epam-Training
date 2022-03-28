@@ -30,29 +30,4 @@ public class UserDto extends RepresentationModel<UserDto> implements Trimmable {
     public UserDto(final Integer id) {
         this.id = id;
     }
-
-    public UserDto(final String username, final String email, final String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
-
-    public UserDto(final Integer id, final String username, final String email, final String password) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
-
-    public UserDto(final String username,
-                   final String email,
-                   final String password,
-                   final Set<OrderDto> dtoOrders,
-                   final List<RoleDto> dtoRoles) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.dtoOrders = dtoOrders;
-        this.dtoRoles = dtoRoles;
-    }
 }

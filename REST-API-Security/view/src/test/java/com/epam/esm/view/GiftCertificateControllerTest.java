@@ -53,7 +53,8 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         //Given
         final TagDto dtoTag = new TagDto(1, "tag1", true);
         final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
-                1, "gift1", "d1", 1.0F, 1, true, Collections.singleton(dtoTag));
+                1, "gift1", "d1", 1.0F, 1,
+                null, null, true, Collections.singleton(dtoTag));
         //When
         final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outDtoGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
@@ -97,7 +98,8 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         //Given
         final TagDto dtoTag = new TagDto(1, "tag1", true);
         final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
-                1, "gift1", "d1", 1.0F, 1, true, Collections.singleton(dtoTag));
+                1, "gift1", "d1", 1.0F, 1,
+                null, null, true, Collections.singleton(dtoTag));
         //When
         final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outDtoGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
@@ -133,7 +135,8 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         //Given
         final TagDto dtoTag = new TagDto(1, "tag1", true);
         final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
-                1, "gift1", "d1", 1.0F, 1, true, Collections.singleton(dtoTag));
+                1, "gift1", "d1", 1.0F, 1,
+                null, null, true, Collections.singleton(dtoTag));
         //When
         final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outGiftCertificateDto = objectMapper.readValue(response, GiftCertificateDto.class);
@@ -147,7 +150,8 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         //Given
         final TagDto dtoTag = new TagDto(1, "tag1", true);
         final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
-                3, "gift3", "d3", 3.0F, 3, false, Collections.singleton(dtoTag));
+                3, "gift3", "d3", 3.0F, 3,
+                null, null, false, Collections.singleton(dtoTag));
         //When
         final String response = getOkForGetMethod("/gifts/3", mockMvc);
         final GiftCertificateDto outGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
@@ -174,14 +178,19 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         final Set<TagDto> dtoTags2 = Collections.singleton(new TagDto(2, "tag2", true));
         final List<GiftCertificateDto> expectedDtoGiftCertificates
                 = Arrays.asList(
-                new GiftCertificateDto(1, "gift1", "d1", 1.0F, 1, true, dtoTags1),
-                new GiftCertificateDto(2, "gift2", "d2", 2.0F, 2, true, dtoTags1),
-                new GiftCertificateDto(4, "gift4", "d4", 4.0F, 4, true, dtoTags2),
-                new GiftCertificateDto(5, "gift5", "d5", 5.0F, 5, true, dtoTags2),
-                new GiftCertificateDto(6, "gift6", "d6", 6.0F, 6, true, dtoTags2)
+                new GiftCertificateDto(1, "gift1", "d1", 1.0F, 1,
+                        null, null, true, dtoTags1),
+                new GiftCertificateDto(2, "gift2", "d2", 2.0F, 2,
+                        null, null, true, dtoTags1),
+                new GiftCertificateDto(4, "gift4", "d4", 4.0F, 4,
+                        null, null, true, dtoTags2),
+                new GiftCertificateDto(5, "gift5", "d5", 5.0F, 5,
+                        null, null, true, dtoTags2),
+                new GiftCertificateDto(6, "gift6", "d6", 6.0F, 6,
+                        null, null, true, dtoTags2)
         );
         //When
-        final List<GiftCertificateDto> outGiftCertificates = getOutGiftCertificatesForGetMethod("/gifts");
+        final List<GiftCertificateDto> outGiftCertificates = getOutGiftCertificatesForGetMethod("/gifts?page=0&size=5");
         //Then
         assertEquals(expectedDtoGiftCertificates, outGiftCertificates);
         assertEquals(expectedDtoGiftCertificates.size(), outGiftCertificates.size());
@@ -189,20 +198,25 @@ public class GiftCertificateControllerTest extends ResponseProvider {
 
     @Test
     @WithMockUser(authorities = "ROLE_USER")
-    public void shouldReturnActiveDtoTags_On_ReadEndPoint_User() throws Exception {
+    public void shouldReturnActiveDtoGiftCertificate_On_ReadEndPoint_User() throws Exception {
         //Given
         final Set<TagDto> dtoTags1 = Collections.singleton(new TagDto(1, "tag1", true));
         final Set<TagDto> dtoTags2 = Collections.singleton(new TagDto(2, "tag2", true));
         final List<GiftCertificateDto> expectedDtoGiftCertificates
                 = Arrays.asList(
-                new GiftCertificateDto(1, "gift1", "d1", 1.0F, 1, true, dtoTags1),
-                new GiftCertificateDto(2, "gift2", "d2", 2.0F, 2, true, dtoTags1),
-                new GiftCertificateDto(4, "gift4", "d4", 4.0F, 4, true, dtoTags2),
-                new GiftCertificateDto(5, "gift5", "d5", 5.0F, 5, true, dtoTags2),
-                new GiftCertificateDto(6, "gift6", "d6", 6.0F, 6, true, dtoTags2)
+                new GiftCertificateDto(1, "gift1", "d1", 1.0F, 1,
+                        null, null, true, dtoTags1),
+                new GiftCertificateDto(2, "gift2", "d2", 2.0F, 2,
+                        null, null, true, dtoTags1),
+                new GiftCertificateDto(4, "gift4", "d4", 4.0F, 4,
+                        null, null, true, dtoTags2),
+                new GiftCertificateDto(5, "gift5", "d5", 5.0F, 5,
+                        null, null, true, dtoTags2),
+                new GiftCertificateDto(6, "gift6", "d6", 6.0F, 6,
+                        null, null, true, dtoTags2)
         );
         //When
-        final List<GiftCertificateDto> outGiftCertificates = getOutGiftCertificatesForGetMethod("/gifts");
+        final List<GiftCertificateDto> outGiftCertificates = getOutGiftCertificatesForGetMethod("/gifts?page=0&size=5");
         //Then
         assertEquals(expectedDtoGiftCertificates, outGiftCertificates);
         assertEquals(expectedDtoGiftCertificates.size(), outGiftCertificates.size());
@@ -216,14 +230,19 @@ public class GiftCertificateControllerTest extends ResponseProvider {
         final Set<TagDto> dtoTags2 = Collections.singleton(new TagDto(2, "tag2", true));
         final List<GiftCertificateDto> expectedDtoGiftCertificates
                 = Arrays.asList(
-                new GiftCertificateDto(1, "gift1", "d1", 1.0F, 1, true, dtoTags1),
-                new GiftCertificateDto(2, "gift2", "d2", 2.0F, 2, true, dtoTags1),
-                new GiftCertificateDto(3, "gift3", "d3", 3.0F, 3, false, dtoTags1),
-                new GiftCertificateDto(4, "gift4", "d4", 4.0F, 4, true, dtoTags2),
-                new GiftCertificateDto(5, "gift5", "d5", 5.0F, 5, true, dtoTags2)
+                new GiftCertificateDto(1, "gift1", "d1", 1.0F, 1,
+                        null, null, true, dtoTags1),
+                new GiftCertificateDto(2, "gift2", "d2", 2.0F, 2,
+                        null, null, true, dtoTags1),
+                new GiftCertificateDto(3, "gift3", "d3", 3.0F, 3,
+                        null, null, false, dtoTags1),
+                new GiftCertificateDto(4, "gift4", "d4", 4.0F, 4,
+                        null, null, true, dtoTags2),
+                new GiftCertificateDto(5, "gift5", "d5", 5.0F, 5,
+                        null, null, true, dtoTags2)
         );
         //When
-        final List<GiftCertificateDto> outGiftCertificates = getOutGiftCertificatesForGetMethod("/gifts");
+        final List<GiftCertificateDto> outGiftCertificates = getOutGiftCertificatesForGetMethod("/gifts?page=0&size=5");
         //Then
         assertEquals(expectedDtoGiftCertificates, outGiftCertificates);
         assertEquals(expectedDtoGiftCertificates.size(), outGiftCertificates.size());
@@ -295,9 +314,11 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_NewTag_Admin() throws Exception {
         //Given
-        final TagDto inTagDto = new TagDto("tagNew");
+        final TagDto inTagDto = new TagDto();
+        inTagDto.setName("tagNew");
         final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                "gift8", "d8", 8.0F, 8, Collections.singleton(inTagDto));
+                null, "gift9", "d9", 9.0F, 9,
+                null, null, null, Collections.singleton(inTagDto));
         //When
         final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
         final String outDtoGiftCertificateAsString
@@ -313,9 +334,12 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_OldActiveTag_Admin() throws Exception {
         //Given
-        final Set<TagDto> inDtoTags = Collections.singleton(new TagDto("tag1"));
+        final TagDto inTagDto = new TagDto();
+        inTagDto.setName("tag1");
+        final Set<TagDto> inDtoTags = Collections.singleton(inTagDto);
         final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                "gift9", "d9", 9.0F, 9, inDtoTags);
+                null, "gift10", "d10", 10.0F, 10,
+                null, null, null, inDtoTags);
         //When
         final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
         final String outDtoGiftCertificateAsString
@@ -331,9 +355,11 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_OldDisabledTag_Admin() throws Exception {
         //Given
-        final TagDto inTagDto = new TagDto("tag10");
+        final TagDto inTagDto = new TagDto();
+        inTagDto.setName("tag10");
         final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                "gift10", "d10", 10.0F, 10, Collections.singleton(inTagDto));
+                null, "gift11", "d11", 11.0F, 11,
+                null, null, null, Collections.singleton(inTagDto));
         //When
         final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
         final String outDtoGiftCertificateAsString
@@ -349,9 +375,11 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_With_ExistsGiftCertificateName_Admin() throws Exception {
         //Given
-        final TagDto inTagDto = new TagDto("tag1");
+        final TagDto inTagDto = new TagDto();
+        inTagDto.setName("tag1");
         final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                "gift1", "d10", 10.0F, 10, Collections.singleton(inTagDto));
+                null, "gift1", "d10", 10.0F, 10,
+                null, null, null, Collections.singleton(inTagDto));
         final String expectedMessage = String.format(
                 rb.getString("giftCertificate.alreadyExists.name"), inDtoGiftCertificate.getName());
         //When
@@ -363,7 +391,7 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     }
 
     private List<GiftCertificateDto> getOutGiftCertificatesForGetMethod(final String url) throws Exception {
-        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/gifts"))
+        final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
         final PagedModelDeserializer<GiftCertificateDto> deserializedResponse
                 = objectMapper.readValue(

@@ -8,6 +8,8 @@ dependencies {
     testImplementation libs.spring.security.test
     implementation libs.modelmapper
     implementation libs.jjwt
+    implementation libs.keycloak.spring.boot.starter
     testImplementation 'com.h2database:h2:2.1.210'
     implementation project(':service')
+    implementation 'org.keycloak:keycloak-adapter-core:17.0.1'
 }

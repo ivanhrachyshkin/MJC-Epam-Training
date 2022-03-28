@@ -24,7 +24,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest()
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class UserControllerTest extends ResponseProvider {
@@ -130,9 +130,8 @@ public class UserControllerTest extends ResponseProvider {
                         Collections.emptySet(), Collections.emptyList()),
                 new UserDto(5, "username5", "email5", "password5",
                         Collections.emptySet(), Collections.emptyList()));
-
         //When
-        final List<UserDto> outDtoUsers = getOutUsersForGetMethod("/users");
+        final List<UserDto> outDtoUsers = getOutUsersForGetMethod("/users?page=0&size=5");
         //Then
         assertEquals(expectedDtoUsers, outDtoUsers);
     }
@@ -141,7 +140,7 @@ public class UserControllerTest extends ResponseProvider {
     @Test
     public void shouldReturnCreatedUserFor_On_CreateEndPoint_For_Anonymous() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto("username6", "email6", "password6",
+        final UserDto inDtoUser = new UserDto(null,"username7", "email7", "password7",
                 null, null);
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoUser);
         //When
@@ -157,7 +156,7 @@ public class UserControllerTest extends ResponseProvider {
     @Test
     public void shouldThrowException_On_CreateEndPoint_With_ExistUsername_For_Anonymous() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto("username1", "email8", "password8",
+        final UserDto inDtoUser = new UserDto(null,"username1", "email8", "password8",
                 null, null);
         final String expectedMessage = rb.getString("user.exists.name");
         //When
@@ -171,7 +170,7 @@ public class UserControllerTest extends ResponseProvider {
     @Test
     public void shouldThrowException_On_CreateEndPoint_With_ExistEmail_For_Anonymous() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto("username100", "email1", "password8",
+        final UserDto inDtoUser = new UserDto(null,"username100", "email1", "password8",
                 null, null);
         final String expectedMessage = rb.getString("user.exists.email");
         //When
@@ -186,7 +185,7 @@ public class UserControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldReturnCreatedUserFor_On_CreateEndPoint_For_User() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto("username7", "email7", "password7",
+        final UserDto inDtoUser = new UserDto(null,"username8", "email8", "password8",
                 null, null);
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoUser);
         //When
@@ -203,7 +202,7 @@ public class UserControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnCreatedUserFor_On_CreateEndPoint_For_Admin() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto("username8", "email8", "password8",
+        final UserDto inDtoUser = new UserDto(null,"username9", "email9", "password9",
                 null, null);
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoUser);
         //When
@@ -226,7 +225,7 @@ public class UserControllerTest extends ResponseProvider {
         return deserializedResponse.getContent();
     }
 
-    private void assertDtoUser(final UserDto inDtoUser, final UserDto outDtoUser) throws Exception {
+    private void assertDtoUser(final UserDto inDtoUser, final UserDto outDtoUser) {
         assertThat(outDtoUser.getId()).isNotNull();
         assertEquals(inDtoUser.getUsername(), outDtoUser.getUsername());
         assertEquals(inDtoUser.getEmail(), outDtoUser.getEmail());

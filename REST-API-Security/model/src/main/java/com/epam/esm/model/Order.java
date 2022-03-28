@@ -28,7 +28,7 @@ public class Order implements Serializable {
     private User user;
     @Column(nullable = false)
     private Float price;
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime date;
 

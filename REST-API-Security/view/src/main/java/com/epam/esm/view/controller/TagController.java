@@ -41,7 +41,7 @@ public class TagController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PagedModel<TagDto> readAll(@PageableDefault(page = 0, size = 5) final Pageable pageable) {
+    public PagedModel<TagDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
         final Page<TagDto> dtoTags = tagService.readAll(pageable);
         return hateoasCreator.linkTagDtos(dtoTags);
     }
@@ -55,7 +55,7 @@ public class TagController {
 
     @GetMapping(value = "/mostUsed")
     @ResponseStatus(HttpStatus.OK)
-    public PagedModel<TagDto> readOneMostUsed(@PageableDefault(page = 0, size = 5) final Pageable pageable) {
+    public PagedModel<TagDto> readOneMostUsed(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
         final Page<TagDto> dtoTags = tagService.readMostUsed(pageable);
         return hateoasCreator.linkTagDtos(dtoTags);
     }
