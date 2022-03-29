@@ -28,14 +28,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class GiftCertificateControllerTest extends ResponseProvider {
+public class GiftCertificateControllerIntegrationTest extends ResponseProvider {
 
     @Autowired
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
-
     private ResourceBundle rb;
+
+    final TagDto inDtoTag = new TagDto();
+    final TagDto expectedDtoTag = new TagDto();
+
+    final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto();
+    final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto();
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -51,10 +56,17 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @Test
     public void shouldReturnGiftCertificate_On_ReadByIdEndPoint_ForActiveGiftCertificate_Anonymous() throws Exception {
         //Given
-        final TagDto dtoTag = new TagDto(1, "tag1", true);
-        final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
-                1, "gift1", "d1", 1.0F, 1,
-                null, null, true, Collections.singleton(dtoTag));
+        expectedDtoTag.setId(1);
+        expectedDtoTag.setName("tag1");
+        expectedDtoTag.setActive(true);
+
+        expectedDtoGiftCertificate.setId(1);
+        expectedDtoGiftCertificate.setName("gift1");
+        expectedDtoGiftCertificate.setDescription("d1");
+        expectedDtoGiftCertificate.setPrice(1.0F);
+        expectedDtoGiftCertificate.setDuration(1);
+        expectedDtoGiftCertificate.setActive(true);
+        expectedDtoGiftCertificate.setDtoTags(Collections.singleton(expectedDtoTag));
         //When
         final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outDtoGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
@@ -96,10 +108,17 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldReturnGiftCertificate_On_ReadByIdEndPoint_For_ActiveGiftCertificate_User() throws Exception {
         //Given
-        final TagDto dtoTag = new TagDto(1, "tag1", true);
-        final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
-                1, "gift1", "d1", 1.0F, 1,
-                null, null, true, Collections.singleton(dtoTag));
+        expectedDtoTag.setId(1);
+        expectedDtoTag.setName("tag1");
+        expectedDtoTag.setActive(true);
+
+        expectedDtoGiftCertificate.setId(1);
+        expectedDtoGiftCertificate.setName("gift1");
+        expectedDtoGiftCertificate.setDescription("d1");
+        expectedDtoGiftCertificate.setPrice(1.0F);
+        expectedDtoGiftCertificate.setDuration(1);
+        expectedDtoGiftCertificate.setActive(true);
+        expectedDtoGiftCertificate.setDtoTags(Collections.singleton(expectedDtoTag));
         //When
         final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outDtoGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
@@ -133,10 +152,17 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnGiftCertificate_On_ReadByIdEndPoint_For_ActiveGiftCertificate_Admin() throws Exception {
         //Given
-        final TagDto dtoTag = new TagDto(1, "tag1", true);
-        final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
-                1, "gift1", "d1", 1.0F, 1,
-                null, null, true, Collections.singleton(dtoTag));
+        expectedDtoTag.setId(1);
+        expectedDtoTag.setName("tag1");
+        expectedDtoTag.setActive(true);
+
+        expectedDtoGiftCertificate.setId(1);
+        expectedDtoGiftCertificate.setName("gift1");
+        expectedDtoGiftCertificate.setDescription("d1");
+        expectedDtoGiftCertificate.setPrice(1.0F);
+        expectedDtoGiftCertificate.setDuration(1);
+        expectedDtoGiftCertificate.setActive(true);
+        expectedDtoGiftCertificate.setDtoTags(Collections.singleton(expectedDtoTag));
         //When
         final String response = getOkForGetMethod("/gifts/1", mockMvc);
         final GiftCertificateDto outGiftCertificateDto = objectMapper.readValue(response, GiftCertificateDto.class);
@@ -148,10 +174,17 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnGiftCertificate_On_ReadByIdEndPoint_For_DisableGiftCertificate_Admin() throws Exception {
         //Given
-        final TagDto dtoTag = new TagDto(1, "tag1", true);
-        final GiftCertificateDto expectedDtoGiftCertificate = new GiftCertificateDto(
-                3, "gift3", "d3", 3.0F, 3,
-                null, null, false, Collections.singleton(dtoTag));
+        expectedDtoTag.setId(1);
+        expectedDtoTag.setName("tag1");
+        expectedDtoTag.setActive(true);
+
+        expectedDtoGiftCertificate.setId(3);
+        expectedDtoGiftCertificate.setName("gift3");
+        expectedDtoGiftCertificate.setDescription("d3");
+        expectedDtoGiftCertificate.setPrice(3.0F);
+        expectedDtoGiftCertificate.setDuration(3);
+        expectedDtoGiftCertificate.setActive(false);
+        expectedDtoGiftCertificate.setDtoTags(Collections.singleton(expectedDtoTag));
         //When
         final String response = getOkForGetMethod("/gifts/3", mockMvc);
         final GiftCertificateDto outGiftCertificate = objectMapper.readValue(response, GiftCertificateDto.class);
@@ -314,11 +347,13 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_NewTag_Admin() throws Exception {
         //Given
-        final TagDto inTagDto = new TagDto();
-        inTagDto.setName("tagNew");
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                null, "gift9", "d9", 9.0F, 9,
-                null, null, null, Collections.singleton(inTagDto));
+        inDtoTag.setName("tagNew");
+
+        inDtoGiftCertificate.setName("gift9");
+        inDtoGiftCertificate.setDescription("d9");
+        inDtoGiftCertificate.setPrice(9.0F);
+        inDtoGiftCertificate.setDuration(9);
+        inDtoGiftCertificate.setDtoTags(Collections.singleton(inDtoTag));
         //When
         final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
         final String outDtoGiftCertificateAsString
@@ -334,12 +369,13 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_OldActiveTag_Admin() throws Exception {
         //Given
-        final TagDto inTagDto = new TagDto();
-        inTagDto.setName("tag1");
-        final Set<TagDto> inDtoTags = Collections.singleton(inTagDto);
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                null, "gift10", "d10", 10.0F, 10,
-                null, null, null, inDtoTags);
+        inDtoTag.setName("tag1");
+
+        inDtoGiftCertificate.setName("gift10");
+        inDtoGiftCertificate.setDescription("d10");
+        inDtoGiftCertificate.setPrice(10.0F);
+        inDtoGiftCertificate.setDuration(10);
+        inDtoGiftCertificate.setDtoTags(Collections.singleton(inDtoTag));
         //When
         final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
         final String outDtoGiftCertificateAsString
@@ -355,11 +391,13 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturn_On_CreateEndPoint_For_NewGiftCertificate_With_OldDisabledTag_Admin() throws Exception {
         //Given
-        final TagDto inTagDto = new TagDto();
-        inTagDto.setName("tag10");
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                null, "gift11", "d11", 11.0F, 11,
-                null, null, null, Collections.singleton(inTagDto));
+        inDtoTag.setName("tag10");
+
+        inDtoGiftCertificate.setName("gift11");
+        inDtoGiftCertificate.setDescription("d11");
+        inDtoGiftCertificate.setPrice(11.0F);
+        inDtoGiftCertificate.setDuration(11);
+        inDtoGiftCertificate.setDtoTags(Collections.singleton(inDtoTag));
         //When
         final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
         final String outDtoGiftCertificateAsString
@@ -375,11 +413,12 @@ public class GiftCertificateControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_With_ExistsGiftCertificateName_Admin() throws Exception {
         //Given
-        final TagDto inTagDto = new TagDto();
-        inTagDto.setName("tag1");
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                null, "gift1", "d10", 10.0F, 10,
-                null, null, null, Collections.singleton(inTagDto));
+        inDtoTag.setName("tag1");
+
+        inDtoGiftCertificate.setName("gift1");
+        inDtoGiftCertificate.setDescription("d1");
+        inDtoGiftCertificate.setPrice(11.0F);
+        inDtoGiftCertificate.setDuration(11);
         final String expectedMessage = String.format(
                 rb.getString("giftCertificate.alreadyExists.name"), inDtoGiftCertificate.getName());
         //When

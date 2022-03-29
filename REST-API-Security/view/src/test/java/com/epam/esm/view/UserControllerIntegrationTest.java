@@ -24,17 +24,19 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest()
+@SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class UserControllerTest extends ResponseProvider {
+public class UserControllerIntegrationTest extends ResponseProvider {
 
     @Autowired
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
-
     private ResourceBundle rb;
+
+    final UserDto inDtoUser = new UserDto();
+    final UserDto expectedDtoUser = new UserDto();
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -71,9 +73,12 @@ public class UserControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnUser_On_ReadByIdEndPoint_Admin() throws Exception {
         //Given
-        final UserDto expectedDtoUser = new UserDto(
-                1, "username1", "email1", "password1",
-                Collections.emptySet(), Collections.emptyList());
+        expectedDtoUser.setId(1);
+        expectedDtoUser.setUsername("username1");
+        expectedDtoUser.setEmail("email1");
+        expectedDtoUser.setPassword("password1");
+        expectedDtoUser.setDtoOrders(Collections.emptySet());
+        expectedDtoUser.setDtoRoles(Collections.emptyList());
         //When
         final String response = getOkForGetMethod("/users/1", mockMvc);
         final UserDto outDtoUser = objectMapper.readValue(response, UserDto.class);
@@ -140,8 +145,9 @@ public class UserControllerTest extends ResponseProvider {
     @Test
     public void shouldReturnCreatedUserFor_On_CreateEndPoint_For_Anonymous() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto(null,"username7", "email7", "password7",
-                null, null);
+        inDtoUser.setUsername("username7");
+        inDtoUser.setEmail("email7");
+        inDtoUser.setPassword("password7");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoUser);
         //When
         final String outDtoUserAsString
@@ -156,8 +162,9 @@ public class UserControllerTest extends ResponseProvider {
     @Test
     public void shouldThrowException_On_CreateEndPoint_With_ExistUsername_For_Anonymous() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto(null,"username1", "email8", "password8",
-                null, null);
+        inDtoUser.setUsername("username1");
+        inDtoUser.setEmail("email100");
+        inDtoUser.setPassword("password100");
         final String expectedMessage = rb.getString("user.exists.name");
         //When
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoUser);
@@ -172,6 +179,9 @@ public class UserControllerTest extends ResponseProvider {
         //Given
         final UserDto inDtoUser = new UserDto(null,"username100", "email1", "password8",
                 null, null);
+        inDtoUser.setUsername("username100");
+        inDtoUser.setEmail("email1");
+        inDtoUser.setPassword("password100");
         final String expectedMessage = rb.getString("user.exists.email");
         //When
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoUser);
@@ -185,8 +195,9 @@ public class UserControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldReturnCreatedUserFor_On_CreateEndPoint_For_User() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto(null,"username8", "email8", "password8",
-                null, null);
+        inDtoUser.setUsername("username8");
+        inDtoUser.setEmail("email8");
+        inDtoUser.setPassword("password8");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoUser);
         //When
         final String outDtoUserAsString
@@ -202,8 +213,9 @@ public class UserControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnCreatedUserFor_On_CreateEndPoint_For_Admin() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto(null,"username9", "email9", "password9",
-                null, null);
+        inDtoUser.setUsername("username9");
+        inDtoUser.setEmail("email9");
+        inDtoUser.setPassword("password9");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoUser);
         //When
         final String outDtoUserAsString

@@ -30,13 +30,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class TagControllerTest extends ResponseProvider {
+public class TagControllerIntegrationTest extends ResponseProvider {
 
     @Autowired
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
     private ResourceBundle rb;
+
+    final TagDto inDtoTag = new TagDto();
+    final TagDto expectedDtoTag = new TagDto();
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -51,7 +54,9 @@ public class TagControllerTest extends ResponseProvider {
     @Test
     public void shouldReturnTag_On_ReadByIdEndPoint_ForActiveTag_Anonymous() throws Exception {
         //Given
-        final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
+        expectedDtoTag.setId(1);
+        expectedDtoTag.setName("tag1");
+        expectedDtoTag.setActive(true);
         //When
         final String response = getOkForGetMethod("/tags/1", mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
@@ -93,7 +98,9 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER")
     public void shouldReturnTag_On_ReadByIdEndPoint_For_ActiveTag_User() throws Exception {
         //Given
-        final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
+        expectedDtoTag.setId(1);
+        expectedDtoTag.setName("tag1");
+        expectedDtoTag.setActive(true);
         //When
         final String response = getOkForGetMethod("/tags/1", mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
@@ -138,7 +145,9 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnTag_On_ReadByIdEndPoint_For_ActiveTag_Admin() throws Exception {
         //Given
-        final TagDto expectedDtoTag = new TagDto(1, "tag1", true);
+        expectedDtoTag.setId(1);
+        expectedDtoTag.setName("tag1");
+        expectedDtoTag.setActive(true);
         //When
         final String response = getOkForGetMethod("/tags/1", mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
@@ -150,7 +159,9 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnTag_On_ReadByIdEndPoint_For_DisableTag_Admin() throws Exception {
         //Given
-        final TagDto expectedDtoTag = new TagDto(3, "tag3", false);
+        expectedDtoTag.setId(3);
+        expectedDtoTag.setName("tag3");
+        expectedDtoTag.setActive(false);
         //When
         final String response = getOkForGetMethod("/tags/3", mockMvc);
         final TagDto outDtoTag = objectMapper.readValue(response, TagDto.class);
@@ -299,7 +310,6 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturn_On_CreateEndPoint_For_NewTag_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto();
         inDtoTag.setName("tag9");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         //When
@@ -316,7 +326,6 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_For_ExistTagName_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto();
         inDtoTag.setName("tag1");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         final String expectedMessage = String.format(rb.getString("tag.alreadyExists.name"), inDtoTag.getName());
@@ -331,7 +340,6 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_With_Id_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto();
         inDtoTag.setId(1);
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         final String expectedMessage = rb.getString("validator.id.should.not.passed");
@@ -346,7 +354,6 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_With_EmptyName_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto();
         inDtoTag.setName("");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         final String expectedMessage = rb.getString("validator.tag.name.required");
@@ -361,7 +368,6 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldThrowException_On_CreateEndPoint_With_Active_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto();
         inDtoTag.setName("name");
         inDtoTag.setActive(true);
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
@@ -377,7 +383,6 @@ public class TagControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnTag_On_CreateEndPoint_For_DisableTag_Admin() throws Exception {
         //Given
-        final TagDto inDtoTag = new TagDto();
         inDtoTag.setName("tag8");
         final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
         //When

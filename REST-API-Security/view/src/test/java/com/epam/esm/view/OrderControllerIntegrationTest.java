@@ -26,14 +26,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class OrderControllerTest extends ResponseProvider {
+public class OrderControllerIntegrationTest extends ResponseProvider {
 
     @Autowired
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
-
     private ResourceBundle rb;
+
+    final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto();
+    final UserDto inDtoUser = new UserDto();
+    final OrderDto inDtoOrder = new OrderDto();
+
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -59,12 +63,19 @@ public class OrderControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER", username = "username6")
     public void shouldReturnOrder_On_ReadByIdEndPoint_User() throws Exception {
         //Given
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                8, "gift8", "d8", 8.0F, 8,
-                null, null, true, null);
-        final UserDto inDtoUser = new UserDto(6);
-        final OrderDto inDtoOrder = new OrderDto(
-                1, 1.0F, null, inDtoUser, Collections.singleton(inDtoGiftCertificate));
+        inDtoGiftCertificate.setId(8);
+        inDtoGiftCertificate.setName("gift8");
+        inDtoGiftCertificate.setDescription("d8");
+        inDtoGiftCertificate.setPrice(8.0F);
+        inDtoGiftCertificate.setDuration(8);
+        inDtoGiftCertificate.setActive(true);
+
+        inDtoUser.setId(6);
+
+        inDtoOrder.setId(1);
+        inDtoOrder.setPrice(1.0F);
+        inDtoOrder.setUserDto(inDtoUser);
+        inDtoOrder.setDtoGiftCertificates(Collections.singleton(inDtoGiftCertificate));
         //When
         final String response = getOkForGetMethod("/orders/1", mockMvc);
         final OrderDto outDtoOrder = objectMapper.readValue(response, OrderDto.class);
@@ -87,13 +98,19 @@ public class OrderControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN", username = "username1")
     public void shouldReturnOrder_On_ReadByIdEndPoint_Admin() throws Exception {
         //Given
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto(
-                8, "gift8", "d8", 8.0F, 8,
-                null, null, true, null);
-        final UserDto inDtoUser = new UserDto();
+        inDtoGiftCertificate.setId(8);
+        inDtoGiftCertificate.setName("gift8");
+        inDtoGiftCertificate.setDescription("d8");
+        inDtoGiftCertificate.setPrice(8.0F);
+        inDtoGiftCertificate.setDuration(8);
+        inDtoGiftCertificate.setActive(true);
+
         inDtoUser.setId(6);
-        final OrderDto inDtoOrder = new OrderDto(
-                1, 1.0F, null, inDtoUser, Collections.singleton(inDtoGiftCertificate));
+
+        inDtoOrder.setId(1);
+        inDtoOrder.setPrice(1.0F);
+        inDtoOrder.setUserDto(inDtoUser);
+        inDtoOrder.setDtoGiftCertificates(Collections.singleton(inDtoGiftCertificate));
         //When
         final String response = getOkForGetMethod("/orders/1", mockMvc);
         final OrderDto outDtoOrder = objectMapper.readValue(response, OrderDto.class);
@@ -127,15 +144,14 @@ public class OrderControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER", username = "username1")
     public void shouldThrowException_On_CreateEndPoint_With_NotPersistedGiftCertificate_For_User() throws Exception {
         //Given
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto();
         inDtoGiftCertificate.setId(100);
-        final OrderDto inDtoOrder = new OrderDto(
-                null, null, null, null, Collections.singleton(inDtoGiftCertificate));
+        inDtoOrder.setDtoGiftCertificates(Collections.singleton(inDtoGiftCertificate));
+
         final String inDtoOrderAsString = objectMapper.writeValueAsString(inDtoOrder);
         //Given
         final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 100);
         //When
-        final String response = getNotFoundForPostMethod("/orders",inDtoOrderAsString, mockMvc);
+        final String response = getNotFoundForPostMethod("/orders", inDtoOrderAsString, mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -144,17 +160,16 @@ public class OrderControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN", username = "username1")
     public void shouldThrowException_On_CreateEndPoint_With_NotPersistedUser_For_Admin() throws Exception {
         //Given
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto();
-        inDtoGiftCertificate.setId(1);
-        final UserDto inDtoUser = new UserDto();
         inDtoUser.setId(100);
-        final OrderDto inDtoOrder = new OrderDto(
-                null, null, null, inDtoUser, Collections.singleton(inDtoGiftCertificate));
+        inDtoGiftCertificate.setId(1);
+        inDtoOrder.setUserDto(inDtoUser);
+        inDtoOrder.setDtoGiftCertificates(Collections.singleton(inDtoGiftCertificate));
+
         final String inDtoOrderAsString = objectMapper.writeValueAsString(inDtoOrder);
         //Given
         final String expectedExceptionMessage = String.format(rb.getString("user.notFound.id"), 100);
         //When
-        final String response = getNotFoundForPostMethod("/orders",inDtoOrderAsString, mockMvc);
+        final String response = getNotFoundForPostMethod("/orders", inDtoOrderAsString, mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
@@ -163,17 +178,16 @@ public class OrderControllerTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_ADMIN", username = "username1")
     public void shouldThrowException_On_CreateEndPoint_With_NotGiftCertificate_For_Admin() throws Exception {
         //Given
-        final GiftCertificateDto inDtoGiftCertificate = new GiftCertificateDto();
-        inDtoGiftCertificate.setId(100);
-        final UserDto inDtoUser = new UserDto();
         inDtoUser.setId(1);
-        final OrderDto inDtoOrder = new OrderDto(
-                null, null, null, inDtoUser, Collections.singleton(inDtoGiftCertificate));
+        inDtoGiftCertificate.setId(100);
+        inDtoOrder.setUserDto(inDtoUser);
+        inDtoOrder.setDtoGiftCertificates(Collections.singleton(inDtoGiftCertificate));
+
         final String inDtoOrderAsString = objectMapper.writeValueAsString(inDtoOrder);
         //Given
         final String expectedExceptionMessage = String.format(rb.getString("giftCertificate.notFound.id"), 100);
         //When
-        final String response = getNotFoundForPostMethod("/orders",inDtoOrderAsString, mockMvc);
+        final String response = getNotFoundForPostMethod("/orders", inDtoOrderAsString, mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }
