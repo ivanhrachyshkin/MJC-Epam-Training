@@ -19,5 +19,5 @@ public interface GiftCertificateService {
 
     GiftCertificateDto update(GiftCertificateDto giftCertificateDto);
 
-    void deleteById(int id);
+    GiftCertificateDto deleteById(int id);
 }

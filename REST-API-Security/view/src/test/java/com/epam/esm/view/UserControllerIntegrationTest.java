@@ -177,7 +177,7 @@ public class UserControllerIntegrationTest extends ResponseProvider {
     @Test
     public void shouldThrowException_On_CreateEndPoint_With_ExistEmail_For_Anonymous() throws Exception {
         //Given
-        final UserDto inDtoUser = new UserDto(null,"username100", "email1", "password8",
+        final UserDto inDtoUser = new UserDto(null, "username100", "email1", "password8",
                 null, null);
         inDtoUser.setUsername("username100");
         inDtoUser.setEmail("email1");

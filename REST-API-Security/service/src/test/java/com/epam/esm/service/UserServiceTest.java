@@ -51,7 +51,9 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
     private UserServiceImpl userService;
 
     @Mock
-    private User user;
+    private User inUser;
+    @Mock
+    private User outUser;
     @Mock
     private Role userRole;
     @Mock
@@ -79,11 +81,11 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
         //Given
         when(userRepository.findByUsername(userDto.getUsername())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(userDto.getEmail())).thenReturn(Optional.empty());
-        when(mapper.dtoToModel(userDto)).thenReturn(user);
+        when(mapper.dtoToModel(userDto)).thenReturn(inUser);
         when(passwordEncoder.encode(userDto.getPassword())).thenReturn("encoded");
         when(roleRepository.findByRoleName(Role.Roles.ROLE_USER)).thenReturn(userRole);
-        when(userRepository.save(user)).thenReturn(user);
-        when(mapper.modelToDto(user)).thenReturn(userDto);
+        when(userRepository.save(inUser)).thenReturn(outUser);
+        when(mapper.modelToDto(outUser)).thenReturn(userDto);
         //When
         final UserDto actualDtoUser = userService.create(userDto);
         //Then
@@ -93,8 +95,8 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
         verify(userRepository, times(1)).findByEmail(userDto.getEmail());
         verify(mapper, times(1)).dtoToModel(userDto);
         verify(passwordEncoder, only()).encode(userDto.getPassword());
-        verify(userRepository, times(1)).save(user);
-        verify(mapper, times(1)).modelToDto(user);
+        verify(userRepository, times(1)).save(inUser);
+        verify(mapper, times(1)).modelToDto(outUser);
         verifyNoMoreInteractions(userRepository);
         verifyNoMoreInteractions(mapper);
     }
@@ -102,7 +104,7 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
     @Test
     void shouldThrowExceptionUsernameExist_On_Create() {
         //Given
-        when(userRepository.findByUsername(userDto.getUsername())).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername(userDto.getUsername())).thenReturn(Optional.of(outUser));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("user.exists.name"),
                 HttpStatus.CONFLICT, properties.getUser());
@@ -119,10 +121,10 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
     void shouldThrowExceptionEmailExist_On_Create() {
         //Given
         when(userRepository.findByUsername(userDto.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findByEmail(userDto.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(userDto.getEmail())).thenReturn(Optional.of(outUser));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("user.exists.email"),
-                HttpStatus.CONFLICT, properties.getUser(), user.getUsername());
+                HttpStatus.CONFLICT, properties.getUser(), outUser.getUsername());
         //When
         final ServiceException actualException = assertThrows(ServiceException.class,
                 () -> userService.create(userDto));
@@ -137,14 +139,14 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
     @Test
     void shouldReturnUser_On_ReadOne() {
         //Given
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(mapper.modelToDto(user)).thenReturn(userDto);
+        when(userRepository.findById(1)).thenReturn(Optional.of(outUser));
+        when(mapper.modelToDto(outUser)).thenReturn(userDto);
         //When
         final UserDto actualDtoUser = userService.readOne(1);
         //Then
         assertEquals(userDto, actualDtoUser);
         verify(userRepository, only()).findById(1);
-        verify(mapper, only()).modelToDto(user);
+        verify(mapper, only()).modelToDto(outUser);
     }
 
     @Test
@@ -165,29 +167,29 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
     @Test
     void shouldReturnUser_On_ReadOneByName() {
         //Given
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-        when(mapper.modelToDto(user)).thenReturn(userDto);
+        when(userRepository.findByUsername(inUser.getUsername())).thenReturn(Optional.of(outUser));
+        when(mapper.modelToDto(outUser)).thenReturn(userDto);
         //When
-        final UserDto actualDtoUser = userService.readOneByName(user.getUsername());
+        final UserDto actualDtoUser = userService.readOneByName(inUser.getUsername());
         //Then
         assertEquals(userDto, actualDtoUser);
-        verify(userRepository, only()).findByUsername(user.getUsername());
-        verify(mapper, only()).modelToDto(user);
+        verify(userRepository, only()).findByUsername(inUser.getUsername());
+        verify(mapper, only()).modelToDto(outUser);
     }
 
     @Test
     void shouldThrowException_On_ReadOneByName() {
         //Given
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(inUser.getUsername())).thenReturn(Optional.empty());
         final ServiceException expectedException = new ServiceException(
                 rb.getString("user.notFound.name"),
-                HttpStatus.NOT_FOUND, properties.getUser(), user.getUsername());
+                HttpStatus.NOT_FOUND, properties.getUser(), inUser.getUsername());
         //When
         final ServiceException actualException = assertThrows(ServiceException.class,
-                () -> userService.readOneByName(user.getUsername()));
+                () -> userService.readOneByName(inUser.getUsername()));
         //Then
         assertServiceExceptions(expectedException, actualException);
-        verify(userRepository, only()).findByUsername(user.getUsername());
+        verify(userRepository, only()).findByUsername(inUser.getUsername());
     }
 
     @Test

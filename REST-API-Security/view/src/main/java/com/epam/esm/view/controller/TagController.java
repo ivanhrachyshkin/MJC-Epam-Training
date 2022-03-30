@@ -11,7 +11,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,9 +61,10 @@ public class TagController {
 
     @Secured({ADMIN})
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable final int id) {
-        tagService.deleteById(id);
-        return ResponseEntity.noContent().build();//todo return deleted
+    @ResponseStatus(HttpStatus.OK)
+    public TagDto deleteById(@PathVariable final int id) {
+       final TagDto deletedTagDto = tagService.deleteById(id);
+       return hateoasCreator.linkTagDtoOne(deletedTagDto);
     }
 
     private void setLocationHeader(final TagDto tagDto) {

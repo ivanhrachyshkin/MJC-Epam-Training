@@ -58,21 +58,19 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
     private OrderServiceImpl orderService;
 
     @Mock
-    private Order order;
+    private Order inOrder;
     @Mock
     private Page<Order> orders;
     @Mock
     private Page<OrderDto> dtoOrders;
     @Mock
-    private Order createdOrder;
+    private Order outOrder;
     @Mock
-    private OrderDto dtoOrder;
+    private OrderDto inDtoOrder;
     @Mock
-    private OrderDto dtoCreatedOrder;
+    private OrderDto outDtoOrder;
     @Mock
     private User authUser;
-    @Mock
-    private User orderUser;
     @Mock
     private UserDto dtoOderUser;
     @Mock
@@ -99,29 +97,29 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         when(userProvider.getUserFromAuthentication()).thenReturn(authUser);
         when(authorityValidator.isAdmin()).thenReturn(true);
         //Check if user exists by userId in dtoOrder
-        when(dtoOrder.getUserDto()).thenReturn(dtoOderUser);
+        when(inDtoOrder.getUserDto()).thenReturn(dtoOderUser);
         //Map dtoOrder to order
-        when(mapper.dtoToModel(dtoOrder)).thenReturn(order);
+        when(mapper.dtoToModel(inDtoOrder)).thenReturn(inOrder);
         //Check if certificate exists by certificateId in dtoOrder
-        when(order.getGiftCertificates()).thenReturn(Collections.singleton(orderGiftCertificate));
+        when(inOrder.getGiftCertificates()).thenReturn(Collections.singleton(orderGiftCertificate));
         when(giftCertificateService.checkExistActive(orderGiftCertificate.getId()))
                 .thenReturn(orderGiftCertificate);
         //Save order
-        when(orderRepository.save(order)).thenReturn(createdOrder);
+        when(orderRepository.save(inOrder)).thenReturn(outOrder);
         //Map order to dtoOrder
-        when(mapper.modelToDto(createdOrder)).thenReturn(dtoCreatedOrder);
+        when(mapper.modelToDto(outOrder)).thenReturn(outDtoOrder);
         //When
-        final OrderDto actualOrderDto = orderService.create(dtoOrder);
+        final OrderDto actualOrderDto = orderService.create(inDtoOrder);
         //Then
-        assertEquals(dtoCreatedOrder, actualOrderDto);
+        assertEquals(outDtoOrder, actualOrderDto);
         verify(userProvider, only()).getUserFromAuthentication();
         verify(authorityValidator, only()).isAdmin();
-        verify(orderValidator, only()).createValidate(dtoOrder, true);
-        verify(userService, only()).checkExist(dtoOrder.getUserDto().getId());
-        verify(mapper, times(1)).dtoToModel(dtoOrder);
+        verify(orderValidator, only()).createValidate(inDtoOrder, true);
+        verify(userService, only()).checkExist(inDtoOrder.getUserDto().getId());
+        verify(mapper, times(1)).dtoToModel(inDtoOrder);
         verify(giftCertificateService, only()).checkExistActive(orderGiftCertificate.getId());
-        verify(orderRepository, only()).save(order);
-        verify(mapper, times(1)).modelToDto(createdOrder);
+        verify(orderRepository, only()).save(inOrder);
+        verify(mapper, times(1)).modelToDto(outOrder);
         verifyNoMoreInteractions(mapper);
     }
 
@@ -132,26 +130,26 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         when(userProvider.getUserFromAuthentication()).thenReturn(authUser);
         when(authorityValidator.isAdmin()).thenReturn(false);
         //Map dtoOrder to order
-        when(mapper.dtoToModel(dtoOrder)).thenReturn(order);
+        when(mapper.dtoToModel(inDtoOrder)).thenReturn(inOrder);
         //Check if certificate exists by certificateId in dtoOrder
-        when(order.getGiftCertificates()).thenReturn(Collections.singleton(orderGiftCertificate));
+        when(inOrder.getGiftCertificates()).thenReturn(Collections.singleton(orderGiftCertificate));
         when(giftCertificateService.checkExistActive(orderGiftCertificate.getId()))
                 .thenReturn(orderGiftCertificate);
         //Save order
-        when(orderRepository.save(order)).thenReturn(createdOrder);
+        when(orderRepository.save(inOrder)).thenReturn(outOrder);
         //Map order to dtoOrder
-        when(mapper.modelToDto(createdOrder)).thenReturn(dtoCreatedOrder);
+        when(mapper.modelToDto(outOrder)).thenReturn(outDtoOrder);
         //When
-        final OrderDto actualOrderDto = orderService.create(dtoOrder);
+        final OrderDto actualOrderDto = orderService.create(inDtoOrder);
         //Then
-        assertEquals(dtoCreatedOrder, actualOrderDto);
+        assertEquals(outDtoOrder, actualOrderDto);
         verify(userProvider, only()).getUserFromAuthentication();
         verify(authorityValidator, only()).isAdmin();
-        verify(orderValidator, only()).createValidate(dtoOrder, false);
-        verify(mapper, times(1)).dtoToModel(dtoOrder);
+        verify(orderValidator, only()).createValidate(inDtoOrder, false);
+        verify(mapper, times(1)).dtoToModel(inDtoOrder);
         verify(giftCertificateService, only()).checkExistActive(orderGiftCertificate.getId());
-        verify(orderRepository, only()).save(order);
-        verify(mapper, times(1)).modelToDto(createdOrder);
+        verify(orderRepository, only()).save(inOrder);
+        verify(mapper, times(1)).modelToDto(outOrder);
         verifyNoMoreInteractions(mapper);
     }
 
@@ -162,20 +160,20 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         when(userProvider.getUserFromAuthentication()).thenReturn(authUser);
         when(authorityValidator.isAdmin()).thenReturn(true);
         //Check if user exists by userId in dtoOrder
-        when(dtoOrder.getUserDto()).thenReturn(dtoOderUser);
+        when(inDtoOrder.getUserDto()).thenReturn(dtoOderUser);
         final ServiceException expectedException = new ServiceException(
                 rb.getString("user.notFound.id"),
                 HttpStatus.NOT_FOUND, properties.getUser(), dtoOderUser.getId());
-        when(userService.checkExist(dtoOrder.getUserDto().getId())).thenThrow(expectedException);
+        when(userService.checkExist(inDtoOrder.getUserDto().getId())).thenThrow(expectedException);
         //When
         final ServiceException actualException
-                = assertThrows(ServiceException.class, () -> orderService.create(dtoOrder));
+                = assertThrows(ServiceException.class, () -> orderService.create(inDtoOrder));
         //Then
         assertServiceExceptions(expectedException, actualException);
         verify(userProvider, only()).getUserFromAuthentication();
         verify(authorityValidator, only()).isAdmin();
-        verify(orderValidator, only()).createValidate(dtoOrder, true);
-        verify(userService, only()).checkExist(dtoOrder.getUserDto().getId());
+        verify(orderValidator, only()).createValidate(inDtoOrder, true);
+        verify(userService, only()).checkExist(inDtoOrder.getUserDto().getId());
     }
 
     @Test
@@ -185,25 +183,25 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         when(userProvider.getUserFromAuthentication()).thenReturn(authUser);
         when(authorityValidator.isAdmin()).thenReturn(true);
         //Check if user exists by userId in dtoOrder
-        when(dtoOrder.getUserDto()).thenReturn(dtoOderUser);
+        when(inDtoOrder.getUserDto()).thenReturn(dtoOderUser);
         //Map dtoOrder to order
-        when(mapper.dtoToModel(dtoOrder)).thenReturn(order);
+        when(mapper.dtoToModel(inDtoOrder)).thenReturn(inOrder);
         //Check if certificate exists by certificateId in dtoOrder
-        when(order.getGiftCertificates()).thenReturn(Collections.singleton(orderGiftCertificate));
+        when(inOrder.getGiftCertificates()).thenReturn(Collections.singleton(orderGiftCertificate));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("giftCertificate.notFound.id"),
                 HttpStatus.NOT_FOUND, properties.getGift(), orderGiftCertificate.getId());
         when(giftCertificateService.checkExistActive(orderGiftCertificate.getId())).thenThrow(expectedException);
         //When
         final ServiceException actualException
-                = assertThrows(ServiceException.class, () -> orderService.create(dtoOrder));
+                = assertThrows(ServiceException.class, () -> orderService.create(inDtoOrder));
         //Then
         assertServiceExceptions(expectedException, actualException);
         verify(userProvider, only()).getUserFromAuthentication();
         verify(authorityValidator, only()).isAdmin();
-        verify(orderValidator, only()).createValidate(dtoOrder, true);
-        verify(userService, only()).checkExist(dtoOrder.getUserDto().getId());
-        verify(mapper, only()).dtoToModel(dtoOrder);
+        verify(orderValidator, only()).createValidate(inDtoOrder, true);
+        verify(userService, only()).checkExist(inDtoOrder.getUserDto().getId());
+        verify(mapper, only()).dtoToModel(inDtoOrder);
         // verify(giftCertificateRepository, only()).findByIdAndActive(orderGiftCertificate.getId(), true);
         verifyNoMoreInteractions(mapper);
     }
@@ -215,22 +213,22 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         when(userProvider.getUserFromAuthentication()).thenReturn(authUser);
         when(authorityValidator.isAdmin()).thenReturn(false);
         //Map dtoOrder to order
-        when(mapper.dtoToModel(dtoOrder)).thenReturn(order);
+        when(mapper.dtoToModel(inDtoOrder)).thenReturn(inOrder);
         //Check if certificate exists by certificateId in dtoOrder
-        when(order.getGiftCertificates()).thenReturn(Collections.singleton(orderGiftCertificate));
+        when(inOrder.getGiftCertificates()).thenReturn(Collections.singleton(orderGiftCertificate));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("giftCertificate.notFound.id"),
                 HttpStatus.NOT_FOUND, properties.getGift(), orderGiftCertificate.getId());
         when(giftCertificateService.checkExistActive(orderGiftCertificate.getId())).thenThrow(expectedException);
         //When
         final ServiceException actualException
-                = assertThrows(ServiceException.class, () -> orderService.create(dtoOrder));
+                = assertThrows(ServiceException.class, () -> orderService.create(inDtoOrder));
         //Then
         assertServiceExceptions(expectedException, actualException);
         verify(userProvider, only()).getUserFromAuthentication();
         verify(authorityValidator, only()).isAdmin();
-        verify(orderValidator, only()).createValidate(dtoOrder, false);
-        verify(mapper, only()).dtoToModel(dtoOrder);
+        verify(orderValidator, only()).createValidate(inDtoOrder, false);
+        verify(mapper, only()).dtoToModel(inDtoOrder);
         verify(giftCertificateService, only()).checkExistActive(orderGiftCertificate.getId());
     }
 
@@ -273,17 +271,17 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         //Given
         when(userProvider.getUserFromAuthentication()).thenReturn(authUser);
         when(authorityValidator.isAdmin()).thenReturn(true);
-        when(orderRepository.findById(1)).thenReturn(Optional.of(order));
-        when(mapper.modelToDto(order)).thenReturn(dtoOrder);
+        when(orderRepository.findById(1)).thenReturn(Optional.of(inOrder));
+        when(mapper.modelToDto(inOrder)).thenReturn(inDtoOrder);
         //When
         final OrderDto actualDtoOrder = orderService.readOne(1);
         //Then
-        assertEquals(dtoOrder, actualDtoOrder);
+        assertEquals(inDtoOrder, actualDtoOrder);
         verify(userProvider, only()).getUserFromAuthentication();
         verify(orderValidator, only()).validateId(1);
         verify(authorityValidator, only()).isAdmin();
         verify(orderRepository, only()).findById(1);
-        verify(mapper, only()).modelToDto(order);
+        verify(mapper, only()).modelToDto(inOrder);
     }
 
     @Test
@@ -291,17 +289,17 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         //Given
         when(userProvider.getUserFromAuthentication()).thenReturn(authUser);
         when(authorityValidator.isAdmin()).thenReturn(false);
-        when(orderRepository.findOrderByUserIdAndId(authUser.getId(), 1)).thenReturn(Optional.of(order));
-        when(mapper.modelToDto(order)).thenReturn(dtoOrder);
+        when(orderRepository.findOrderByUserIdAndId(authUser.getId(), 1)).thenReturn(Optional.of(inOrder));
+        when(mapper.modelToDto(inOrder)).thenReturn(inDtoOrder);
         //When
         final OrderDto actualDtoOrder = orderService.readOne(1);
         //Then
-        assertEquals(dtoOrder, actualDtoOrder);
+        assertEquals(inDtoOrder, actualDtoOrder);
         verify(userProvider, only()).getUserFromAuthentication();
         verify(orderValidator, only()).validateId(1);
         verify(authorityValidator, only()).isAdmin();
         verify(orderRepository, only()).findOrderByUserIdAndId(authUser.getId(), 1);
-        verify(mapper, only()).modelToDto(order);
+        verify(mapper, only()).modelToDto(inOrder);
     }
 
     @Test
@@ -347,15 +345,15 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
     @Test
     void shouldReturnOrder_On_readOneByUserIdAndOrderId() {
         //Given
-        when(orderRepository.findOrderByUserIdAndId(1, 1)).thenReturn(Optional.of(order));
-        when(mapper.modelToDto(order)).thenReturn(dtoOrder);
+        when(orderRepository.findOrderByUserIdAndId(1, 1)).thenReturn(Optional.of(inOrder));
+        when(mapper.modelToDto(inOrder)).thenReturn(inDtoOrder);
         //When
         final OrderDto actualDtoOrder = orderService.readOneByUserIdAndOrderId(1, 1);
         //Then
-        assertEquals(dtoOrder, actualDtoOrder);
+        assertEquals(inDtoOrder, actualDtoOrder);
         verify(orderValidator, times(2)).validateId(1);
         verify(orderRepository, only()).findOrderByUserIdAndId(1, 1);
-        verify(mapper, only()).modelToDto(order);
+        verify(mapper, only()).modelToDto(inOrder);
         verifyNoMoreInteractions(orderValidator);
     }
 

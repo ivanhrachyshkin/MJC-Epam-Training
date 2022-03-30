@@ -35,6 +35,11 @@ public abstract class ResponseProvider {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn().getResponse().getContentAsString();
     }
 
+    public String getOkForDeleteMethod(final String url, final MockMvc mockMvc) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.delete(url))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+    }
+
     public String getUnauthorizedForDeleteMethod(final String url, final MockMvc mockMvc) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.delete(url))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized()).andReturn().getResponse().getContentAsString();

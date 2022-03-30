@@ -14,5 +14,5 @@ public interface TagService {
 
     Page<TagDto> readMostUsed(Pageable pageable);
 
-    void deleteById(int id);
+    TagDto deleteById(int id);
 }

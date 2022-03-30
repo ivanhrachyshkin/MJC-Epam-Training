@@ -305,11 +305,22 @@ public class GiftCertificateControllerIntegrationTest extends ResponseProvider {
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnDeleted_On_DeleteEndPoint_For_ActiveGiftCertificate_Admin() throws Exception {
+        inDtoTag.setId(2);
+        inDtoTag.setName("tag2");
+        inDtoTag.setActive(true);
+        expectedDtoGiftCertificate.setId(7);
+        expectedDtoGiftCertificate.setName("gift7");
+        expectedDtoGiftCertificate.setDescription("d7");
+        expectedDtoGiftCertificate.setPrice(7.0F);
+        expectedDtoGiftCertificate.setDuration(7);
+        expectedDtoGiftCertificate.setActive(false);
+        expectedDtoGiftCertificate.setDtoTags(Collections.singleton(inDtoTag));
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.delete("/gifts/7"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent()).andReturn().getResponse().getContentAsString();
+        final String outDtoGiftCertificateAsString = getOkForDeleteMethod("/gifts/7", mockMvc);
+        final GiftCertificateDto outDtoGiftCertificate
+                = objectMapper.readValue(outDtoGiftCertificateAsString, GiftCertificateDto.class);
         //Then
-        // todo return gift
+        assertEquals(expectedDtoGiftCertificate, outDtoGiftCertificate);
     }
 
     @Test

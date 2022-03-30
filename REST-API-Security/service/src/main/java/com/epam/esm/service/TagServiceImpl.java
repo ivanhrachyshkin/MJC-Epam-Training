@@ -69,11 +69,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public void deleteById(final int id) {
+    public TagDto deleteById(final int id) {
         tagValidator.validateId(id);
         final Tag tag = checkExistActive(id);
         tag.setActive(false);
-        tagRepository.save(tag);
+        final Tag deletedTag = tagRepository.save(tag);
+        return mapper.modelToDto(deletedTag);
     }
 
     public void prepareTagsForGiftCertificate(final Set<Tag> rawTags) {

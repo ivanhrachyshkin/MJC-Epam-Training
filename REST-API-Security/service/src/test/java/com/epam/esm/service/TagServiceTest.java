@@ -248,12 +248,16 @@ public class TagServiceTest extends AssertionsProvider<TagDto> {
     void shouldDelete_On_Delete_() {
         //Given
         when(tagRepository.findByIdAndActive(1, true)).thenReturn(Optional.of(inputTag));
+        when(tagRepository.save(inputTag)).thenReturn(outputTag);
+        when(mapper.modelToDto(outputTag)).thenReturn(outputDtoTag);
         //When
-        tagService.deleteById(1);
+        final TagDto actualTagDto = tagService.deleteById(1);
         //Then
+        assertEquals(outputDtoTag, actualTagDto);
         verify(tagValidator, only()).validateId(1);
         verify(tagRepository, times(1)).findByIdAndActive(1, true);
         verify(tagRepository, times(1)).save(inputTag);
+        verify(mapper, only()).modelToDto(outputTag);
         verifyNoMoreInteractions(tagRepository);
     }
 

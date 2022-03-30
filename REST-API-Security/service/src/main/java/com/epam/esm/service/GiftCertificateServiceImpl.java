@@ -92,11 +92,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public void deleteById(final int id) {
+    public GiftCertificateDto deleteById(final int id) {
         giftCertificateValidator.validateId(id);
         final GiftCertificate giftCertificate = checkExistActive(id);
         giftCertificate.setActive(false);
-        giftCertificateRepository.save(giftCertificate);
+       final GiftCertificate deletedGiftCertificate = giftCertificateRepository.save(giftCertificate);
+        return mapper.modelToDto(deletedGiftCertificate);
     }
 
     public GiftCertificate checkExistActive(final int id) {

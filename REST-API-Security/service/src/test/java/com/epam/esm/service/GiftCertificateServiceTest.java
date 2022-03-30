@@ -59,17 +59,17 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     private GiftCertificateServiceImpl giftCertificateService;
 
     @Mock
-    private GiftCertificate inputGiftCertificate;
+    private GiftCertificate inGiftCertificate;
     @Mock
-    private GiftCertificate outputGiftCertificate;
+    private GiftCertificate outGiftCertificate;
     @Mock
-    private GiftCertificateDto dtoInputGiftCertificate;
+    private GiftCertificateDto inDtoGiftCertificate;
     @Mock
-    private GiftCertificateDto dtoOutputGiftCertificate;
+    private GiftCertificateDto outDtoGiftCertificate;
     @Mock
-    private Page<GiftCertificate> outputGiftCertificates;
+    private Page<GiftCertificate> outGiftCertificates;
     @Mock
-    private Page<GiftCertificateDto> dtoOutputGiftCertificates;
+    private Page<GiftCertificateDto> outDtoGiftCertificates;
 
     @Mock
     private Tag inputTag;
@@ -94,22 +94,22 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     @Test
     void shouldReturnCreatedGiftCertificate_On_CreateNewGiftCertificateWithNewTag() {
         //Given
-        when(inputGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
+        when(inGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
-        when(mapper.dtoToModel(dtoInputGiftCertificate)).thenReturn(inputGiftCertificate);
-        when(giftCertificateRepository.findByName(inputGiftCertificate.getName())).thenReturn(Optional.empty());
-        when(giftCertificateRepository.save(inputGiftCertificate)).thenReturn(outputGiftCertificate);
-        when(mapper.modelToDto(outputGiftCertificate)).thenReturn(dtoOutputGiftCertificate);
+        when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
+        when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.empty());
+        when(giftCertificateRepository.save(inGiftCertificate)).thenReturn(outGiftCertificate);
+        when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
         //When
-        final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.create(dtoInputGiftCertificate);
+        final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.create(inDtoGiftCertificate);
         //Then
-        assertEquals(dtoOutputGiftCertificate, actualDtoGiftCertificate);
-        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.POST.name());
-        verify(mapper, times(1)).dtoToModel(dtoInputGiftCertificate);
-        verify(tagService, only()).prepareTagsForGiftCertificate(inputGiftCertificate.getTags());
-        verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
-        verify(giftCertificateRepository, times(1)).save(inputGiftCertificate);
-        verify(mapper, times(1)).modelToDto(outputGiftCertificate);
+        assertEquals(outDtoGiftCertificate, actualDtoGiftCertificate);
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
+        verify(mapper, times(1)).dtoToModel(inDtoGiftCertificate);
+        verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
+        verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
+        verify(giftCertificateRepository, times(1)).save(inGiftCertificate);
+        verify(mapper, times(1)).modelToDto(outGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
         verifyNoMoreInteractions(mapper);
     }
@@ -117,22 +117,22 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     @Test
     void shouldReturnCreatedGiftCertificate_On_CreateNewGiftCertificateWithOldTag() {
         //Given
-        when(inputGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
+        when(inGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
-        when(mapper.dtoToModel(dtoInputGiftCertificate)).thenReturn(inputGiftCertificate);
-        when(giftCertificateRepository.findByName(inputGiftCertificate.getName())).thenReturn(Optional.empty());
-        when(giftCertificateRepository.save(inputGiftCertificate)).thenReturn(outputGiftCertificate);
-        when(mapper.modelToDto(outputGiftCertificate)).thenReturn(dtoOutputGiftCertificate);
+        when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
+        when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.empty());
+        when(giftCertificateRepository.save(inGiftCertificate)).thenReturn(outGiftCertificate);
+        when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
         //When
-        final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.create(dtoInputGiftCertificate);
+        final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.create(inDtoGiftCertificate);
         //Then
-        assertEquals(dtoOutputGiftCertificate, actualDtoGiftCertificate);
-        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.POST.name());
-        verify(mapper, times(1)).dtoToModel(dtoInputGiftCertificate);
-        verify(tagService, only()).prepareTagsForGiftCertificate(inputGiftCertificate.getTags());
-        verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
-        verify(giftCertificateRepository, times(1)).save(inputGiftCertificate);
-        verify(mapper, times(1)).modelToDto(outputGiftCertificate);
+        assertEquals(outDtoGiftCertificate, actualDtoGiftCertificate);
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
+        verify(mapper, times(1)).dtoToModel(inDtoGiftCertificate);
+        verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
+        verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
+        verify(giftCertificateRepository, times(1)).save(inGiftCertificate);
+        verify(mapper, times(1)).modelToDto(outGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
         verifyNoMoreInteractions(mapper);
     }
@@ -140,23 +140,23 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     @Test
     void shouldThrowServiceException_On_Create() {
         //Given
-        when(inputGiftCertificate.getActive()).thenReturn(true);
-        when(inputGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
+        when(inGiftCertificate.getActive()).thenReturn(true);
+        when(inGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
-        when(mapper.dtoToModel(dtoInputGiftCertificate)).thenReturn(inputGiftCertificate);
-        when(giftCertificateRepository.findByName(inputGiftCertificate.getName())).thenReturn(Optional.of(inputGiftCertificate));
+        when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
+        when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.of(inGiftCertificate));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("giftCertificate.alreadyExists.name"),
-                HttpStatus.CONFLICT, properties.getGift(), inputGiftCertificate.getName());
+                HttpStatus.CONFLICT, properties.getGift(), inGiftCertificate.getName());
         //When
         final ServiceException actualException = assertThrows(ServiceException.class,
-                () -> giftCertificateService.create(dtoInputGiftCertificate));
+                () -> giftCertificateService.create(inDtoGiftCertificate));
         //Then
         assertServiceExceptions(expectedException, actualException);
-        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.POST.name());
-        verify(mapper, only()).dtoToModel(dtoInputGiftCertificate);
-        verify(tagService, only()).prepareTagsForGiftCertificate(inputGiftCertificate.getTags());
-        verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
+        verify(mapper, only()).dtoToModel(inDtoGiftCertificate);
+        verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
+        verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
         verifyNoMoreInteractions(giftCertificateRepository);
     }
 
@@ -170,16 +170,16 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
                 .findAll(specification
                         .giftCertificateFiltered(
                                 Collections.emptyList(), "name", "desc", true), page))
-                .thenReturn(outputGiftCertificates);
-        when(mapper.modelsToDto(outputGiftCertificates)).thenReturn(dtoOutputGiftCertificates);
+                .thenReturn(outGiftCertificates);
+        when(mapper.modelsToDto(outGiftCertificates)).thenReturn(outDtoGiftCertificates);
         //When
         final Page<GiftCertificateDto> actualDtoGiftCertificates
                 = giftCertificateService.readAll(Collections.emptyList(), container, page);
         //Then
-        assertPages(dtoOutputGiftCertificates, actualDtoGiftCertificates);
+        assertPages(outDtoGiftCertificates, actualDtoGiftCertificates);
         verify(giftCertificateValidator, only()).readAllValidate(Collections.emptyList(), container);
         verify(pageValidator, only()).paginationValidate(page);
-        verify(mapper, only()).modelsToDto(outputGiftCertificates);
+        verify(mapper, only()).modelsToDto(outGiftCertificates);
     }
 
     @Test
@@ -192,16 +192,16 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
                 .findAll(specification
                         .giftCertificateFiltered(
                                 Collections.emptyList(), "name", "desc", false), page))
-                .thenReturn(outputGiftCertificates);
-        when(mapper.modelsToDto(outputGiftCertificates)).thenReturn(dtoOutputGiftCertificates);
+                .thenReturn(outGiftCertificates);
+        when(mapper.modelsToDto(outGiftCertificates)).thenReturn(outDtoGiftCertificates);
         //When
         final Page<GiftCertificateDto> actualDtoGiftCertificates
                 = giftCertificateService.readAll(Collections.emptyList(), container, page);
         //Then
-        assertPages(dtoOutputGiftCertificates, actualDtoGiftCertificates);
+        assertPages(outDtoGiftCertificates, actualDtoGiftCertificates);
         verify(giftCertificateValidator, only()).readAllValidate(Collections.emptyList(), container);
         verify(pageValidator, only()).paginationValidate(page);
-        verify(mapper, only()).modelsToDto(outputGiftCertificates);
+        verify(mapper, only()).modelsToDto(outGiftCertificates);
     }
 
     @Test
@@ -209,15 +209,15 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         //Given
         when(authorityValidator.isAdmin()).thenReturn(false);
         when(giftCertificateRepository.findByIdAndActive(1, true))
-                .thenReturn(Optional.of(outputGiftCertificate));
-        when(mapper.modelToDto(outputGiftCertificate)).thenReturn(dtoOutputGiftCertificate);
+                .thenReturn(Optional.of(outGiftCertificate));
+        when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
         //When
         final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.readOne(1);
         //Then
-        assertEquals(dtoOutputGiftCertificate, actualDtoGiftCertificate);
+        assertEquals(outDtoGiftCertificate, actualDtoGiftCertificate);
         verify(authorityValidator, only()).isAdmin();
         verify(giftCertificateRepository, only()).findByIdAndActive(1, true);
-        verify(mapper, only()).modelToDto(outputGiftCertificate);
+        verify(mapper, only()).modelToDto(outGiftCertificate);
     }
 
     @Test
@@ -240,15 +240,15 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     void shouldReturnTag_On_ReadOne_For_Admin() {
         //Given
         when(authorityValidator.isAdmin()).thenReturn(true);
-        when(giftCertificateRepository.findById(1)).thenReturn(Optional.of(outputGiftCertificate));
-        when(mapper.modelToDto(outputGiftCertificate)).thenReturn(dtoOutputGiftCertificate);
+        when(giftCertificateRepository.findById(1)).thenReturn(Optional.of(outGiftCertificate));
+        when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
         //When
         final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.readOne(1);
         //Then
-        assertEquals(dtoOutputGiftCertificate, actualDtoGiftCertificate);
+        assertEquals(outDtoGiftCertificate, actualDtoGiftCertificate);
         verify(authorityValidator, only()).isAdmin();
         verify(giftCertificateRepository, only()).findById(1);
-        verify(mapper, only()).modelToDto(outputGiftCertificate);
+        verify(mapper, only()).modelToDto(outGiftCertificate);
     }
 
     @Test
@@ -270,24 +270,24 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     @Test
     void shouldReturnUpdatedGiftCertificate_On_Update() {
         //Given
-        when(inputGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
-        when(giftCertificateRepository.findByName(inputGiftCertificate.getName())).thenReturn(Optional.empty());
+        when(inGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
+        when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.empty());
         when(request.getMethod()).thenReturn(HttpMethod.PATCH.name());
-        when(mapper.dtoToModel(dtoInputGiftCertificate)).thenReturn(inputGiftCertificate);
-        when(giftCertificateRepository.findById(inputGiftCertificate.getId())).thenReturn(Optional.of(inputGiftCertificate));
-        when(giftCertificateRepository.save(inputGiftCertificate)).thenReturn(outputGiftCertificate);
-        when(mapper.modelToDto(outputGiftCertificate)).thenReturn(dtoOutputGiftCertificate);
+        when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
+        when(giftCertificateRepository.findById(inGiftCertificate.getId())).thenReturn(Optional.of(inGiftCertificate));
+        when(giftCertificateRepository.save(inGiftCertificate)).thenReturn(outGiftCertificate);
+        when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
         //When
-        final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.update(dtoInputGiftCertificate);
+        final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.update(inDtoGiftCertificate);
         //Then
-        assertEquals(dtoOutputGiftCertificate, actualDtoGiftCertificate);
-        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.PATCH.name());
-        verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
-        verify(mapper, times(1)).dtoToModel(dtoInputGiftCertificate);
-        verify(giftCertificateRepository, times(1)).findById(inputGiftCertificate.getId());
-        verify(tagService, only()).prepareTagsForGiftCertificate(inputGiftCertificate.getTags());
-        verify(giftCertificateRepository, times(1)).save(inputGiftCertificate);
-        verify(mapper, times(1)).modelToDto(outputGiftCertificate);
+        assertEquals(outDtoGiftCertificate, actualDtoGiftCertificate);
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.PATCH.name());
+        verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
+        verify(mapper, times(1)).dtoToModel(inDtoGiftCertificate);
+        verify(giftCertificateRepository, times(1)).findById(inGiftCertificate.getId());
+        verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
+        verify(giftCertificateRepository, times(1)).save(inGiftCertificate);
+        verify(mapper, times(1)).modelToDto(outGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
         verifyNoMoreInteractions(mapper);
     }
@@ -296,21 +296,21 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     void shouldThrowServiceException_On_Update() {
         //Given
         when(request.getMethod()).thenReturn(HttpMethod.PATCH.name());
-        when(giftCertificateRepository.findById(inputGiftCertificate.getId()))
-                .thenReturn(Optional.of(inputGiftCertificate));
-        when(giftCertificateRepository.findByName(inputGiftCertificate.getName()))
-                .thenReturn(Optional.of(inputGiftCertificate));
+        when(giftCertificateRepository.findById(inGiftCertificate.getId()))
+                .thenReturn(Optional.of(inGiftCertificate));
+        when(giftCertificateRepository.findByName(inGiftCertificate.getName()))
+                .thenReturn(Optional.of(inGiftCertificate));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("giftCertificate.alreadyExists.name"),
-                HttpStatus.CONFLICT, properties.getGift(), inputGiftCertificate.getName());
+                HttpStatus.CONFLICT, properties.getGift(), inGiftCertificate.getName());
         //When
         final ServiceException actualException = assertThrows(ServiceException.class,
-                () -> giftCertificateService.update(dtoInputGiftCertificate));
+                () -> giftCertificateService.update(inDtoGiftCertificate));
         //Then
         assertServiceExceptions(expectedException, actualException);
-        verify(giftCertificateValidator, only()).validateCreateOrUpdate(dtoInputGiftCertificate, HttpMethod.PATCH.name());
-        verify(giftCertificateRepository, times(1)).findById(inputGiftCertificate.getId());
-        verify(giftCertificateRepository, times(1)).findByName(inputGiftCertificate.getName());
+        verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.PATCH.name());
+        verify(giftCertificateRepository, times(1)).findById(inGiftCertificate.getId());
+        verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
         verifyNoMoreInteractions(giftCertificateRepository);
     }
 
@@ -318,13 +318,16 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     @Test
     void shouldDelete_On_Delete() {
         //Given
-        when(giftCertificateRepository.findByIdAndActive(1, true)).thenReturn(Optional.of(inputGiftCertificate));
+        when(giftCertificateRepository.findByIdAndActive(1, true)).thenReturn(Optional.of(inGiftCertificate));
+        when(giftCertificateRepository.save(inGiftCertificate)).thenReturn(outGiftCertificate);
+        when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
         //When
-        giftCertificateService.deleteById(1);
+       final GiftCertificateDto actualDtoGiftCertificate = giftCertificateService.deleteById(1);
         //Then
+        assertEquals(outDtoGiftCertificate, actualDtoGiftCertificate);
         verify(giftCertificateValidator, only()).validateId(1);
         verify(giftCertificateRepository, times(1)).findByIdAndActive(1, true);
-        verify(giftCertificateRepository, times(1)).save(inputGiftCertificate);
+        verify(giftCertificateRepository, times(1)).save(inGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
     }
 

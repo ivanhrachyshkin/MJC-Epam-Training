@@ -12,7 +12,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,10 +81,12 @@ public class GiftCertificateController {
 
     @Secured(ADMIN)
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteById(@PathVariable int id) {
-        giftCertificateService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.OK)
+    public GiftCertificateDto deleteById(@PathVariable int id) {
+        final GiftCertificateDto deletedGiftCertificateDto = giftCertificateService.deleteById(id);
+         hateoasCreator.linkGiftCertificateDtoOne(deletedGiftCertificateDto);
+        deletedGiftCertificateDto.getDtoTags().forEach(hateoasCreator::linkTagDto);
+        return deletedGiftCertificateDto;
     }
 
     private void setLocationHeader(final GiftCertificateDto giftCertificateDto) {

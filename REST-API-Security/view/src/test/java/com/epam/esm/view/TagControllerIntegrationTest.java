@@ -267,11 +267,15 @@ public class TagControllerIntegrationTest extends ResponseProvider {
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void shouldReturnDeletedTag_On_DeleteEndPoint_ForActiveTag_Admin() throws Exception {
+        //Given
+        expectedDtoTag.setId(7);
+        expectedDtoTag.setName("tag7");
+        expectedDtoTag.setActive(false);
         //When
-        final String contentAsString = mockMvc.perform(MockMvcRequestBuilders.delete("/tags/7"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent()).andReturn().getResponse().getContentAsString();
+        final String outDtoTagAsString = getOkForDeleteMethod("/tags/7",mockMvc);
+        final TagDto outDtoTag = objectMapper.readValue(outDtoTagAsString, TagDto.class);
         //Then
-        // todo return tag
+        assertEquals(expectedDtoTag, outDtoTag);
     }
 
     @Test
