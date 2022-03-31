@@ -29,11 +29,13 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
+
     @Setter
     private ResourceBundle rb;
     private final TagServiceImpl tagService;
     private final ExceptionStatusPostfixProperties properties;
-    private final DtoMapper<GiftCertificate, GiftCertificateDto> mapper;
+    private final DtoMapper<GiftCertificate, GiftCertificateDto> dtoMapper;
+    private final GiftCertificateMapper giftCertificateMapper;
     private final GiftCertificateRepository giftCertificateRepository;
     private final GiftCertificateValidator giftCertificateValidator;
     private final PageValidator paginationValidator;
@@ -41,31 +43,34 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateSpecification specification;
     private final HttpServletRequest request;
 
+
     @Override
     @Transactional
-    public GiftCertificateDto create(final GiftCertificateDto giftCertificateDto) {
-        giftCertificateDto.trim();
-        giftCertificateValidator.validateCreateOrUpdate(giftCertificateDto, request.getMethod());
-        final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
+    public GiftCertificateDto create(final GiftCertificateDto rawGiftCertificateDto) {
+        rawGiftCertificateDto.trim();
+        giftCertificateValidator.validateCreateOrUpdate(rawGiftCertificateDto, request.getMethod());
+        final GiftCertificate rawGiftCertificate = dtoMapper.dtoToModel(rawGiftCertificateDto);
         rawGiftCertificate.setActive(true);
         final Set<Tag> rawTags = rawGiftCertificate.getTags();
         tagService.prepareTagsForGiftCertificate(rawTags);
-        final GiftCertificate newGiftCertificate = createOrUpdateOld(rawGiftCertificate);
-        return mapper.modelToDto(newGiftCertificate);
+        final GiftCertificate preparedGiftCertificate = prepareGiftCertificateForCreate(rawGiftCertificate);
+        final GiftCertificate createdGiftCertificate = giftCertificateRepository.save(preparedGiftCertificate);
+        return dtoMapper.modelToDto(createdGiftCertificate);
     }
 
     @Override
     @Transactional
-    public GiftCertificateDto update(final GiftCertificateDto giftCertificateDto) {
-        giftCertificateDto.trim();
-        giftCertificateValidator.validateCreateOrUpdate(giftCertificateDto, request.getMethod());
-        checkExist(giftCertificateDto.getId());
-        checkExistByName(giftCertificateDto.getName());
-        final GiftCertificate rawGiftCertificate = mapper.dtoToModel(giftCertificateDto);
+    public GiftCertificateDto update(final GiftCertificateDto rawGiftCertificateDto) {
+        rawGiftCertificateDto.trim();
+        giftCertificateValidator.validateCreateOrUpdate(rawGiftCertificateDto, request.getMethod());
+        checkExistByName(rawGiftCertificateDto.getName());
+        final GiftCertificate oldGiftCertificate = checkExist(rawGiftCertificateDto.getId());
+        final GiftCertificate rawGiftCertificate = dtoMapper.dtoToModel(rawGiftCertificateDto);
         final Set<Tag> rawTags = rawGiftCertificate.getTags();
         tagService.prepareTagsForGiftCertificate(rawTags);
-        final GiftCertificate updatedGiftCertificate = giftCertificateRepository.save(rawGiftCertificate);
-        return mapper.modelToDto(updatedGiftCertificate);
+        giftCertificateMapper.updateGiftCertificateFromRaw(rawGiftCertificate, oldGiftCertificate);
+        final GiftCertificate updatedGiftCertificate = giftCertificateRepository.save(oldGiftCertificate);
+        return dtoMapper.modelToDto(updatedGiftCertificate);
     }
 
     @Override
@@ -79,7 +84,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         final String giftCertificateDescription = container.getDescription();
         final Page<GiftCertificate> giftCertificates
                 = getGiftCertificatesByUserRole(tags, giftCertificateName, giftCertificateDescription, pageable);
-        return mapper.modelsToDto(giftCertificates);
+        return dtoMapper.modelsToDto(giftCertificates);
     }
 
     @Override
@@ -87,7 +92,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto readOne(final int id) {
         giftCertificateValidator.validateId(id);
         final GiftCertificate giftCertificate = getGiftCertificateByUserRole(id);
-        return mapper.modelToDto(giftCertificate);
+        return dtoMapper.modelToDto(giftCertificate);
     }
 
     @Override
@@ -96,8 +101,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateValidator.validateId(id);
         final GiftCertificate giftCertificate = checkExistActive(id);
         giftCertificate.setActive(false);
-       final GiftCertificate deletedGiftCertificate = giftCertificateRepository.save(giftCertificate);
-        return mapper.modelToDto(deletedGiftCertificate);
+        final GiftCertificate deletedGiftCertificate = giftCertificateRepository.save(giftCertificate);
+        return dtoMapper.modelToDto(deletedGiftCertificate);
     }
 
     public GiftCertificate checkExistActive(final int id) {
@@ -141,16 +146,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 });
     }
 
-    private GiftCertificate createOrUpdateOld(final GiftCertificate rawGiftCertificate) {
+    private GiftCertificate prepareGiftCertificateForCreate(GiftCertificate rawGiftCertificate) {
         final Optional<GiftCertificate> optionalGiftCertificate
                 = giftCertificateRepository.findByName(rawGiftCertificate.getName());
-        if (optionalGiftCertificate.isPresent() && optionalGiftCertificate.get().getActive()) {
-            throw new ServiceException(
-                    rb.getString("giftCertificate.alreadyExists.name"),
-                    HttpStatus.CONFLICT, properties.getGift(), optionalGiftCertificate.get().getName());
+
+        if (optionalGiftCertificate.isPresent()) {
+            if(optionalGiftCertificate.get().getActive()){
+                throw new ServiceException(
+                        rb.getString("giftCertificate.alreadyExists.name"),
+                        HttpStatus.CONFLICT, properties.getGift(), optionalGiftCertificate.get().getName());
+            }
+            giftCertificateMapper.updateGiftCertificateFromRaw(rawGiftCertificate, optionalGiftCertificate.get());
+            rawGiftCertificate = optionalGiftCertificate.get();
         }
-        optionalGiftCertificate.ifPresent(oldGiftCertificate -> rawGiftCertificate.setId(oldGiftCertificate.getId()));
-        return giftCertificateRepository.save(rawGiftCertificate);
+
+        return rawGiftCertificate;
     }
 }
 

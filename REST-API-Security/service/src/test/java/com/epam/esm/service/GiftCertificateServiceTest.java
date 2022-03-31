@@ -70,6 +70,8 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     private Page<GiftCertificate> outGiftCertificates;
     @Mock
     private Page<GiftCertificateDto> outDtoGiftCertificates;
+    @Mock
+    private GiftCertificateMapper giftCertificateMapper;
 
     @Mock
     private Tag inputTag;
@@ -97,6 +99,7 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         when(inGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
         when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
+        when(giftCertificateRepository.findByNameAndActive(inGiftCertificate.getName(), true)).thenReturn(Optional.empty());
         when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.empty());
         when(giftCertificateRepository.save(inGiftCertificate)).thenReturn(outGiftCertificate);
         when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
@@ -107,6 +110,7 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
         verify(mapper, times(1)).dtoToModel(inDtoGiftCertificate);
         verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
+        verify(giftCertificateRepository, times(1)).findByNameAndActive(inGiftCertificate.getName(), true);
         verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
         verify(giftCertificateRepository, times(1)).save(inGiftCertificate);
         verify(mapper, times(1)).modelToDto(outGiftCertificate);
@@ -121,6 +125,7 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
         when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
         when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.empty());
+        when(giftCertificateRepository.findByNameAndActive(inGiftCertificate.getName(), true)).thenReturn(Optional.empty());
         when(giftCertificateRepository.save(inGiftCertificate)).thenReturn(outGiftCertificate);
         when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
         //When
@@ -128,10 +133,11 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         //Then
         assertEquals(outDtoGiftCertificate, actualDtoGiftCertificate);
         verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
-        verify(mapper, times(1)).dtoToModel(inDtoGiftCertificate);
         verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
+        verify(giftCertificateRepository, times(1)).findByNameAndActive(inGiftCertificate.getName(), true);
         verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
         verify(giftCertificateRepository, times(1)).save(inGiftCertificate);
+        verify(mapper, times(1)).dtoToModel(inDtoGiftCertificate);
         verify(mapper, times(1)).modelToDto(outGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
         verifyNoMoreInteractions(mapper);
@@ -140,11 +146,8 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     @Test
     void shouldThrowServiceException_On_Create() {
         //Given
-        when(inGiftCertificate.getActive()).thenReturn(true);
-        when(inGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
-        when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
-        when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.of(inGiftCertificate));
+        when(giftCertificateRepository.findByNameAndActive(inGiftCertificate.getName(), true)).thenReturn(Optional.of(inGiftCertificate));
         final ServiceException expectedException = new ServiceException(
                 rb.getString("giftCertificate.alreadyExists.name"),
                 HttpStatus.CONFLICT, properties.getGift(), inGiftCertificate.getName());
@@ -154,9 +157,7 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         //Then
         assertServiceExceptions(expectedException, actualException);
         verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
-        verify(mapper, only()).dtoToModel(inDtoGiftCertificate);
-        verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
-        verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
+        verify(giftCertificateRepository, times(1)).findByNameAndActive(inGiftCertificate.getName(), true);
         verifyNoMoreInteractions(giftCertificateRepository);
     }
 
@@ -296,8 +297,6 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     void shouldThrowServiceException_On_Update() {
         //Given
         when(request.getMethod()).thenReturn(HttpMethod.PATCH.name());
-        when(giftCertificateRepository.findById(inGiftCertificate.getId()))
-                .thenReturn(Optional.of(inGiftCertificate));
         when(giftCertificateRepository.findByName(inGiftCertificate.getName()))
                 .thenReturn(Optional.of(inGiftCertificate));
         final ServiceException expectedException = new ServiceException(
@@ -309,11 +308,8 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         //Then
         assertServiceExceptions(expectedException, actualException);
         verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.PATCH.name());
-        verify(giftCertificateRepository, times(1)).findById(inGiftCertificate.getId());
-        verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
-        verifyNoMoreInteractions(giftCertificateRepository);
+        verify(giftCertificateRepository, only()).findByName(inGiftCertificate.getName());
     }
-
 
     @Test
     void shouldDelete_On_Delete() {

@@ -20,7 +20,7 @@ public class OrderValidator {
     private final ExceptionStatusPostfixProperties properties;
 
     public void validateId(final Integer id) {
-        if (id != null && id <= 0) {
+        if (id == null || id <= 0) {
             throwValidationException("validator.id.non");
         }
     }

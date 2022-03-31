@@ -25,7 +25,7 @@ public class GiftCertificateValidator {
     private final TagValidator tagValidator;
 
     public void validateId(final Integer id) {
-        if (id != null && id <= 0) {
+        if (id == null || id <= 0) {
             throwValidationException("validator.id.non");
         }
     }
@@ -35,7 +35,7 @@ public class GiftCertificateValidator {
         if (method.matches(HttpMethod.POST.name())) {
             createValidate(giftCertificateDto);
         }
-        if(method.matches(HttpMethod.PATCH.name())) {
+        if (method.matches(HttpMethod.PATCH.name())) {
             updateValidate(giftCertificateDto);
         }
         validateShouldNotBePassedFields(giftCertificateDto);
@@ -101,7 +101,7 @@ public class GiftCertificateValidator {
     }
 
     private void validateTags(final Set<TagDto> dtoTags) {
-        if (dtoTags!=null && !dtoTags.isEmpty()) {
+        if (dtoTags != null && !dtoTags.isEmpty()) {
             dtoTags.forEach(tagValidator::validate);
         }
     }
