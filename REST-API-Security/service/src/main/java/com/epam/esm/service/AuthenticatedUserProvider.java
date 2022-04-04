@@ -23,11 +23,12 @@ public class AuthenticatedUserProvider {
 
     public User getUserFromAuthentication() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication);
         final String name = authentication.getName();
         return userRepository
                 .findByUsername(name).orElseThrow(() ->
                         new ServiceException(
-                                rb.getString("user.exists.name"),
-                                HttpStatus.NOT_FOUND, properties.getUser()));
+                                rb.getString("user.notFound.name"),
+                                HttpStatus.NOT_FOUND, properties.getUser(), name));
     }
 }

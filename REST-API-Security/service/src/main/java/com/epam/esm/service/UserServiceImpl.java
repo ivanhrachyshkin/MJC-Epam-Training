@@ -7,7 +7,7 @@ import com.epam.esm.model.User;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
-import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.PageableValidator;
 import com.epam.esm.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserValidator userValidator;
-    private final PageValidator paginationValidator;
+    private final PageableValidator paginationValidator;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -99,7 +99,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto createKeycloakUser(final UserDto userDto) {
         userValidator.createValidate(userDto);
-        userValidator.validateId(userDto.getId());
 
         final User user = mapper.dtoToModel(userDto);
         final String username = user.getUsername();

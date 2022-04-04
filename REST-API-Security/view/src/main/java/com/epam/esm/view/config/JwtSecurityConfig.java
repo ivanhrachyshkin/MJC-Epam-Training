@@ -1,8 +1,8 @@
 package com.epam.esm.view.config;
 
 import com.epam.esm.view.exceptionhandler.AccessDeniedExceptionHandler;
+import com.epam.esm.view.exceptionhandler.RestAuthenticationEntryPoint;
 import com.epam.esm.view.security.ObjectToJsonMapper;
-import com.epam.esm.view.security.RestAuthenticationEntryPoint;
 import com.epam.esm.view.security.jwt.JwtTokenFilter;
 import com.epam.esm.view.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_ENDPOINT = "/auth/login";
-    private static final String REFRESH_TOKEN_ENDPOINT = "/auth/refreshToken";
     private final ObjectToJsonMapper mapper;
     private final JwtTokenProvider jwtTokenProvider;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
@@ -55,14 +54,9 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(REFRESH_TOKEN_ENDPOINT).hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/gifts/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
-                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

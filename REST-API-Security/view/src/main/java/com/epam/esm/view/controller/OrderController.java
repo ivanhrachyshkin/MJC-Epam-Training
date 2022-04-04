@@ -40,11 +40,11 @@ public class OrderController {
         final OrderDto createdOrderDto = orderService.create(orderDto);
         hateoasCreator.linkOrderDtoOne(createdOrderDto);
         hateoasCreator.linkUserDto(createdOrderDto.getUserDto());
-        orderDto
+        createdOrderDto
                 .getDtoGiftCertificates()
                 .forEach(hateoasCreator::linkGiftCertificateDto);
         setLocationHeader(createdOrderDto);
-       return createdOrderDto;
+        return createdOrderDto;
     }
 
     @Secured({USER, ADMIN})
@@ -61,7 +61,7 @@ public class OrderController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
-    @Secured({USER,ADMIN})
+    @Secured({USER, ADMIN})
     @GetMapping(value = "/{id}")
     public OrderDto readOne(@PathVariable final int id) {
         final OrderDto orderDto = orderService.readOne(id);

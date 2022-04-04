@@ -6,7 +6,7 @@ import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.AuthorityValidator;
-import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.PageableValidator;
 import com.epam.esm.service.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -30,7 +30,7 @@ public class TagServiceImpl implements TagService {
     private final DtoMapper<Tag, TagDto> mapper;
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
-    private final PageValidator paginationValidator;
+    private final PageableValidator paginationValidator;
     private final AuthorityValidator authorityValidator;
 
     @Override

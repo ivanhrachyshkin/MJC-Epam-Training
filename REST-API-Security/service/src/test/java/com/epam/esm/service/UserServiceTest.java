@@ -7,7 +7,7 @@ import com.epam.esm.model.User;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
-import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.PageableValidator;
 import com.epam.esm.service.validator.UserValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
     @Mock
     private UserValidator userValidator;
     @Mock
-    private PageValidator pageValidator;
+    private PageableValidator pageableValidator;
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks
@@ -201,7 +201,7 @@ public class UserServiceTest extends AssertionsProvider<UserDto> {
         final Page<UserDto> actualDtoUsers = userService.readAll(page);
         //Then
         assertPages(dtoUsers, actualDtoUsers);
-        verify(pageValidator, only()).paginationValidate(page);
+        verify(pageableValidator, only()).paginationValidate(page);
         verify(userRepository, only()).findAll(page);
         verify(mapper, only()).modelsToDto(users);
     }

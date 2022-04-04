@@ -1,7 +1,7 @@
-package com.epam.esm.view.security;
+package com.epam.esm.view.exceptionhandler;
 
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
-import com.epam.esm.view.exceptionhandler.ApiError;
+import com.epam.esm.view.security.ObjectToJsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +30,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.
                 getWriter()
                 .write(mapper.convertObjectToJson(
-                        new ApiError(statusValue + properties.getAuth(), e.getMessage())));
+                        new ApiError(statusValue + properties.getAuth(), "Authentication required or failed")));
     }
 }

@@ -13,7 +13,5 @@ public interface GiftCertificateRepository
 
     Optional<GiftCertificate> findByName(String name);
 
-    Optional<GiftCertificate> findByNameAndActive(String name, boolean isActive);
-
     Optional<GiftCertificate> findByIdAndActive(Integer id, Boolean active);
 }

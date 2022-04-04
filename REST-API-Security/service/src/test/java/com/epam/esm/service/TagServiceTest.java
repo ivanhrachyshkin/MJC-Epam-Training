@@ -6,7 +6,7 @@ import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
 import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.AuthorityValidator;
-import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.PageableValidator;
 import com.epam.esm.service.validator.TagValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ public class TagServiceTest extends AssertionsProvider<TagDto> {
     @Mock
     private TagValidator tagValidator;
     @Mock
-    private PageValidator pageValidator;
+    private PageableValidator pageableValidator;
     @Mock
     private AuthorityValidator authorityValidator;
     @Mock
@@ -143,7 +143,7 @@ public class TagServiceTest extends AssertionsProvider<TagDto> {
         assertPages(dtoTags, actualDtoTags);
         assertEquals(dtoTags.getTotalElements(), actualDtoTags.getTotalElements());
         assertEquals(dtoTags.getTotalPages(), actualDtoTags.getTotalPages());
-        verify(pageValidator, only()).paginationValidate(page);
+        verify(pageableValidator, only()).paginationValidate(page);
         verify(authorityValidator, only()).isAdmin();
         verify(tagRepository, only()).findAll(page);
         verify(mapper, only()).modelsToDto(tags);
@@ -161,7 +161,7 @@ public class TagServiceTest extends AssertionsProvider<TagDto> {
         assertPages(dtoTags, actualDtoTags);
         assertEquals(dtoTags.getTotalElements(), actualDtoTags.getTotalElements());
         assertEquals(dtoTags.getTotalPages(), actualDtoTags.getTotalPages());
-        verify(pageValidator, only()).paginationValidate(page);
+        verify(pageableValidator, only()).paginationValidate(page);
         verify(authorityValidator, only()).isAdmin();
         verify(tagRepository, only()).findAllByActive(true, page);
         verify(mapper, only()).modelsToDto(tags);

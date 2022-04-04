@@ -13,12 +13,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
+import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @Profile("jwt")
 @RestController
@@ -46,11 +50,12 @@ public class AuthenticationJwtController {
                 userDto.getUsername(), userDto.getEmail(), userDto.getDtoRoles()));
     }
 
+    @Secured({USER,ADMIN})
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(@RequestBody final TokenRefreshRequest request) {
         requestValidator.validateRefreshTokenRequest(request);
         final String requestRefreshToken = request.getRefreshToken();
-        final RefreshTokenDto refreshTokenDto = jwtTokenProvider.findByToken(requestRefreshToken);
+        final RefreshTokenDto refreshTokenDto = jwtTokenProvider.findRefreshToken(requestRefreshToken);
         final UserDto userDto = refreshTokenDto.getUserDto();
         final String token = jwtTokenProvider.createToken(userDto);
         return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));

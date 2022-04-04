@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public abstract class ResponseProvider {
 
     public static String ACCESS_DENIED_MESSAGE = "Access is denied";
-    public static String UNAUTHORIZED_MESSAGE = "Full authentication is required to access this resource";
+    public static String UNAUTHORIZED_MESSAGE = "Authentication required or failed";
 
     public String getOkForGetMethod(final String url, final MockMvc mockMvc) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.get(url))
@@ -60,8 +60,10 @@ public abstract class ResponseProvider {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized()).andReturn().getResponse().getContentAsString();
     }
 
-    public String getForbiddenForPostMethod(final String url, final MockMvc mockMvc) throws Exception {
-        return mockMvc.perform(MockMvcRequestBuilders.post(url))
+    public String getForbiddenForPostMethod(final String url, final String objectAsString, final MockMvc mockMvc) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectAsString))
                 .andExpect(MockMvcResultMatchers.status().isForbidden()).andReturn().getResponse().getContentAsString();
     }
 

@@ -314,7 +314,7 @@ public class GiftCertificateControllerIntegrationTest extends ResponseProvider {
         expectedDtoGiftCertificate.setPrice(7.0F);
         expectedDtoGiftCertificate.setDuration(7);
         expectedDtoGiftCertificate.setActive(false);
-        expectedDtoGiftCertificate.setDtoTags(Collections.singleton(inDtoTag));
+        expectedDtoGiftCertificate.setDtoTags(Collections.emptySet());
         //When
         final String outDtoGiftCertificateAsString = getOkForDeleteMethod("/gifts/7", mockMvc);
         final GiftCertificateDto outDtoGiftCertificate
@@ -348,7 +348,8 @@ public class GiftCertificateControllerIntegrationTest extends ResponseProvider {
     public void shouldThrowException_On_CreateEndPoint_For_GiftCertificate_User() throws Exception {
         final String expectedExceptionMessage = ACCESS_DENIED_MESSAGE;
         //When
-        final String response = getForbiddenForPostMethod("/gifts", mockMvc);
+        final String innDtoGiftCertificateAsString = objectMapper.writeValueAsString(inDtoGiftCertificate);
+        final String response = getForbiddenForPostMethod("/gifts",innDtoGiftCertificateAsString, mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }

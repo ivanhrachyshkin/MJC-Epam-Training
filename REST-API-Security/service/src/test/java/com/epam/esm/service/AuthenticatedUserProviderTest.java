@@ -75,8 +75,8 @@ public class AuthenticatedUserProviderTest extends AssertionsProvider {
        //Given
        when(userRepository.findByUsername("name")).thenReturn(Optional.empty());
        final ServiceException expectedException =  new ServiceException(
-               rb.getString("user.exists.name"),
-               HttpStatus.NOT_FOUND, properties.getUser());
+               rb.getString("user.notFound.name"),
+               HttpStatus.NOT_FOUND, properties.getUser(), "name");
        //When
        final ServiceException actualException = assertThrows(ServiceException.class,
                () -> userProvider.getUserFromAuthentication());

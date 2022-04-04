@@ -31,7 +31,7 @@ public class AccessDeniedExceptionHandler implements AccessDeniedHandler {
         response.
                 getWriter()
                 .write(mapper.convertObjectToJson(
-                        new ApiError(statusValue + properties.getAuth(), e.getMessage())));
+                        new ApiError(statusValue + properties.getAuth(), "Access is denied")));
 
     }
 }

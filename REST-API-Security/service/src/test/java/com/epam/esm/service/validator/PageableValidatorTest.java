@@ -22,12 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PageValidatorTest extends AssertionsProvider {
+class PageableValidatorTest extends AssertionsProvider {
 
     @Mock
     private ExceptionStatusPostfixProperties properties;
     @InjectMocks
-    private PageValidator paginationValidator;
+    private PageableValidator paginationValidator;
 
     @Mock
     private Pageable pageable;

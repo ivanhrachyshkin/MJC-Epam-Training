@@ -10,7 +10,11 @@ public interface OrderService {
 
     Page<OrderDto> readAll(Pageable pageable);
 
+    Page<OrderDto> readAllKeycloak(Pageable pageable);
+
     OrderDto readOne(int id);
+
+    OrderDto readOneKeycloak(int orderId);
 
     OrderDto readOneByUserIdAndOrderId(int userId, int orderId);
 

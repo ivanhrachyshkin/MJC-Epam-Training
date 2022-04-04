@@ -3,7 +3,6 @@ package com.epam.esm.view.interceptor;
 import com.epam.esm.service.*;
 import com.epam.esm.service.validator.*;
 import com.epam.esm.view.exceptionhandler.RestExceptionHandler;
-import com.epam.esm.view.security.jwt.JwtTokenProvider;
 import com.epam.esm.view.security.payload.requestvalidator.RequestValidator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.LocaleUtils;
@@ -26,11 +25,11 @@ public class Interceptor implements HandlerInterceptor {
     private final OrderValidator orderValidator;
     private final TagValidator tagValidator;
     private final UserValidator userValidator;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final PageValidator paginationValidator;
+    private final PageableValidator paginationValidator;
     private final RequestValidator requestValidator;
     private final AuthenticatedUserProvider userProvider;
     private final RestExceptionHandler restExceptionHandler;
+    private final RefreshTokenServiceImpl refreshTokenService;
 
     @Override
     public boolean preHandle(final HttpServletRequest request,
@@ -47,10 +46,10 @@ public class Interceptor implements HandlerInterceptor {
         tagValidator.setRb(resourceBundle);
         userValidator.setRb(resourceBundle);
         paginationValidator.setRb(resourceBundle);
-        jwtTokenProvider.setRb(resourceBundle);
         requestValidator.setRb(resourceBundle);
         userProvider.setRb(resourceBundle);
         restExceptionHandler.setRb(resourceBundle);
+        refreshTokenService.setRb(resourceBundle);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

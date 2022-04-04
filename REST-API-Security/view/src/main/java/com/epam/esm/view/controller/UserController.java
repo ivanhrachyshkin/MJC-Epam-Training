@@ -7,6 +7,7 @@ import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.view.hateoas.HateoasCreator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -33,6 +34,7 @@ public class UserController {
     private final UserService userService;
     private final OrderService orderService;
 
+    @Profile("jwt")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody final UserDto userDto) {
@@ -45,7 +47,7 @@ public class UserController {
 
     @Secured({ADMIN})
     @GetMapping
-    @ResponseStatus(HttpStatus.OK) // todo application
+    @ResponseStatus(HttpStatus.OK)
     public PagedModel<UserDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
         final Page<UserDto> dtoUsers = userService.readAll(pageable);
         dtoUsers.forEach(userDto -> userDto.getDtoOrders().forEach(hateoasCreator::linkOrderDto));

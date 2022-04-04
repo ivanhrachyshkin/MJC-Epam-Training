@@ -10,7 +10,7 @@ import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.GiftCertificateValidator;
-import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.PageableValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
@@ -38,7 +38,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateMapper giftCertificateMapper;
     private final GiftCertificateRepository giftCertificateRepository;
     private final GiftCertificateValidator giftCertificateValidator;
-    private final PageValidator paginationValidator;
+    private final PageableValidator paginationValidator;
     private final AuthorityValidator authorityValidator;
     private final GiftCertificateSpecification specification;
     private final HttpServletRequest request;
@@ -66,6 +66,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         checkExistByName(rawGiftCertificateDto.getName());
         final GiftCertificate oldGiftCertificate = checkExist(rawGiftCertificateDto.getId());
         final GiftCertificate rawGiftCertificate = dtoMapper.dtoToModel(rawGiftCertificateDto);
+        rawGiftCertificate.setActive(true);
         final Set<Tag> rawTags = rawGiftCertificate.getTags();
         tagService.prepareTagsForGiftCertificate(rawTags);
         giftCertificateMapper.updateGiftCertificateFromRaw(rawGiftCertificate, oldGiftCertificate);
@@ -99,9 +100,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto deleteById(final int id) {
         giftCertificateValidator.validateId(id);
-        final GiftCertificate giftCertificate = checkExistActive(id);
-        giftCertificate.setActive(false);
-        final GiftCertificate deletedGiftCertificate = giftCertificateRepository.save(giftCertificate);
+        final GiftCertificate rawGiftCertificate = new GiftCertificate();
+        rawGiftCertificate.setActive(false);
+        final GiftCertificate oldGiftCertificate = checkExistActive(id);
+        giftCertificateMapper.updateGiftCertificateFromRaw(rawGiftCertificate, oldGiftCertificate);
+        final GiftCertificate deletedGiftCertificate = giftCertificateRepository.save(oldGiftCertificate);
         return dtoMapper.modelToDto(deletedGiftCertificate);
     }
 

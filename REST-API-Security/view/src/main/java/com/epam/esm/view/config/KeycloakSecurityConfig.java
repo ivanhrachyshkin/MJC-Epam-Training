@@ -1,7 +1,7 @@
 package com.epam.esm.view.config;
 
 import com.epam.esm.view.exceptionhandler.AccessDeniedExceptionHandler;
-import com.epam.esm.view.security.RestAuthenticationEntryPoint;
+import com.epam.esm.view.exceptionhandler.RestAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -41,7 +41,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authManagerBuilder) {
-        KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
+        final KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
         keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
         authManagerBuilder.authenticationProvider(keycloakAuthenticationProvider);
     }
@@ -50,17 +50,15 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http
+                .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,"/keycloak**").permitAll()
+                .antMatchers(HttpMethod.GET,"/keycloak**").hasAnyRole("ADMIN","USER")
                 .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/gifts/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
-                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/keycloak").permitAll()
                 .anyRequest().authenticated();
 
         http

@@ -305,7 +305,8 @@ public class TagControllerIntegrationTest extends ResponseProvider {
         //Given
         final String expectedExceptionMessage = ACCESS_DENIED_MESSAGE;
         //When
-        final String response = getForbiddenForPostMethod("/tags", mockMvc);
+        final String inDtoTagAsString = objectMapper.writeValueAsString(inDtoTag);
+        final String response = getForbiddenForPostMethod("/tags", inDtoTagAsString, mockMvc);
         //Then
         assertThat(response).contains(expectedExceptionMessage);
     }

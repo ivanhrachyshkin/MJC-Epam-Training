@@ -10,7 +10,7 @@ import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.GiftCertificateValidator;
-import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.PageableValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +46,7 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     @Mock
     private GiftCertificateValidator giftCertificateValidator;
     @Mock
-    private PageValidator pageValidator;
+    private PageableValidator pageableValidator;
     @Mock
     private GiftCertificateSpecification specification;
     @Mock
@@ -99,7 +99,6 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         when(inGiftCertificate.getTags()).thenReturn(Collections.singleton(inputTag));
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
         when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
-        when(giftCertificateRepository.findByNameAndActive(inGiftCertificate.getName(), true)).thenReturn(Optional.empty());
         when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.empty());
         when(giftCertificateRepository.save(inGiftCertificate)).thenReturn(outGiftCertificate);
         when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
@@ -110,7 +109,6 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
         verify(mapper, times(1)).dtoToModel(inDtoGiftCertificate);
         verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
-        verify(giftCertificateRepository, times(1)).findByNameAndActive(inGiftCertificate.getName(), true);
         verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
         verify(giftCertificateRepository, times(1)).save(inGiftCertificate);
         verify(mapper, times(1)).modelToDto(outGiftCertificate);
@@ -125,7 +123,6 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
         when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
         when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.empty());
-        when(giftCertificateRepository.findByNameAndActive(inGiftCertificate.getName(), true)).thenReturn(Optional.empty());
         when(giftCertificateRepository.save(inGiftCertificate)).thenReturn(outGiftCertificate);
         when(mapper.modelToDto(outGiftCertificate)).thenReturn(outDtoGiftCertificate);
         //When
@@ -134,7 +131,6 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         assertEquals(outDtoGiftCertificate, actualDtoGiftCertificate);
         verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
         verify(tagService, only()).prepareTagsForGiftCertificate(inGiftCertificate.getTags());
-        verify(giftCertificateRepository, times(1)).findByNameAndActive(inGiftCertificate.getName(), true);
         verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
         verify(giftCertificateRepository, times(1)).save(inGiftCertificate);
         verify(mapper, times(1)).dtoToModel(inDtoGiftCertificate);
@@ -147,7 +143,9 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
     void shouldThrowServiceException_On_Create() {
         //Given
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
-        when(giftCertificateRepository.findByNameAndActive(inGiftCertificate.getName(), true)).thenReturn(Optional.of(inGiftCertificate));
+        when(mapper.dtoToModel(inDtoGiftCertificate)).thenReturn(inGiftCertificate);
+        when(giftCertificateRepository.findByName(inGiftCertificate.getName())).thenReturn(Optional.of(inGiftCertificate));
+        when(inGiftCertificate.getActive()).thenReturn(true);
         final ServiceException expectedException = new ServiceException(
                 rb.getString("giftCertificate.alreadyExists.name"),
                 HttpStatus.CONFLICT, properties.getGift(), inGiftCertificate.getName());
@@ -157,7 +155,8 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         //Then
         assertServiceExceptions(expectedException, actualException);
         verify(giftCertificateValidator, only()).validateCreateOrUpdate(inDtoGiftCertificate, HttpMethod.POST.name());
-        verify(giftCertificateRepository, times(1)).findByNameAndActive(inGiftCertificate.getName(), true);
+        verify(giftCertificateRepository, times(1)).findByName(inGiftCertificate.getName());
+        verify(mapper, only()).dtoToModel(inDtoGiftCertificate);
         verifyNoMoreInteractions(giftCertificateRepository);
     }
 
@@ -179,7 +178,7 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         //Then
         assertPages(outDtoGiftCertificates, actualDtoGiftCertificates);
         verify(giftCertificateValidator, only()).readAllValidate(Collections.emptyList(), container);
-        verify(pageValidator, only()).paginationValidate(page);
+        verify(pageableValidator, only()).paginationValidate(page);
         verify(mapper, only()).modelsToDto(outGiftCertificates);
     }
 
@@ -201,7 +200,7 @@ public class GiftCertificateServiceTest extends AssertionsProvider<GiftCertifica
         //Then
         assertPages(outDtoGiftCertificates, actualDtoGiftCertificates);
         verify(giftCertificateValidator, only()).readAllValidate(Collections.emptyList(), container);
-        verify(pageValidator, only()).paginationValidate(page);
+        verify(pageableValidator, only()).paginationValidate(page);
         verify(mapper, only()).modelsToDto(outGiftCertificates);
     }
 

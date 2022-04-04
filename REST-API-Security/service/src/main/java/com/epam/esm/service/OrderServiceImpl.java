@@ -10,9 +10,10 @@ import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.OrderValidator;
-import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.PageableValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private final DtoMapper<Order, OrderDto> mapper;
     private final OrderRepository orderRepository;
     private final OrderValidator orderValidator;
-    private final PageValidator paginationValidator;
+    private final PageableValidator paginationValidator;
     private final AuthorityValidator authorityValidator;
     private final AuthenticatedUserProvider userProvider;
 
@@ -81,6 +82,24 @@ public class OrderServiceImpl implements OrderService {
         orderValidator.validateId(userId);
         orderValidator.validateId(orderId);
         final Order order = checkExistByUserIdAndId(userId, orderId);
+        return mapper.modelToDto(order);
+    }
+
+    @Profile("keycloak")
+    @Override
+    @Transactional
+    public Page<OrderDto> readAllKeycloak(final Pageable pageable) {
+        paginationValidator.paginationValidate(pageable);
+        final Page<Order> orders = orderRepository.findAll(pageable);
+        return mapper.modelsToDto(orders);
+    }
+
+    @Profile("keycloak")
+    @Override
+    @Transactional
+    public OrderDto readOneKeycloak(final int orderId) {
+        orderValidator.validateId(orderId);
+        final Order order = checkExist(orderId);
         return mapper.modelToDto(order);
     }
 

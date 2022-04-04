@@ -10,7 +10,7 @@ import com.epam.esm.service.dto.UserDto;
 import com.epam.esm.service.dto.mapper.DtoMapper;
 import com.epam.esm.service.validator.AuthorityValidator;
 import com.epam.esm.service.validator.OrderValidator;
-import com.epam.esm.service.validator.PageValidator;
+import com.epam.esm.service.validator.PageableValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +46,7 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
     @Mock
     private OrderValidator orderValidator;
     @Mock
-    private PageValidator pageValidator;
+    private PageableValidator pageableValidator;
     @Mock
     private AuthorityValidator authorityValidator;
     @Mock
@@ -243,7 +243,7 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         final Page<OrderDto> actualDtoOrders = orderService.readAll(pageable);
         //Then
         assertPages(dtoOrders, actualDtoOrders);
-        verify(pageValidator, only()).paginationValidate(pageable);
+        verify(pageableValidator, only()).paginationValidate(pageable);
         verify(authorityValidator, only()).isNotAdmin();
         verify(orderRepository, only()).findAll(pageable);
         verify(mapper, only()).modelsToDto(orders);
@@ -260,7 +260,7 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         final Page<OrderDto> actualDtoOrders = orderService.readAll(pageable);
         //Then
         assertPages(dtoOrders, actualDtoOrders);
-        verify(pageValidator, only()).paginationValidate(pageable);
+        verify(pageableValidator, only()).paginationValidate(pageable);
         verify(authorityValidator, only()).isNotAdmin();
         verify(orderRepository, only()).findOrdersByUserId(authUser.getId(), pageable);
         verify(mapper, only()).modelsToDto(orders);

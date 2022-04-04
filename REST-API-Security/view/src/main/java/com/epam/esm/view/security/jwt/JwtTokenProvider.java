@@ -7,7 +7,6 @@ import com.epam.esm.service.dto.RoleDto;
 import com.epam.esm.service.dto.UserDto;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,14 +20,15 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Setter
-    private ResourceBundle rb;
     private final JwtTokenProperties jwtTokenProperties;
     private final ExceptionStatusPostfixProperties exceptionStatusPostfixProperties;
     private final UserDetailsService userDetailsService;
@@ -82,7 +82,7 @@ public class JwtTokenProvider {
                 Long.parseLong(jwtTokenProperties.getJwtRefreshExpirationMs()));
     }
 
-    public RefreshTokenDto findByToken(final String token) {
+    public RefreshTokenDto findRefreshToken(final String token) {
         return refreshTokenService.findByToken(token);
     }
 
