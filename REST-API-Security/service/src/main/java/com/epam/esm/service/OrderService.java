@@ -8,6 +8,8 @@ public interface OrderService {
 
     OrderDto create(OrderDto orderDto);
 
+    OrderDto createKeycloak(OrderDto orderDto);
+
     Page<OrderDto> readAll(Pageable pageable);
 
     Page<OrderDto> readAllKeycloak(Pageable pageable);

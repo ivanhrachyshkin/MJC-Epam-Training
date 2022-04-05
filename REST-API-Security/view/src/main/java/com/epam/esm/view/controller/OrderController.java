@@ -23,6 +23,7 @@ import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Profile("jwt")
 @RestController
 @RequestMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -32,7 +33,6 @@ public class OrderController {
     private final HateoasCreator hateoasCreator;
     private final OrderService orderService;
 
-    @Profile("jwt")
     @Secured({USER, ADMIN})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -47,6 +47,7 @@ public class OrderController {
         return createdOrderDto;
     }
 
+    @Profile("jwt")
     @Secured({USER, ADMIN})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -61,6 +62,7 @@ public class OrderController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
+    @Profile("jwt")
     @Secured({USER, ADMIN})
     @GetMapping(value = "/{id}")
     public OrderDto readOne(@PathVariable final int id) {

@@ -88,6 +88,16 @@ public class OrderServiceImpl implements OrderService {
     @Profile("keycloak")
     @Override
     @Transactional
+    public OrderDto createKeycloak(final OrderDto orderDto) {
+        orderValidator.createValidate(orderDto, true);
+        final Order order = mapper.dtoToModel(orderDto);
+        final Order createdOrder = orderRepository.save(prepareOrderForCreation(order));
+        return mapper.modelToDto(createdOrder);
+    }
+
+    @Profile("keycloak")
+    @Override
+    @Transactional
     public Page<OrderDto> readAllKeycloak(final Pageable pageable) {
         paginationValidator.paginationValidate(pageable);
         final Page<Order> orders = orderRepository.findAll(pageable);

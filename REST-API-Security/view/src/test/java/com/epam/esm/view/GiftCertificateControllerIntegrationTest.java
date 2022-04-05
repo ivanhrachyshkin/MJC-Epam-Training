@@ -314,7 +314,7 @@ public class GiftCertificateControllerIntegrationTest extends ResponseProvider {
         expectedDtoGiftCertificate.setPrice(7.0F);
         expectedDtoGiftCertificate.setDuration(7);
         expectedDtoGiftCertificate.setActive(false);
-        expectedDtoGiftCertificate.setDtoTags(Collections.emptySet());
+        expectedDtoGiftCertificate.setDtoTags(Collections.singleton(inDtoTag));
         //When
         final String outDtoGiftCertificateAsString = getOkForDeleteMethod("/gifts/7", mockMvc);
         final GiftCertificateDto outDtoGiftCertificate

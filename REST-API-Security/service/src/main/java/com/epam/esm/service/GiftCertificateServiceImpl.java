@@ -66,7 +66,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         checkExistByName(rawGiftCertificateDto.getName());
         final GiftCertificate oldGiftCertificate = checkExist(rawGiftCertificateDto.getId());
         final GiftCertificate rawGiftCertificate = dtoMapper.dtoToModel(rawGiftCertificateDto);
-        rawGiftCertificate.setActive(true);
         final Set<Tag> rawTags = rawGiftCertificate.getTags();
         tagService.prepareTagsForGiftCertificate(rawTags);
         giftCertificateMapper.updateGiftCertificateFromRaw(rawGiftCertificate, oldGiftCertificate);
@@ -100,10 +99,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto deleteById(final int id) {
         giftCertificateValidator.validateId(id);
-        final GiftCertificate rawGiftCertificate = new GiftCertificate();
-        rawGiftCertificate.setActive(false);
         final GiftCertificate oldGiftCertificate = checkExistActive(id);
-        giftCertificateMapper.updateGiftCertificateFromRaw(rawGiftCertificate, oldGiftCertificate);
+        oldGiftCertificate.setActive(false);
         final GiftCertificate deletedGiftCertificate = giftCertificateRepository.save(oldGiftCertificate);
         return dtoMapper.modelToDto(deletedGiftCertificate);
     }

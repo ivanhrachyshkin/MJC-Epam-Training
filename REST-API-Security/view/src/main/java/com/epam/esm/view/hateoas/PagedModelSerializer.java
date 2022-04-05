@@ -14,14 +14,19 @@ public class PagedModelSerializer extends StdSerializer<PagedModel> {
     }
 
     @Override
-    public void serialize(PagedModel value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(final PagedModel value, final JsonGenerator gen, final SerializerProvider provider)
+            throws IOException {
         gen.writeStartObject();
         gen.writeFieldName("content");
         provider.defaultSerializeValue(value.getContent(), gen);
-        gen.writeFieldName("nextLink");
-        provider.defaultSerializeValue(value.getNextLink(), gen); //todo
-        gen.writeFieldName("previousLink");
-        provider.defaultSerializeValue(value.getPreviousLink(), gen);
+        if(value.getPreviousLink().isPresent()) {
+            gen.writeFieldName("previousLink");
+            provider.defaultSerializeValue(value.getPreviousLink().get(), gen);
+        }
+        if(value.getNextLink().isPresent()) {
+            gen.writeFieldName("nextLink");
+            provider.defaultSerializeValue(value.getNextLink().get(), gen);
+        }
         gen.writeEndObject();
     }
 }
