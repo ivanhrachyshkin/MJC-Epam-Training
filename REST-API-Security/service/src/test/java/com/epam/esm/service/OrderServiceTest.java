@@ -330,7 +330,7 @@ public class OrderServiceTest extends AssertionsProvider<OrderDto> {
         when(orderRepository.findOrderByUserIdAndId(authUser.getId(), 1)).thenReturn(Optional.empty());
         final ServiceException expectedException = new ServiceException(
                 rb.getString("order.notFound.user.order"),
-                HttpStatus.NOT_FOUND, properties.getOrder(), authUser.getId(), 1);
+                HttpStatus.NOT_FOUND, properties.getOrder(), 1);
         //When
         final ServiceException actualException
                 = assertThrows(ServiceException.class, () -> orderService.readOne(1));

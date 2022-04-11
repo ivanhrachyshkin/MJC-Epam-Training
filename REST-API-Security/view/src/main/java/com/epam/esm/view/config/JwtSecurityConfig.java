@@ -1,11 +1,13 @@
 package com.epam.esm.view.config;
 
+import com.epam.esm.view.LocalizationFilter.LocalizationFilter;
 import com.epam.esm.view.exceptionhandler.AccessDeniedExceptionHandler;
 import com.epam.esm.view.exceptionhandler.RestAuthenticationEntryPoint;
 import com.epam.esm.view.security.ObjectToJsonMapper;
 import com.epam.esm.view.security.jwt.JwtTokenFilter;
 import com.epam.esm.view.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_ENDPOINT = "/auth/login";
+    @Autowired
+    private LocalizationFilter localizationFilter;
     private final ObjectToJsonMapper mapper;
     private final JwtTokenProvider jwtTokenProvider;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
@@ -58,6 +62,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .addFilterBefore(localizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http

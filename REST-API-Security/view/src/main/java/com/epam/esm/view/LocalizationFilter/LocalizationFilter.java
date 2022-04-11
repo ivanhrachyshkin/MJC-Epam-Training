@@ -1,21 +1,27 @@
-package com.epam.esm.view.interceptor;
+package com.epam.esm.view.LocalizationFilter;
 
 import com.epam.esm.service.*;
 import com.epam.esm.service.validator.*;
+import com.epam.esm.view.exceptionhandler.AccessDeniedExceptionHandler;
+import com.epam.esm.view.exceptionhandler.RestAuthenticationEntryPoint;
 import com.epam.esm.view.exceptionhandler.RestExceptionHandler;
 import com.epam.esm.view.security.payload.requestvalidator.RequestValidator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.filter.GenericFilterBean;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 @Component
 @RequiredArgsConstructor
-public class Interceptor implements HandlerInterceptor {
+public class LocalizationFilter extends GenericFilterBean {
 
     private final GiftCertificateServiceImpl giftCertificateService;
     private final TagServiceImpl tagService;
@@ -29,13 +35,13 @@ public class Interceptor implements HandlerInterceptor {
     private final RequestValidator requestValidator;
     private final AuthenticatedUserProvider userProvider;
     private final RestExceptionHandler restExceptionHandler;
+    private final AccessDeniedExceptionHandler accessDeniedExceptionHandler;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final RefreshTokenServiceImpl refreshTokenService;
 
     @Override
-    public boolean preHandle(final HttpServletRequest request,
-                             final HttpServletResponse response,
-                             final Object handler) throws Exception {
-        final String lang = getLang(request);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        final String lang = getLang((HttpServletRequest) request);
         final ResourceBundle resourceBundle = ResourceBundle.getBundle("message", LocaleUtils.toLocale(lang));
         giftCertificateService.setRb(resourceBundle);
         tagService.setRb(resourceBundle);
@@ -50,8 +56,9 @@ public class Interceptor implements HandlerInterceptor {
         userProvider.setRb(resourceBundle);
         restExceptionHandler.setRb(resourceBundle);
         refreshTokenService.setRb(resourceBundle);
-
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        accessDeniedExceptionHandler.setRb(resourceBundle);
+        restAuthenticationEntryPoint.setRb(resourceBundle);
+        chain.doFilter(request, response);
     }
 
     private String getLang(final HttpServletRequest request) {

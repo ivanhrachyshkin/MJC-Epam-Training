@@ -126,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
                 findOrderByUserIdAndId(userId, orderId)
                 .orElseThrow(() -> new ServiceException(
                         rb.getString("order.notFound.user.order"),
-                        HttpStatus.NOT_FOUND, properties.getOrder(), userId, orderId));
+                        HttpStatus.NOT_FOUND, properties.getOrder(), orderId));
     }
 
     private Page<Order> getOrdersForReadAllByUserRole(final User user, final Pageable pageable) {

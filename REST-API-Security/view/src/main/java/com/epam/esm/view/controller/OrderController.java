@@ -47,7 +47,6 @@ public class OrderController {
         return createdOrderDto;
     }
 
-    @Profile("jwt")
     @Secured({USER, ADMIN})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -62,7 +61,6 @@ public class OrderController {
         return hateoasCreator.linkOrderDtos(dtoOrders);
     }
 
-    @Profile("jwt")
     @Secured({USER, ADMIN})
     @GetMapping(value = "/{id}")
     public OrderDto readOne(@PathVariable final int id) {

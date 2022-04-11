@@ -87,7 +87,7 @@ public class OrderControllerIntegrationTest extends ResponseProvider {
     @WithMockUser(authorities = "ROLE_USER", username = "username1")
     public void shouldThrowException_On_ReadByIdEndPoint_User() throws Exception {
         //Given
-        final String expectedExceptionMessage = String.format(rb.getString("order.notFound.user.order"), 1, 1);
+        final String expectedExceptionMessage = String.format(rb.getString("order.notFound.user.order"),1);
         //When
         final String response = getNotFoundForGetMethod("/orders/1", mockMvc);
         //Then
@@ -176,7 +176,7 @@ public class OrderControllerIntegrationTest extends ResponseProvider {
 
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN", username = "username1")
-    public void shouldThrowException_On_CreateEndPoint_With_NotGiftCertificate_For_Admin() throws Exception {
+    public void shouldThrowException_On_CreateEndPoint_With_NotFoundGiftCertificate_For_Admin() throws Exception {
         //Given
         inDtoUser.setId(1);
         inDtoGiftCertificate.setId(100);
