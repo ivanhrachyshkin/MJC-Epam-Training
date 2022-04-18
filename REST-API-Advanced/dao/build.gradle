@@ -1,9 +1,0 @@
-dependencies {
-    implementation libs.spring.boot.starter
-    implementation libs.spring.boot.starter.jdbc
-    implementation libs.spring.orm
-    implementation libs.hibernate.core
-    implementation libs.postgresql
-    implementation libs.javafaker
-    implementation project(':model')
-}
