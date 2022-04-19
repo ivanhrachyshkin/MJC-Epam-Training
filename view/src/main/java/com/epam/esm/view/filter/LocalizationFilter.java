@@ -1,4 +1,4 @@
-package com.epam.esm.view.LocalizationFilter;
+package com.epam.esm.view.filter;
 
 import com.epam.esm.service.*;
 import com.epam.esm.service.validator.*;

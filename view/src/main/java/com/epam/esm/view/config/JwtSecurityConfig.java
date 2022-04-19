@@ -1,6 +1,6 @@
 package com.epam.esm.view.config;
 
-import com.epam.esm.view.LocalizationFilter.LocalizationFilter;
+import com.epam.esm.view.filter.LocalizationFilter;
 import com.epam.esm.view.exceptionhandler.AccessDeniedExceptionHandler;
 import com.epam.esm.view.exceptionhandler.RestAuthenticationEntryPoint;
 import com.epam.esm.view.security.ObjectToJsonMapper;

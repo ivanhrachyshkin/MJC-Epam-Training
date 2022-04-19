@@ -1,2 +1,28 @@
 rootProject.name = 'MJC-Epam-Training'
 
+include 'dao', 'model', 'service', 'view'
+
+enableFeaturePreview('VERSION_CATALOGS')
+
+dependencyResolutionManagement() {
+    versionCatalogs {
+        libs {
+            alias('spring-boot-starter').to('org.springframework.boot:spring-boot-starter:2.6.3')
+            alias('spring-boot-starter-test').to('org.springframework.boot:spring-boot-starter-test:2.6.3')
+            alias('spring-boot-starter-web').to('org.springframework.boot:spring-boot-starter-web:2.6.3')
+            alias('spring-boot-starter-hateoas').to('org.springframework.boot:spring-boot-starter-hateoas:2.6.3')
+            alias('spring-boot-starter-data-jpa').to('org.springframework.boot:spring-boot-starter-data-jpa:2.6.4')
+            alias('spring-boot-starter-security').to('org.springframework.boot:spring-boot-starter-security:2.6.4')
+            alias('keycloak-spring-boot-starter').to('org.keycloak:keycloak-spring-boot-starter:17.0.0')
+            alias('keycloak-admin-client').to('org.keycloak:keycloak-admin-client:17.0.0')
+            alias('spring-security-test').to('org.springframework.security:spring-security-test:5.6.2')
+            alias('jjwt').to('io.jsonwebtoken:jjwt:0.9.1')
+            alias('hibernate-envers').to('org.hibernate:hibernate-envers:5.6.5.Final')
+            alias('postgresql').to('org.postgresql:postgresql:42.3.1')
+            alias('lombok').to('org.projectlombok:lombok:1.18.22')
+            alias('commons-lang3').to('org.apache.commons:commons-lang3:3.12.0')
+            alias('modelmapper').to('org.modelmapper:modelmapper:2.4.5')
+            alias('jackson-annotations').to('com.fasterxml.jackson.core:jackson-annotations:2.13.2')
+        }
+    }
+}
