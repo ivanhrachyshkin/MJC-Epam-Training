@@ -1,0 +1,10 @@
+node {
+  stage('SCM') {
+    git 'https://github.com/ivanhrachyshkin/MJC-Epam-Training.git'
+  }
+  stage('SonarQube analysis') {
+    withSonarQubeEnv('sonar-server') {
+      sh 'sonar:sonar'
+    }
+  }
+}

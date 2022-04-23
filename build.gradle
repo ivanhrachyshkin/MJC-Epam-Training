@@ -1,10 +1,9 @@
-plugins{
+plugins {
     id 'org.springframework.boot' version '2.6.3'
     id 'war'
 }
 
 allprojects {
-    apply plugin: 'jacoco'
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
 
@@ -33,7 +32,6 @@ allprojects {
     bootJar {
         mainClass.set("com.epam.esm.view.Application")
     }
-
 }
 
 dependencies {
