@@ -32,7 +32,19 @@ allprojects {
     bootJar {
         mainClass.set("com.epam.esm.view.Application")
     }
+
 }
+
+//jacocoTestCoverageVerification {
+//    violationRules {
+//        rule {
+//            limit {
+//                counter = 'LINE'
+//                minimum = 0.9
+//            }
+//        }
+//    }
+//}
 
 dependencies {
     implementation project(':view')

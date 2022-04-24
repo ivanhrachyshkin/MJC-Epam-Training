@@ -1,3 +1,8 @@
+plugins {
+    id 'org.sonarqube' version '3.3'
+    id 'jacoco'
+}
+
 dependencies {
     implementation libs.spring.boot.starter
     testImplementation libs.spring.boot.starter.test
@@ -8,8 +13,24 @@ dependencies {
     implementation libs.modelmapper
     implementation libs.keycloak.spring.boot.starter
     implementation libs.keycloak.admin.client
+    implementation libs.mapstruct
+    annotationProcessor libs.mapstruct.processor
     implementation project(':model')
     implementation project(':dao')
-    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 }
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco.xml")
+    }
+}
+
+sonarqube {
+    properties {
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco.xml"
+    }
+}
+
+project.tasks["sonarqube"].dependsOn "jacocoTestReport"

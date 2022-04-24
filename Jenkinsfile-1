@@ -1,10 +1,29 @@
-node {
-  stage('SCM') {
-    git 'https://github.com/ivanhrachyshkin/MJC-Epam-Training.git'
-  }
-  stage('SonarQube analysis') {
-    withSonarQubeEnv('sonar-server') {
-      sh 'sonar:sonar'
+pipeline{
+    agent any
+    stages{
+       stage('GetCode'){
+            steps{
+                git 'https://github.com/ivanhrachyshkin/MJC-Epam-Training.git'
+            }
+         }
+       stage('Test and SonarQube') {
+             steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh "./gradlew sonarqube"
+                }
+             }
+         }
+       stage('Build war'){
+             steps{
+                sh "./gradlew war"
+             }
+         }
+       stage('Deploy'){
+             steps{
+                deploy adapters: [tomcat9(url: 'http://44.198.188.190:8888/', credentialsId: 'fecba010-e582-4ebd-923a-aaba0a6296f1')],
+                                 war: '**/*.war',
+                                 contextPath: 'app'
+             }
+         }
     }
-  }
 }
