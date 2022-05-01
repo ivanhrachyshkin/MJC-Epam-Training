@@ -3,6 +3,8 @@ plugins {
     id 'jacoco'
 }
 
+apply plugin: 'jacoco'
+
 dependencies {
     implementation libs.spring.boot.starter
     implementation libs.spring.boot.starter.test
@@ -33,4 +35,18 @@ sonarqube {
     }
 }
 
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+            enabled = true
+            failOnViolation = true
+            limit {
+                counter = 'LINE'
+                minimum = 0.0
+            }
+        }
+    }
+}
+check.dependsOn jacocoTestCoverageVerification
 project.tasks["sonarqube"].dependsOn "jacocoTestReport"
