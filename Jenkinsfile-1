@@ -1,5 +1,9 @@
 pipeline{
     agent any
+     environment {
+                EC2_TOMCAT_IP = sh(script: "aws ec2 describe-instances --instance-ids ${env.EC2_TOMCAT_ID} --query 'Reservations[*].Instances[*].PublicIpAddress' --output text", returnStdout: true).trim()
+            }
+
     stages{
        stage('GetCode'){
             steps{
@@ -25,10 +29,11 @@ pipeline{
          }
        stage('Deploy'){
              steps{
-                deploy adapters: [tomcat9(url: "${tomcat}", credentialsId: 'fecba010-e582-4ebd-923a-aaba0a6296f1')],
+                deploy adapters: [tomcat9(url: "http://${env.EC2_TOMCAT_IP}:8080/", credentialsId: '384a2f7f-2066-4066-ada0-79037b9813f0')],
                                  war: '**/*.war',
                                  contextPath: 'app'
              }
          }
     }
 }
+
