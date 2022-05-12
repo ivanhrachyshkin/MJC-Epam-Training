@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+            rel="stylesheet"
+    >
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    >
+    <link
+            href="login.css"
+            rel="stylesheet"
+    >
+    <title>Title</title>
+</head>
+<body>
+<header class="header">
+    <div class="header__group">
+        <button
+                class="material-icons"
+                type="button"
+                aria-label="Open menu"
+        >menu
+        </button>
+        <span>logo</span>
+    </div>
+
+    <div class="header__group">
+        <input
+                class="control"
+                type="search"
+                placeholder="Search by item name"
+                aria-label="Search by item name"
+        >
+        <select
+                name="category"
+                class="control"
+                aria-label="All categories"
+        >
+            <option
+                    value="0"
+                    selected
+            >All categories
+            </option>
+            <option value="1">category1</option>
+            <option value="2">category2</option>
+        </select></div>
+
+    <div class="header__group">
+        <button
+                class="material-icons"
+                type="button"
+        >shopping_cart
+        </button>
+        <a href="#">Login</a>
+        <a href="#">Sign up</a>
+    </div>
+</header>
+
+<main class="new-giftCertificate-page">
+
+    <form
+            action="#"
+            method="post"
+            class="new-giftCertificate-form"
+    >
+        <label class="new-giftCertificate-form__title">
+            <span>Add new gift certificate</span>
+        </label>
+        <div class="new-giftCertificate-form-left">
+            <label class="new-giftCertificate-form__input-title">login name</label>
+            <input
+                    class="control"
+                    type="text"
+                    name="login"
+                    aria-label="Login"
+            >
+            <label class="new-giftCertificate-form__input-title">password</label>
+            <input
+                    class="control"
+                    type="password"
+                    name="password"
+                    aria-label="email"
+            >
+            <label class="new-giftCertificate-form__input-title">email</label>
+            <input
+                    class="control"
+                    type="email"
+                    name="email"
+                    aria-label="email"
+            >
+        </div>
+
+        <div class="new-giftCertificate-form-right">
+            <label class="new-giftCertificate-form__input-title">first name</label>
+            <input
+                    class="control"
+                    type="text"
+                    name="login"
+                    aria-label="Login"
+            >
+            <label class="new-giftCertificate-form__input-title">repeat password</label>
+            <input
+                    class="control"
+                    type="password"
+                    name="password"
+                    aria-label="email"
+            >
+            <label class="new-giftCertificate-form__input-title">address</label>
+            <input
+                    class="control"
+                    type="text"
+                    name="address"
+                    aria-label="address"
+            >
+            <div class="new-giftCertificate-form-buttons">
+                <button
+                        class="button cancel-button"
+                        type="submit"
+                >
+                    Cancel
+                </button>
+                <button
+                        class="button signup-button"
+                        type="submit"
+                >
+                    Sign Up
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
