@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+            rel="stylesheet"
+    >
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    >
+    <link
+            href="shared.css"
+            rel="stylesheet"
+    >
+    <link
+            href="certificate-register.css"
+            rel="stylesheet"
+    >
+    <title>Register Certificate</title>
+</head>
+<body>
+<header class="header">
+    <div class="header__group">
+        <button
+                class="material-icons"
+                type="button"
+                aria-label="Open menu"
+        >menu
+        </button>
+        <span>logo</span>
+    </div>
+
+    <div class="header__group">
+        <input
+                class="input"
+                type="search"
+                placeholder="Search by item name"
+                aria-label="Search by item name"
+        >
+        <select
+                name="category"
+                class="input"
+                aria-label="All categories"
+        >
+            <option
+                    value="0"
+                    selected
+            >All categories
+            </option>
+            <option value="1">category1</option>
+            <option value="2">category2</option>
+        </select></div>
+
+    <div class="header__group">
+        <button
+                class="material-icons"
+                type="button"
+        >shopping_cart
+        </button>
+        <a href="#">Login</a>
+        <a href="#">Sign up</a>
+    </div>
+</header>
+
+<main class="register-certificate-page">
+    <form
+            action="#"
+            method="post"
+            class="register-form"
+    >
+        <label class="register-form__title">
+            <span>Add new certificate</span>
+        </label>
+
+        <div class="register-form-left">
+            <label class="register-form__input-title">gift certificate name</label>
+            <input
+                    class="input"
+                    type="text"
+                    name="certificate_name"
+                    aria-label="certificate_name"
+            >
+
+            <label
+                    class="register-form__input-title"
+                    for="category"
+            >category</label>
+            <div class="input-wrapper">
+                <select
+                        id="category"
+                        class="input"
+                >
+                    <option
+                            value=""
+                            selected
+                            disabled
+                    >category name
+                    </option>
+                    <option value="1">category1</option>
+                    <option value="2">category2</option>
+                </select>
+                <span
+                        class="material-icons"
+                        aria-hidden="true"
+                >expand_more</span>
+            </div>
+
+            <label
+                    class="register-form__input-title"
+                    for="images"
+            >images</label>
+            <label
+                    for="images"
+                    class="input-wrapper input"
+            >
+                <input
+                        id="images"
+                        class="visually-hidden"
+                        type="file"
+                >
+                <span
+                        class="material-icons"
+                        aria-hidden="true"
+                >collections</span>
+            </label>
+        </div>
+
+            <div class="register-form-right">
+                <label class="register-form__input-title"
+                        for="validTo"
+                >Valid to</label>
+                <div class="input-wrapper">
+                    <input
+                            id="validTo"
+                            class="input"
+                            type="datetime-local"
+                    >
+                    <span
+                            class="material-icons"
+                            aria-hidden="true"
+                    >event</span>
+                </div>
+
+                <label
+                        class="register-form__input-title"
+                        for="price"
+                >price</label>
+                <input
+                        id="price"
+                        class="input"
+                        type="number"
+                >
+                <label
+                        class="register-form__input-title"
+                        for="shortDescription"
+                >Short description</label>
+                <textarea
+                        id="shortDescription"
+                        class="input"
+                ></textarea>
+                <div class="register-form-buttons">
+                    <button
+                            class="button cancel-button"
+                            type="submit"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                            class="button signup-button"
+                            type="submit"
+                    >
+                        Sign Up
+                    </button>
+                </div>
+            </div>
+    </form>
+</main>
+</body>
+</html>

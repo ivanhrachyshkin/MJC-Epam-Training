@@ -1,0 +1,81 @@
+.register-certificate-page {
+    display: flex;
+}
+
+.register-form {
+    flex-grow: 1;
+    padding: 8rem 22rem 1rem 22rem;
+    display: flex;
+    position: relative;
+
+    background-color: #FFFFFF;
+}
+
+:root {
+  --color-text-muted: #929292;
+  --color-border: #d8d8d8;
+  --color-button-background: #6fcf97;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.visually-hidden {
+  position: relative;
+  clip-path: inset(100%);
+}
+
+.register-certificate-page .input {
+  -webkit-appearance: none;
+}
+
+.input[type^="date"]::-webkit-inner-spin-button,
+.input[type^="date"]::-webkit-calendar-picker-indicator {
+  -webkit-appearance: none;
+
+  display: none;
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+
+  margin: 0;
+}
+
+.input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper .input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.input-wrapper .material-icons {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+}
+
+.register-form__input-title {
+  display: block;
+  margin-bottom: 0.5em;
+
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.register-form__title span {
+    padding-left: 22rem;
+}
+
+
+
