@@ -23,10 +23,14 @@ public class User {
     private Integer id;
     @Column(unique = true)
     private String username;
+    @Column(nullable = false)
+    private String firstName;
     @Column(unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private String address;
 
     @OneToMany(mappedBy = "user")
     private Set<Order> orders = new HashSet<>();
