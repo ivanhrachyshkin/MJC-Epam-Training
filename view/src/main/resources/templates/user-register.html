@@ -11,59 +11,17 @@
             rel="stylesheet"
     >
     <link
-            href="shared.css"
+            href="/css/shared.css"
             rel="stylesheet"
     >
     <link
-            href="user-register.css"
+            href="/css/user-register.css"
             rel="stylesheet"
     >
     <title>Register User</title>
 </head>
 <body>
-<header class="header">
-    <div class="header__group">
-        <button
-                class="material-icons"
-                type="button"
-                aria-label="Open menu"
-        >menu
-        </button>
-        <span>logo</span>
-    </div>
-
-    <div class="header__group">
-        <input
-                class="input"
-                type="search"
-                placeholder="Search by item name"
-                aria-label="Search by item name"
-        >
-        <select
-                name="category"
-                class="input"
-                aria-label="All categories"
-        >
-            <option
-                    value="0"
-                    selected
-            >All categories
-            </option>
-            <option value="1">category1</option>
-            <option value="2">category2</option>
-        </select></div>
-
-    <div class="header__group">
-        <button
-                class="material-icons"
-                type="button"
-        >shopping_cart
-        </button>
-        <a href="#">Login</a>
-        <a href="#">Sign up</a>
-    </div>
-</header>
-
+<div th:replace="header :: myheader"></div>
 <main class="register-user-page">
     <form
             action="#"

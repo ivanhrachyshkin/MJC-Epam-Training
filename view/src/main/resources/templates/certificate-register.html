@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+            rel="stylesheet"
+    >
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    >
+    <link
+            href="/css/shared.css"
+            rel="stylesheet"
+    >
+    <link
+            href="/css/certificate-register.css"
+            rel="stylesheet"
+    >
+    <title>Register Certificate</title>
+</head>
+<body>
+<div th:replace="header :: myheader"></div>
+<main class="register-certificate-page">
+    <form
+            action="#"
+            method="post"
+            class="register-form"
+    >
+        <label class="register-form__title">
+            <span>Add new certificate</span>
+        </label>
+
+        <div class="register-form-left">
+            <label class="register-form__input-title">gift certificate name</label>
+            <input
+                    class="input"
+                    type="text"
+                    name="certificate_name"
+                    aria-label="certificate_name"
+            >
+
+            <label
+                    class="register-form__input-title"
+                    for="category"
+            >category</label>
+            <div class="input-wrapper">
+                <select
+                        id="category"
+                        class="input"
+                >
+                    <option
+                            value=""
+                            selected
+                            disabled
+                    >category name
+                    </option>
+                    <option value="1">category1</option>
+                    <option value="2">category2</option>
+                </select>
+                <span
+                        class="material-icons"
+                        aria-hidden="true"
+                >expand_more</span>
+            </div>
+
+            <label
+                    class="register-form__input-title"
+                    for="images"
+            >images</label>
+            <label
+                    for="images"
+                    class="input-wrapper input"
+            >
+                <input
+                        id="images"
+                        class="visually-hidden"
+                        type="file"
+                >
+                <span
+                        class="material-icons"
+                        aria-hidden="true"
+                >collections</span>
+            </label>
+            <label class="register-form__input-title">tag name</label>
+            <input
+                    class="input"
+                    type="text"
+                    name="tag_name"
+                    aria-label="tag_name"
+            >
+        </div>
+
+
+        <div class="register-form-right">
+            <label class="register-form__input-title">price</label>
+            <input
+                    class="input"
+                    type="text"
+                    name="price"
+                    aria-label="price"
+            >
+            <label class="register-form__input-title"
+                   for="validTo"
+            >valid to</label>
+            <div class="input-wrapper">
+                <input
+                        id="validTo"
+                        class="input"
+                        type="datetime-local"
+                >
+                <span
+                        class="material-icons"
+                        aria-hidden="true"
+                >event</span>
+            </div>
+            <label
+                    class="register-form__input-title"
+                    for="description"
+            >description</label>
+            <textarea
+                    id="description"
+                    class="input"
+            ></textarea>
+            <div class="register-form-buttons">
+                <button
+                        class="button cancel-button"
+                        type="submit"
+                >
+                    Cancel
+                </button>
+                <button
+                        class="button signup-button"
+                        type="submit"
+                >
+                    Sign Up
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
+</body>
+</html>

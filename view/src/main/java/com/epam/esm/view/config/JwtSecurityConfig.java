@@ -23,12 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @ComponentScan("com.epam.esm.view")
-@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_ENDPOINT = "/auth/login";
+    private static final String INDEX_ENDPOINT = "/";
     @Autowired
     private LocalizationFilter localizationFilter;
     private final ObjectToJsonMapper mapper;
@@ -56,6 +56,8 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers(INDEX_ENDPOINT).permitAll()
+                .antMatchers( "/**/*.css").permitAll()
                 .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()

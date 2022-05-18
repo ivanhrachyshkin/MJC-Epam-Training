@@ -39,6 +39,8 @@ public class GiftCertificate {
     private LocalDateTime lastUpdateDate;
     @Column(columnDefinition = "boolean default true")
     private Boolean active;
+    @Column(unique = true)
+    private String image;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "gift_certificate_tags",
@@ -48,6 +50,10 @@ public class GiftCertificate {
 
     @ManyToMany(mappedBy = "giftCertificates")
     private Set<Order> orders = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public GiftCertificate(final Integer id) {
         this.id = id;
