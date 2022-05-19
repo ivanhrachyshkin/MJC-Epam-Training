@@ -1,13 +1,7 @@
 package com.epam.esm.view.hateoas;
 
-import com.epam.esm.service.dto.GiftCertificateDto;
-import com.epam.esm.service.dto.OrderDto;
-import com.epam.esm.service.dto.TagDto;
-import com.epam.esm.service.dto.UserDto;
-import com.epam.esm.view.controller.GiftCertificateController;
-import com.epam.esm.view.controller.OrderController;
-import com.epam.esm.view.controller.TagController;
-import com.epam.esm.view.controller.UserController;
+import com.epam.esm.service.dto.*;
+import com.epam.esm.view.controller.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -25,6 +19,7 @@ public class HateoasCreator {
     private final PagedResourcesAssembler<UserDto> pagedResourcesAssemblerUser;
     private final PagedResourcesAssembler<GiftCertificateDto> pagedResourcesAssemblerGift;
     private final PagedResourcesAssembler<OrderDto> pagedResourcesAssemblerOrder;
+    private final PagedResourcesAssembler<CategoryDto> pagedResourcesAssemblerCategory;
 
     public GiftCertificateDto linkGiftCertificateDtoOne(final GiftCertificateDto giftCertificateDto) {
         return giftCertificateDto
@@ -101,5 +96,16 @@ public class HateoasCreator {
                 .add(linkTo(methodOn(OrderController.class)
                         .readOne(orderDto.getId()))
                         .withSelfRel());
+    }
+
+    public CategoryDto linkCategoryDto(final CategoryDto categoryDto) {
+        return categoryDto
+                .add(linkTo(methodOn(CategoryController.class)
+                        .readOne(categoryDto.getId()))
+                        .withSelfRel());
+    }
+
+    public PagedModel<CategoryDto> linkCategoryDtos(Page<CategoryDto> dtoCategories) {
+        return pagedResourcesAssemblerCategory.toModel(dtoCategories, this::linkCategoryDto);
     }
 }

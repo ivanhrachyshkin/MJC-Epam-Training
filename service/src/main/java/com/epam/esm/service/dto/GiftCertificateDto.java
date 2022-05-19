@@ -31,6 +31,8 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime lastUpdateDate;
     private Boolean active;
+    private String image;
+    private CategoryDto categoryDto;
     private Set<TagDto> dtoTags;
 
     public GiftCertificateDto(Integer id) {

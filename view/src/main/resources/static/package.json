@@ -1,0 +1,17 @@
+{
+  "name": "static",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "sass -w scss/shared.scss:css/shared.css scss/index.scss:css/index.css scss/user-register.scss:css/user-register.css scss/certificate-register.scss:css/certificate-register.css -s compressed --no-source-map",
+    "preserve": "npm run build",
+    "build": "sass scss/shared.scss:css/shared.css scss/index.scss:css/index.css scss/user-register.scss:css/user-register.css scss/certificate-register.scss:css/certificate-register.css -s compressed --no-source-map"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "sass": "^1.51.0"
+  }
+}

@@ -1,8 +1,10 @@
 package com.epam.esm.service.dto.mapper;
 
 import com.epam.esm.model.Category;
+import com.epam.esm.model.Order;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.dto.CategoryDto;
+import com.epam.esm.service.dto.OrderDto;
 import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,7 +33,11 @@ public class CategoryDtoMapper implements DtoMapper<Category, CategoryDto> {
     }
 
     @Override
-    public Page<CategoryDto> modelsToDto(Page<Category> m) {
-        return null;
+    public Page<CategoryDto> modelsToDto(Page<Category> categories) {
+        List<CategoryDto> collect = categories
+                .stream()
+                .map(this::modelToDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(collect, categories.getPageable(), categories.getTotalElements());
     }
 }

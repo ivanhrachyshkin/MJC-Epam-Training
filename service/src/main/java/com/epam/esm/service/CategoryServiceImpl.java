@@ -20,13 +20,18 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<CategoryDto> readAll() {
-        final Page<Category> categories = categoryRepository.findAll(Pageable.unpaged());
-        return categories.stream().map(mapper::modelToDto).collect(Collectors.toList());
+    public Page<CategoryDto> readAll(final Pageable pageable) {
+        final Page<Category> categories = categoryRepository.findAll(pageable);
+        return mapper.modelsToDto(categories);
     }
 
     @Override
     public CategoryDto readOne(int id) {
-        return mapper.modelToDto(categoryRepository.findById(id).get());
+        return mapper.modelToDto(categoryRepository.findById(id).get()); //todo
+    }
+
+    @Override
+    public CategoryDto readOneByName(String name) {
+        return mapper.modelToDto(categoryRepository.findByName(name).get()); //todo
     }
 }

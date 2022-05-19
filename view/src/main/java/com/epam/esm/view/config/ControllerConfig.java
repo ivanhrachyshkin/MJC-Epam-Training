@@ -62,6 +62,12 @@ public class ControllerConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public PagedResourcesAssembler<CategoryDto> pagedResourcesAssemblerCategory(
+            HateoasPageableHandlerMethodArgumentResolver pageableResolver) {
+        return new PagedResourcesAssembler<>(pageableResolver, null);
+    }
+
+    @Bean
     public PagedResourcesAssembler<TagDto> pagedResourcesAssemblerTag(
             HateoasPageableHandlerMethodArgumentResolver pageableResolver) {
         return new PagedResourcesAssembler<>(pageableResolver, null);

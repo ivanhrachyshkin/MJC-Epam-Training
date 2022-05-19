@@ -19,4 +19,8 @@ public class CategoryDto extends RepresentationModel<CategoryDto> implements Tri
 
     private Integer id;
     private String name;
+
+    public CategoryDto(final Integer id) {
+        this.id = id;
+    }
 }

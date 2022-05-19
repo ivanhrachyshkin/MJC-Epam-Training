@@ -1,12 +1,14 @@
 package com.epam.esm.service;
 
 import com.epam.esm.service.dto.CategoryDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
 
-    List<CategoryDto> readAll();
+    Page<CategoryDto> readAll(Pageable pageable);
 
     CategoryDto readOne(int id);
+
+    CategoryDto readOneByName(String name);
 }
