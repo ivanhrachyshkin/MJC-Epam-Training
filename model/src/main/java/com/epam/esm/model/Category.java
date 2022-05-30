@@ -21,6 +21,8 @@ public class Category {
     private Integer id;
     @Column(unique = true)
     private String name;
+    @Column(unique = true)
+    private String image;
 
     @OneToMany(mappedBy = "category")
     private Set<GiftCertificate> giftCertificates;

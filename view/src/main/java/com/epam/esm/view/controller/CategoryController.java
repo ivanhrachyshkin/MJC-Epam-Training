@@ -29,6 +29,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
+    @CrossOrigin(origins = {"http://192.168.43.65:3000"})
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<CategoryDto> readAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
         final Page<CategoryDto> dtoCategories = categoryService.readAll(pageable);
@@ -36,6 +37,7 @@ public class CategoryController {
     }
 
     @GetMapping(value = {"/{id}"})
+    @CrossOrigin(origins = {"http://localhost:3000"})
     @ResponseStatus(HttpStatus.OK)
     public CategoryDto readOne(@PathVariable final int id) {
         final CategoryDto dtoCategory = categoryService.readOne(id);
