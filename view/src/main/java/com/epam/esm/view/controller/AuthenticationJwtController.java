@@ -24,7 +24,8 @@ import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @Profile("jwt")
-@Controller
+@RestController
+@CrossOrigin(origins = {"http://192.168.43.65:3000"})
 @RequestMapping(value = "/auth")
 @RequiredArgsConstructor
 public class AuthenticationJwtController {
@@ -36,7 +37,7 @@ public class AuthenticationJwtController {
 
     @PostMapping(value = "/login")
     @ResponseStatus(HttpStatus.OK)
-    public String login(@ModelAttribute(value = "loginRequest") LoginRequest request, Model model) {
+    public LoginResponse login(@RequestBody LoginRequest request) {
         requestValidator.validateLoginRequest(request);
         final String username = request.getUsername();
         final String password = request.getPassword();
@@ -46,12 +47,8 @@ public class AuthenticationJwtController {
         final String token = jwtTokenProvider.createToken(userDto);
         final RefreshTokenDto refreshTokenDto = jwtTokenProvider.createRefreshToken(userDto.getId());
 
-        final LoginResponse loginResponse = new LoginResponse(token, refreshTokenDto.getToken(), userDto.getId(),
+        return new LoginResponse(token, refreshTokenDto.getToken(), userDto.getId(),
                 userDto.getUsername(), userDto.getEmail(), userDto.getDtoRoles());
-
-        model.addAttribute("loginResponse", loginResponse);
-
-        return "success";
     }
 
     @Secured({USER, ADMIN})

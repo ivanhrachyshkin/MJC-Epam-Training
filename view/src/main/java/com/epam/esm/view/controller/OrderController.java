@@ -25,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Profile("jwt")
 @RestController
+@CrossOrigin(origins = {"http://192.168.43.65:3000"})
 @RequestMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class OrderController {

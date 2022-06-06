@@ -18,7 +18,6 @@ dependencies {
     implementation libs.keycloak.spring.boot.starter
     testImplementation libs.h2database
     implementation libs.keycloak.adapter.core
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.6.7'
     implementation project(':service')
 }
 
