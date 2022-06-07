@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
@@ -25,7 +23,7 @@ import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @Profile("jwt")
 @RestController
-@CrossOrigin(origins = {"http://192.168.43.65:3000"})
+@CrossOrigin
 @RequestMapping(value = "/auth")
 @RequiredArgsConstructor
 public class AuthenticationJwtController {

@@ -20,7 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@CrossOrigin(origins = {"http://192.168.43.65:3000"})
+@CrossOrigin
 @RequestMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class CategoryController {
