@@ -1,0 +1,39 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.3'
+    id 'war'
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+group 'by.hrachyshkin'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation libs.spring
+    implementation libs.test
+    implementation libs.web
+    implementation libs.hateoas
+    implementation libs.data.jpa
+    implementation libs.hibernate.envers
+    implementation libs.postgresql
+    implementation libs.lombok
+    annotationProcessor libs.lombok
+    implementation libs.commons.lang3
+    implementation libs.modelmapper
+    implementation libs.jackson.annotations
+    implementation libs.tomcat
+    implementation libs.logging
+    testImplementation libs.jsr310
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    mainClass.set("com.epam.esm.view.Runner")
+}

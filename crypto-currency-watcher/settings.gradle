@@ -1,0 +1,26 @@
+rootProject.name = 'crypto-currency-watcher'
+
+enableFeaturePreview('VERSION_CATALOGS')
+
+dependencyResolutionManagement() {
+    versionCatalogs {
+        libs {
+            alias('spring').to('org.springframework.boot:spring-boot-starter:2.6.3')
+            alias('test').to('org.springframework.boot:spring-boot-starter-test:2.6.3')
+            alias('web').to('org.springframework.boot:spring-boot-starter-web:2.6.3')
+            alias('hateoas').to('org.springframework.boot:spring-boot-starter-hateoas:2.6.3')
+            alias('data-jpa').to('org.springframework.boot:spring-boot-starter-data-jpa:2.6.4')
+            alias('jjwt').to('io.jsonwebtoken:jjwt:0.9.1')
+            alias('hibernate-envers').to('org.hibernate:hibernate-envers:5.6.5.Final')
+            alias('postgresql').to('org.postgresql:postgresql:42.3.1')
+            alias('lombok').to('org.projectlombok:lombok:1.18.22')
+            alias('commons-lang3').to('org.apache.commons:commons-lang3:3.12.0')
+            alias('modelmapper').to('org.modelmapper:modelmapper:2.4.5')
+            alias('jackson-annotations').to('com.fasterxml.jackson.core:jackson-annotations:2.13.2')
+            alias('h2database').to('com.h2database:h2:2.1.210')
+            alias('tomcat').to('org.springframework.boot:spring-boot-starter-tomcat:2.7.0')
+            alias('logging').to('org.springframework.boot:spring-boot-starter-logging:2.7.1')
+            alias('jsr310').to('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3')
+        }
+    }
+}

@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TagServiceTest extends AssertionsProvider<TagDto> {
+public class CurrencyTest {
 
     @Mock
     private TagRepository tagRepository;
