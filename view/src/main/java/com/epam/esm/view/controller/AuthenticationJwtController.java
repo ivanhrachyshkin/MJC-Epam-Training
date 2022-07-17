@@ -11,21 +11,19 @@ import com.epam.esm.view.security.payload.TokenRefreshResponse;
 import com.epam.esm.view.security.payload.requestvalidator.RequestValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.epam.esm.service.dto.RoleDto.Roles.ADMIN;
 import static com.epam.esm.service.dto.RoleDto.Roles.USER;
 
 @Profile("jwt")
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/auth")
 @RequiredArgsConstructor
 public class AuthenticationJwtController {
@@ -35,8 +33,9 @@ public class AuthenticationJwtController {
     private final RequestValidator requestValidator;
     private final UserService userService;
 
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> login(@RequestBody final LoginRequest request) {
+    @PostMapping(value = "/login")
+    @ResponseStatus(HttpStatus.OK)
+    public LoginResponse login(@RequestBody LoginRequest request) {
         requestValidator.validateLoginRequest(request);
         final String username = request.getUsername();
         final String password = request.getPassword();
@@ -46,11 +45,11 @@ public class AuthenticationJwtController {
         final String token = jwtTokenProvider.createToken(userDto);
         final RefreshTokenDto refreshTokenDto = jwtTokenProvider.createRefreshToken(userDto.getId());
 
-        return ResponseEntity.ok(new LoginResponse(token, refreshTokenDto.getToken(), userDto.getId(),
-                userDto.getUsername(), userDto.getEmail(), userDto.getDtoRoles()));
+        return new LoginResponse(token, refreshTokenDto.getToken(), userDto.getId(),
+                userDto.getUsername(), userDto.getEmail(), userDto.getDtoRoles());
     }
 
-    @Secured({USER,ADMIN})
+    @Secured({USER, ADMIN})
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(@RequestBody final TokenRefreshRequest request) {
         requestValidator.validateRefreshTokenRequest(request);

@@ -1,7 +1,9 @@
 package com.epam.esm.service.dto.mapper;
 
+import com.epam.esm.model.Category;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
+import com.epam.esm.service.dto.CategoryDto;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,8 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificate, Gift
                 .map(tag -> new TagDto(tag.getId(), tag.getName(), tag.getActive()))
                 .collect(Collectors.toSet());
         dtoGiftCertificate.setDtoTags(dtoTags);
+        dtoGiftCertificate.setCategoryDto(new CategoryDto(giftCertificate.getCategory().getId()));
+
         return dtoGiftCertificate;
     }
 

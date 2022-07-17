@@ -2,9 +2,11 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateRepository;
 import com.epam.esm.dao.GiftCertificateSpecification;
+import com.epam.esm.model.Category;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.service.config.ExceptionStatusPostfixProperties;
+import com.epam.esm.service.dto.CategoryDto;
 import com.epam.esm.service.dto.GiftCertificateDto;
 import com.epam.esm.service.dto.GiftCertificateRequestParamsContainer;
 import com.epam.esm.service.dto.mapper.DtoMapper;
@@ -35,9 +37,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagServiceImpl tagService;
     private final ExceptionStatusPostfixProperties properties;
     private final DtoMapper<GiftCertificate, GiftCertificateDto> dtoMapper;
+    private final DtoMapper<Category, CategoryDto> categoryMapper;
     private final GiftCertificateMapper giftCertificateMapper;
     private final GiftCertificateRepository giftCertificateRepository;
     private final GiftCertificateValidator giftCertificateValidator;
+    private final CategoryService categoryService;
     private final PageableValidator paginationValidator;
     private final AuthorityValidator authorityValidator;
     private final GiftCertificateSpecification specification;
@@ -84,6 +88,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         final String giftCertificateDescription = container.getDescription();
         final Page<GiftCertificate> giftCertificates
                 = getGiftCertificatesByUserRole(tags, giftCertificateName, giftCertificateDescription, pageable);
+        return dtoMapper.modelsToDto(giftCertificates);
+    }
+
+    @Override
+    public Page<GiftCertificateDto> readAllByCategory(final CategoryDto categoryDto, final Pageable pageable) {
+        paginationValidator.paginationValidate(pageable);
+        final CategoryDto oldCategoryDto = categoryService.readOneByName(categoryDto.getName());
+        final Category category = categoryMapper.dtoToModel(oldCategoryDto);
+        final Page<GiftCertificate> giftCertificates
+                = giftCertificateRepository.findAllByCategory(category, pageable);
         return dtoMapper.modelsToDto(giftCertificates);
     }
 
@@ -151,7 +165,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 = giftCertificateRepository.findByName(rawGiftCertificate.getName());
 
         if (optionalGiftCertificate.isPresent()) {
-            if(optionalGiftCertificate.get().getActive()){
+            if (optionalGiftCertificate.get().getActive()) {
                 throw new ServiceException(
                         rb.getString("giftCertificate.alreadyExists.name"),
                         HttpStatus.CONFLICT, properties.getGift(), optionalGiftCertificate.get().getName());

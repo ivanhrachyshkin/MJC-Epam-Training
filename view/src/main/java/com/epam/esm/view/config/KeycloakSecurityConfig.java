@@ -2,6 +2,7 @@ package com.epam.esm.view.config;
 
 import com.epam.esm.view.exceptionhandler.AccessDeniedExceptionHandler;
 import com.epam.esm.view.exceptionhandler.RestAuthenticationEntryPoint;
+import com.sun.jmx.remote.internal.ArrayQueue;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -18,6 +19,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Profile("keycloak")
 @KeycloakConfiguration

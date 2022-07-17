@@ -1,8 +1,8 @@
 package com.epam.esm.view.config;
 
-import com.epam.esm.view.filter.LocalizationFilter;
 import com.epam.esm.view.exceptionhandler.AccessDeniedExceptionHandler;
 import com.epam.esm.view.exceptionhandler.RestAuthenticationEntryPoint;
+import com.epam.esm.view.filter.LocalizationFilter;
 import com.epam.esm.view.security.ObjectToJsonMapper;
 import com.epam.esm.view.security.jwt.JwtTokenFilter;
 import com.epam.esm.view.security.jwt.JwtTokenProvider;
@@ -11,24 +11,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @ComponentScan("com.epam.esm.view")
-@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_ENDPOINT = "/auth/login";
+    private static final String INDEX_ENDPOINT = "/";
     @Autowired
     private LocalizationFilter localizationFilter;
     private final ObjectToJsonMapper mapper;
@@ -56,8 +54,11 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers(INDEX_ENDPOINT).permitAll()
+                .antMatchers("/**/*.css").permitAll()
                 .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/gifts/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/categories/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
